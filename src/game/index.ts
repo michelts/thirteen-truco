@@ -1,10 +1,10 @@
 import type { Card, Deck } from "@/core";
 
 class Game {
-  private players?: [Player, Player];
+  private players?: Player[];
   private deck?: Deck;
 
-  constructor(players: [Player, Player], pack: Deck) {
+  constructor(players: Player[], pack: Deck) {
     this.players = players;
     this.deck = pack;
 
@@ -16,7 +16,16 @@ class Game {
 }
 
 class Player {
+  private name = "";
   private cards: [] | [Card, Card, Card] = [];
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
+  }
 
   receiveCards(cards: [Card, Card, Card]) {
     this.cards = cards;
