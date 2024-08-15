@@ -1,0 +1,28 @@
+{
+  "name": "triskaidekaphobia-card-game",
+  "version": "0.0.1",
+  "description": "2024 js13k-games contestant",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "lint": "pnpm biome check",
+    "typecheck": "tsc",
+    "build": "vite build && rm -f dist.zip && advzip -a dist.zip dist/index.html && ls -l dist.zip",
+    "preview": "vite preview",
+    "test": "vitest",
+    "serve": "python -m http.server 8008"
+  },
+  "keywords": [],
+  "author": "Michel Thadeu Sabchuk",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "lightningcss": "^1.26.0",
+    "terser": "^5.31.6",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vite-plugin-singlefile": "^2.0.2",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.0.5"
+  }
+}
