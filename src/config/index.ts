@@ -1,4 +1,4 @@
-import { Deck, Card, Suit } from "@/core";
+import { Card, Deck } from "@/core";
 
 export const defaultDeck = new Deck(Array.from(generateDefaultCards()));
 

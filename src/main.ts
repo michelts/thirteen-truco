@@ -1,6 +1,6 @@
+import { defaultDeck } from "@/config";
 import { type Card, Suit } from "@/core";
 import { Game, Player } from "@/game";
-import { defaultDeck } from "@/config";
 
 function runApp() {
   listenToEvents();
