@@ -12,9 +12,11 @@ export class Deck {
   shuffledCards: [] | Card[] = [];
   shuffleFunc: (cards: Card[]) => void = shuffle;
 
-  constructor(cards: Card[], shuffleFunc: (cards: Card[]) => void) {
+  constructor(cards: Card[], shuffleFunc?: (cards: Card[]) => void) {
     this.cards = cards;
-    this.shuffleFunc = shuffleFunc;
+    if (shuffleFunc) {
+      this.shuffleFunc = shuffleFunc;
+    }
     this.shuffle();
   }
 
