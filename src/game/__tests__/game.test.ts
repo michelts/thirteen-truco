@@ -19,8 +19,8 @@ const customDeck = new Deck(
 );
 
 it("should shuffle the deck and give 3 distinct cards to each player", () => {
-  const player1 = new Player();
-  const player2 = new Player();
+  const player1 = new Player("A");
+  const player2 = new Player("B");
   new Game([player1, player2], customDeck);
   expect(player1.getCards()).toEqual([
     new Card(1, Suit.Hearts),
