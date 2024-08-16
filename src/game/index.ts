@@ -1,8 +1,9 @@
 import type { Card, Deck } from "@/core";
 
 class Game {
-  private players?: Player[];
-  private deck?: Deck;
+  private players: Player[];
+  private deck: Deck;
+  private roundCards?: Card[];
 
   constructor(players: Player[], pack: Deck) {
     this.players = players;
@@ -12,6 +13,14 @@ class Game {
     for (const player of this.players) {
       player.receiveCards(pack.getHand());
     }
+  }
+
+  getPlayers() {
+    return this.players;
+  }
+
+  getRoundCards() {
+    return this.roundCards;
   }
 }
 
