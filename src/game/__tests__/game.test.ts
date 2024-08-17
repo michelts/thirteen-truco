@@ -21,7 +21,7 @@ const customDeck = new Deck(
 it("should shuffle the deck and give 3 distinct cards to each player", () => {
   const player1 = new Player("A");
   const player2 = new Player("B");
-  const game = new Game([player1, player2], customDeck);
+  new Game([player1, player2], customDeck);
   expect(player1.getCards()).toEqual([
     new Card(1, Suit.Hearts),
     new Card(2, Suit.Hearts),
@@ -38,5 +38,22 @@ it("should allow player to drop cards on the table", () => {
   const player1 = new Player("A");
   const player2 = new Player("B");
   const game = new Game([player1, player2], customDeck);
-  expect(game.getRoundCards()).toEqual([]);
+  expect(game.getRounds()).toHaveLength(1);
+  expect(game.getCurrentRound().getSteps()).toHaveLength(1);
+  expect(game.getCurrentRound().getCurrentStep().getCards()).toEqual([]);
+
+  game.dropCard(player1, new Card(1, Suit.Hearts));
+  expect(game.getRounds()).toHaveLength(1);
+  expect(game.getCurrentRound().getSteps()).toHaveLength(1);
+  expect(game.getCurrentRound().getCurrentStep().getCards()).toEqual([
+    new Card(1, Suit.Hearts),
+  ]);
+
+  game.dropCard(player2, new Card(1, Suit.Clubs));
+  expect(game.getRounds()).toHaveLength(1);
+  expect(game.getCurrentRound().getSteps()).toHaveLength(1);
+  expect(game.getCurrentRound().getCurrentStep().getCards()).toEqual([
+    new Card(1, Suit.Hearts),
+    new Card(1, Suit.Clubs),
+  ]);
 });
