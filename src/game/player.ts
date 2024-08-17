@@ -33,7 +33,6 @@ export class Player {
     if (cardIndex === -1) {
       throw new Error("Card not found");
     }
-    const [card] = this.cards.splice(cardIndex, 1);
-    return card;
+    this.cards.splice(cardIndex, 1);
   }
 }

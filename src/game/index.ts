@@ -29,7 +29,7 @@ class Game {
     return this.rounds[this.rounds.length - 1];
   }
 
-  dropCard(player: Player, card: Card) {
+  dropCard(player: Pick<Player, "id">, card: Card) {
     player.takeCard(card);
     this.getCurrentRound().getCurrentStep().addPlayerCard(player, card);
   }
@@ -58,7 +58,7 @@ class RoundStep {
     return Object.values(this.cards);
   }
 
-  addPlayerCard(player: Player, card: Card) {
+  addPlayerCard(player: Pick<Player, "id">, card: Card) {
     this.cards[player.id] = card;
   }
 }
