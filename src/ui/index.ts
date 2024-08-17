@@ -8,8 +8,10 @@ export function renderApp(game: Game) {
     throw new Error("App container not found");
   }
 
-  root.innerHTML = `${game
-    .getPlayers()
-    .map((player) => renderPlayer(game, player))
-    .join("")}${renderTable(game)}`;
+  root.innerHTML = `
+    ${game
+      .getPlayers()
+      .map((player) => renderPlayer(game, player))
+      .join("")}
+    ${renderTable(game)}`;
 }
