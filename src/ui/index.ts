@@ -10,7 +10,7 @@ export function renderApp(game: Game) {
   }
 
   root.innerHTML = `
-    <div class="header">
+    <div class="hd">
       <h1>13 Truco</h1>
       <div>
         ${renderToggle("Music", false, () => true)}
