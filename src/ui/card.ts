@@ -4,7 +4,7 @@ export function renderCard(card: Card) {
   const number = `<div class="n">${cardRepresentation[card.cardNumber] ?? card.cardNumber}</div>`;
   const suit = `<div class="r">${suitRepresentation[card.suit]}</div>`;
   return `
-    <div class="card card-${card.suit}">
+    <div class="card s-${card.suit}">
       ${number}
       ${suit}
       ${number}
