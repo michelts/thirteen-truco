@@ -9,7 +9,12 @@ function runApp() {
 }
 
 function createGame() {
-  const players = [new Player("Danny Ocean"), new Player("Linus Caldwell")];
+  const players = [
+    new Player("You"),
+    new Player("Molly"),
+    new Player("Curtis"),
+    new Player("Bret"),
+  ];
   return new Game(players, defaultDeck);
 }
 

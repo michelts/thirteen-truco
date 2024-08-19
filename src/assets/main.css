@@ -1,3 +1,95 @@
+html, body, button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+html, body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+#wrap {
+  width: 100%;
+  max-width: 430px;
+  height: 568px;
+  background: #4d8a81;
+}
+#app {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  background: linear-gradient(180deg, #e1e2d9 0%, #c8caca 100%);
+  border-bottom: 2px solid #325a54;
+  font-family: sans-serif;
+  padding: 1rem;
+  gap: 1rem;
+  color: #2e524d;
+}
+.header > div {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.header h1 {
+  margin: 0;
+}
+
+
+.tg {
+  text-transform: uppercase;
+  color: #2e524d;
+  cursor: pointer;
+}
+.tg div {
+  position: relative;
+  width: 2.7rem;
+  height: 1.2rem;
+  line-height: 1.2rem;
+  padding: 4px;
+  display: block;
+  background: #4d4d4d;
+  color: #fff;
+  text-align: right;
+  border-radius: 1.2rem;
+  font-size: 10px;
+  margin-top: 0.25rem;
+}
+.tg div:before {
+  content: 'off'
+}
+.tg div:after {
+  content: "";
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: #fff;
+  border-radius: 1000px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+.tg.on div {
+  text-align: left;
+  background: #680;
+}
+.tg.on div:before {
+  content: 'on'
+}
+.tg.on div:after {
+  left: auto;
+  right: 4px;
+}
+
+
 .card {
   position: relative;
   width: 50px;
