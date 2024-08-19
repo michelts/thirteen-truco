@@ -1,6 +1,7 @@
 import { defaultDeck } from "@/config";
 import { Game, Player } from "@/game";
 import { renderApp } from "@/ui";
+import "@/assets/main.css";
 
 function runApp() {
   const game = createGame();
