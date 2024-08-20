@@ -2,23 +2,23 @@ import type { Card, Deck } from "@/core";
 import { Player } from "./player";
 
 class Game {
-  private players: Player[];
+  private _players: Player[];
   private deck: Deck;
   private rounds: Round[] = [];
 
   constructor(players: Player[], pack: Deck) {
-    this.players = players;
+    this._players = players;
     this.deck = pack;
 
     this.deck.shuffle();
-    for (const player of this.players) {
+    for (const player of this._players) {
       player.receiveCards(pack.getHand());
     }
     this.rounds.push(new Round());
   }
 
-  getPlayers() {
-    return this.players;
+  get players() {
+    return this._players;
   }
 
   getRounds() {

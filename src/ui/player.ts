@@ -11,7 +11,7 @@ export function renderPlayer(game: Game, player: Player) {
 function render(game: Game, player: Player) {
   return `
       <div id="p${player.id}">
-        <div>${player.getName()}</div>
+        <div>${player.name}</div>
         <div>
           ${player
             .getCards()

@@ -3,21 +3,21 @@ import { getId } from "@/utils/getId";
 
 export class Player {
   private _id: ReturnType<typeof getId>;
-  private name = "";
+  private _name = "";
 
   private cards: [] | [Card, Card, Card] = [];
 
   constructor(name: string) {
     this._id = getId();
-    this.name = name;
+    this._name = name;
   }
 
   get id() {
     return this._id;
   }
 
-  getName() {
-    return this.name;
+  get name() {
+    return this._name;
   }
 
   receiveCards(cards: [Card, Card, Card]) {
