@@ -24,13 +24,13 @@ export function renderApp(game: Game) {
         ${renderToggle("SFX", false, () => true)}
       </div>
     </div>
-    <div class="bd">
+    <div class="tb">
       <div>${renderAvatar(game.players[2], AvatarDirection.Bottom)}</div>
       <div>${renderOthersCards(game.players[1])}</div>
       <div>${renderAvatar(game.players[1], AvatarDirection.Left)}</div>
 
       <div>${renderOthersCards(game.players[2])}</div>
-      <div class="tb">
+      <div class="ct">
         table cards<br/>
         ${renderTable(game)}
       </div>

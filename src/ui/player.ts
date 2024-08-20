@@ -11,14 +11,11 @@ export function renderPlayer(game: Game, player: Player) {
 function render(game: Game, player: Player) {
   return `
       <div id="p${player.id}">
-        <div>${player.name}</div>
-        <div>
-          ${player
-            .getCards()
-            .map((card) => renderPlayerCard(game, player, card))
-            .join(" ")}
-        </div>
-      </div><br/>`;
+        ${player
+          .getCards()
+          .map((card) => renderPlayerCard(game, player, card))
+          .join(" ")}
+      </div>`;
 }
 
 function renderPlayerCard(game: Game, player: Player, card: Card) {

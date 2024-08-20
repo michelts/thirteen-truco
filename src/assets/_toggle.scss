@@ -1,0 +1,51 @@
+$toggle-width: 18px;
+
+.tg {
+  color: #2e524d;
+  cursor: pointer;
+
+  & div {
+    position: relative;
+    width: 48px;
+    height: $toggle-width;
+    line-height: $toggle-width;
+    border-radius: $toggle-width;
+    padding: 4px;
+    display: block;
+    background: #4d4d4d;
+    color: #fff;
+    text-align: right;
+    font-size: 10px;
+    margin-top: 0.25rem;
+  }
+
+  & div:before {
+    content: 'OFF'
+  }
+
+  & div:after {
+    content: "";
+    display: block;
+    width: $toggle-width;
+    height: $toggle-width;
+    background: #fff;
+    border-radius: 1000px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    transition: left 150ms ease-in-out;
+  }
+
+  &.on div {
+    text-align: left;
+    background: #680;
+
+    &:before {
+      content: 'ON'
+    }
+
+    &:after {
+      left: 34px;
+    }
+  }
+}

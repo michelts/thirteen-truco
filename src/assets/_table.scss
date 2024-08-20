@@ -1,0 +1,20 @@
+.tb {
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr min-content min-content;
+
+  .ct {
+    grid-row: span 2;
+    background: #41756e;
+    border: 1px solid #2e524c;
+    outline: 1px solid #fff;
+    border-bottom: 0;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .me {
+    grid-column: span 3;
+    background: #3c6c65;
+    box-shadow: 0 8px 8px -8px inset rgba(0, 0, 0, 0.5);
+  }
+}

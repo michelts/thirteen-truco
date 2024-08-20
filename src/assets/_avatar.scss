@@ -1,0 +1,68 @@
+$avatar-label-color: #520;
+$avatar-arrow-size: 12px;
+
+.av {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr 1.5rem;
+  width: 80px;
+  height: 100px;
+  background: #c83771;
+  border: 1px solid $avatar-label-color;
+  box-sizing: border-box;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $avatar-label-color;
+    color: #fff;
+    font-size: sans-serif;
+    text-transform: uppercase;
+  }
+
+  &:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    z-index: 9;
+  }
+
+  // bottom
+  &.b:after {
+    border-left: $avatar-arrow-size solid transparent;
+    border-right: $avatar-arrow-size solid transparent;
+    border-top: $avatar-arrow-size solid $avatar-label-color;
+    bottom: -1 * $avatar-arrow-size;
+    left: 50%;
+    margin-left: -1 * $avatar-arrow-size;
+  }
+
+  // left
+  &.l:after {
+    border-top: $avatar-arrow-size solid transparent;
+    border-bottom: $avatar-arrow-size solid transparent;
+    border-right: $avatar-arrow-size solid $avatar-label-color;
+    top: 50%;
+    left: -1 * $avatar-arrow-size;
+    margin-top: -1 * $avatar-arrow-size;
+  }
+
+  // top
+  &.t:after {
+    border-left: $avatar-arrow-size solid transparent;
+    border-right: $avatar-arrow-size solid transparent;
+    border-bottom: $avatar-arrow-size solid $avatar-label-color;
+    top: -1 * $avatar-arrow-size;
+    left: 50%;
+    margin-left: -1 * $avatar-arrow-size;
+  }
+}
+
+@media (min-width: 600px) {
+  .av {
+    width: 92px;
+    height: 115px;
+  }
+}
