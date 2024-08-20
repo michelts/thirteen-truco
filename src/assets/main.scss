@@ -32,7 +32,7 @@ html, body {
   justify-content: space-between;
   background: #fff;
   background: linear-gradient(180deg, #e1e2d9 0%, #c8caca 100%);
-  border-bottom: 2px solid #325a54;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.4);
   font-family: sans-serif;
   padding: 1rem;
   gap: 1rem;
@@ -177,6 +177,7 @@ $toggle-width: 18px;
     border: 1px solid #2e524c;
     outline: 1px solid #fff;
     border-bottom: 0;
+    border-radius: 2px 2px 0 0;
   }
 
   .me {
@@ -189,11 +190,14 @@ $toggle-width: 18px;
 
 // avatar
 .av {
+  position: relative;
   display: grid;
   grid-template-rows: 1fr 1.5rem;
   width: 80px;
   height: 100px;
   background: #c83771;
+  border: 1px solid #520;
+  box-sizing: border-box;
 
   span {
     display: flex;
@@ -203,5 +207,42 @@ $toggle-width: 18px;
     color: #fff;
     font-size: sans-serif;
     text-transform: uppercase;
+  }
+
+  &:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+  }
+
+  // bottom
+  &.b:after {
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid #520;
+    bottom: -12px;
+    left: 50%;
+    margin-left: -12px;
+  }
+
+  // left
+  &.l:after {
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 12px solid #520;
+    top: 50%;
+    left: -12px;
+    margin-top: -12px;
+  }
+
+  // top
+  &.t:after {
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid #520;
+    top: -12px;
+    left: 50%;
+    margin-left: -12px;
   }
 }

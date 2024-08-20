@@ -2,7 +2,7 @@ import type { Game, Player } from "@/types";
 import { renderPlayer } from "./player";
 import { renderTable } from "./table";
 import { renderToggle } from "./toggle";
-import { renderAvatar } from "./avatar";
+import { renderAvatar, AvatarDirection } from "./avatar";
 // import { renderOthersCards } from "./othersCards";
 //
 
@@ -25,9 +25,9 @@ export function renderApp(game: Game) {
       </div>
     </div>
     <div class="bd">
-      <div>${renderAvatar(game.players[2])}</div>
+      <div>${renderAvatar(game.players[2], AvatarDirection.Bottom)}</div>
       <div>${renderOthersCards(game.players[1])}</div>
-      <div>${renderAvatar(game.players[1])}</div>
+      <div>${renderAvatar(game.players[1], AvatarDirection.Left)}</div>
 
       <div>${renderOthersCards(game.players[2])}</div>
       <div class="tb">
@@ -36,8 +36,8 @@ export function renderApp(game: Game) {
       </div>
       <div>${renderOthersCards(game.players[3])}</div>
 
-      <div>${renderAvatar(game.players[0])}</div>
-      <div>${renderAvatar(game.players[3])}</div>
+      <div>${renderAvatar(game.players[0], AvatarDirection.Bottom)}</div>
+      <div>${renderAvatar(game.players[3], AvatarDirection.Top)}</div>
 
       <div class="me">${renderPlayer(game, game.players[0])}</div>
     </div>
