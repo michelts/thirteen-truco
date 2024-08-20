@@ -1,11 +1,12 @@
 .cd {
   position: relative;
-  width: 50px;
-  height: 66px;
+  width: 70px;
+  height: 98px;
+  box-sizing: border-box;
+  padding: 16px 10px;
   font-family: Georgia, serif;
   border-radius: 6px;
   box-shadow: -2px 2px 5px -1px rgba(0, 0, 0, 0.4);
-  padding: 16px 10px;
   background: #fff;
 
   &:after {

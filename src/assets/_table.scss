@@ -1,9 +1,10 @@
 .tb {
   display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  grid-template-rows: min-content 1fr min-content min-content;
+  grid-template-columns: 92px 1fr 92px;
+  grid-template-rows: min-content 1fr min-content 120px;
 
-  .ct {
+  // content
+  .cn {
     grid-row: span 2;
     background: #41756e;
     border: 1px solid #2e524c;
@@ -12,9 +13,26 @@
     border-radius: 2px 2px 0 0;
   }
 
+  // cards-right, cards-top, cards-bottom
+  .c {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cr {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 1rem 2rem;
+  }
+
+  // player cards
   .me {
     grid-column: span 3;
     background: #3c6c65;
     box-shadow: 0 8px 8px -8px inset rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    z-index: 8;
   }
 }

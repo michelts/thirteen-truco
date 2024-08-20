@@ -21,10 +21,12 @@ html, body {
 }
 #wrap {
   width: 100%;
-  max-width: 430px;
-  height: 568px;
+  max-width: 640px;
+  height: 100%;
+  max-height: 960px;
   background: #4d8a81;
-  box-shadow: 0 0 10px 10px rgba(0, 0, 0, .3)
+  box-shadow: 0 0 10px 10px rgba(0, 0, 0, .3);
+  overflow: hidden;
 }
 #app {
   width: 100%;

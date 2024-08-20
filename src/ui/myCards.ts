@@ -4,7 +4,7 @@ import { renderCard } from "./card";
 import { getElement } from "@/utils/getElement";
 import { cardDropped } from "./events";
 
-export function renderPlayer(game: Game, player: Player) {
+export function renderMyCards(game: Game, player: Player) {
   return render(game, player);
 }
 
