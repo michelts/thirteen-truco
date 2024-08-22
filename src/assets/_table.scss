@@ -1,6 +1,7 @@
 $skew-angle: 32deg;
 $x-position-compensation: 82px;
 $up-side-color: #4d2d15;
+$border-color: #28170b;
 
 // table background
 .tbg {
@@ -16,37 +17,30 @@ $up-side-color: #4d2d15;
 
   .t1 {
     display: flex;
-    overflow: hidden;
-
-    &, & div {
-      height: 260px;
-      overflow: hidden;
-    }
-
-    & > div > div {
-      width: 300px;
-      transform: skewX(-1 * $skew-angle) translateX($x-position-compensation);
-      border: 1px solid #28170b;
-      background: $up-side-color;
-    }
-
-    & > div + div > div {
-      transform: skewX($skew-angle) translateX(-1 * $x-position-compensation);
-      border-left: 0;
-    }
+    height: 650px;
+    border: 1px solid $border-color;
+    background: $up-side-color;
+    background: linear-gradient(0, $up-side-color 0%, darken($up-side-color, 5) 100%);
+    transform: matrix3d(
+      1, 0, 0, 0,
+      0, 1, 0, -0.0018,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    );
+    transform-origin: bottom center;
   }
 
   .t2 {
     height: 25px;
     background: #724220;
-    border: 1px solid #28170b;
+    border: 1px solid $border-color;
   }
   .t3 {
     height: 60px;
     background: $up-side-color;
     margin: 0 60px;
     box-shadow: 0 20px 20px -20px inset rgba(0,0,0,0.5);
-    border: 1px solid #28170b;
+    border: 1px solid $border-color;
     border-width: 0 1px;
   }
 }

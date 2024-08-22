@@ -45,7 +45,7 @@ export function renderApp(game: Game) {
 
 const kitchenTable = `
   <div class="tbg">
-    <div class="t1"><div><div></div></div><div><div></div></div></div>
+    <div class="t1"></div>
     <div class="t2"></div>
     <div class="t3"></div>
   </div>
