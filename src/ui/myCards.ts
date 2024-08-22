@@ -5,21 +5,18 @@ import { getElement } from "@/utils/getElement";
 import { cardDropped } from "./events";
 
 export function renderMyCards(game: Game, player: Player) {
-  return render(game, player);
+  return `<div id="me">${render(game, player)}</div>`;
 }
 
 function render(game: Game, player: Player) {
-  return `
-      <div id="me">
-        ${player
-          .getCards()
-          .map((card) => renderPlayerCard(game, player, card))
-          .join(" ")}
-      </div>`;
+  return player
+    .getCards()
+    .map((card) => renderPlayerCard(game, player, card))
+    .join(" ");
 }
 
 function renderPlayerCard(game: Game, player: Player, card: Card) {
-  const id = `p${player.id}-${card.cardNumber}-${card.suit}`;
+  const id = `me-${card.cardNumber}-${card.suit}`;
   setTimeout(() => {
     getElement(id).addEventListener("click", () => {
       game.dropCard(player, card);
@@ -31,5 +28,5 @@ function renderPlayerCard(game: Game, player: Player, card: Card) {
 }
 
 function redraw(game: Game, player: Player) {
-  getElement(`p${player.id}`).innerHTML = render(game, player);
+  getElement("me").innerHTML = render(game, player);
 }

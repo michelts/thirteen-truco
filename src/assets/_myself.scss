@@ -12,11 +12,11 @@
   }
 
   button:first-child {
-    transform: rotate(-5deg);
+    transform: rotate(-5deg) translateY(5px);
   }
 
   button:last-child {
-    transform: rotate(5deg);
+    transform: rotate(5deg) translateY(5px);
   }
 }
 
