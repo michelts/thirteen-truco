@@ -1,36 +1,29 @@
+@import "./_body.scss";
+@import "./_table.scss";
+/*
 @import "./_header.scss";
 @import "./_toggle.scss";
 @import "./_card.scss";
 @import "./_avatar.scss";
-@import "./_table.scss";
+*/
 
-html, body, button {
+html, body, button, svg {
+  display: block;
   margin: 0;
   padding: 0;
   border: 0;
   background: transparent;
 }
 
-html, body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+html, body, #wrap {
   width: 100%;
   height: 100%;
-  background: #333;
 }
+
+body {
+  @include body-pattern;
+}
+
 #wrap {
-  width: 100%;
-  max-width: 640px;
-  height: 100%;
-  max-height: 960px;
-  background: #4d8a81;
-  box-shadow: 0 0 10px 10px rgba(0, 0, 0, .3);
-  overflow: hidden;
-}
-#app {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: min-content 1fr;
+  @include body-shadow;
 }

@@ -1,0 +1,20 @@
+// Copied from https://projects.verou.me/css3patterns/#argyle
+$background-color: #6d695c;
+$light-color: rgba(255,255,255,.1);
+$dark-color: rgba(0,0,0,.1);
+$shadow-dark: rgba(0,0,0,.90);
+$shadow-light: rgba(0,0,0,.65);
+
+@mixin body-pattern {
+  background-color: $background-color;
+  background-image:
+    repeating-linear-gradient(120deg, $light-color, $light-color 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(60deg, $light-color, $light-color 1px, transparent 1px, transparent 60px),
+    linear-gradient(60deg, $dark-color 25%, transparent 25%, transparent 75%, $dark-color 75%, $dark-color),
+    linear-gradient(120deg, $dark-color 25%, transparent 25%, transparent 75%, $dark-color 75%, $dark-color);
+  background-size: 70px 120px;
+}
+
+@mixin body-shadow {
+  background: radial-gradient($shadow-light, $shadow-dark);
+}
