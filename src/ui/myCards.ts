@@ -10,7 +10,7 @@ export function renderMyCards(game: Game, player: Player) {
 
 function render(game: Game, player: Player) {
   return `
-      <div id="p${player.id}">
+      <div id="me">
         ${player
           .getCards()
           .map((card) => renderPlayerCard(game, player, card))

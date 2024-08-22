@@ -1,0 +1,28 @@
+#me {
+  position: absolute;
+  bottom: 70px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  button {
+    cursor: pointer;
+  }
+
+  button:first-child {
+    transform: rotate(-5deg);
+  }
+
+  button:last-child {
+    transform: rotate(5deg);
+  }
+}
+
+@media (min-width: 600px) {
+  #me {
+    bottom: calc((100vh - 100px) / 5);
+    margin-bottom: 40px;
+  }
+}

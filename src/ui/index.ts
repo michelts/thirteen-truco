@@ -11,9 +11,7 @@ export function renderApp(game: Game) {
     throw new Error("App container not found");
   }
 
-  root.innerHTML = `
-    ${kitchenTable}
-  `;
+  root.innerHTML = kitchenTable + renderMyCards(game, game.players[0]);
   return;
   root.innerHTML = `
     <div class="hd">
