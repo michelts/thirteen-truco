@@ -10,7 +10,7 @@
     "build": "vite build && rm -f dist.zip && advzip -a dist.zip dist/index.html && ls -l dist.zip",
     "preview": "vite preview",
     "test": "vitest",
-    "serve": "python -m http.server 8008",
+    "serve": "cd dist && python -m http.server 8008",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
