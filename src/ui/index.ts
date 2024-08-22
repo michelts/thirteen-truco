@@ -12,7 +12,7 @@ export function renderApp(game: Game) {
   }
 
   root.innerHTML = `
-    ${table}
+    ${kitchenTable}
   `;
   return;
   root.innerHTML = `
@@ -43,18 +43,10 @@ export function renderApp(game: Game) {
   `;
 }
 
-const t1 = `<div class="t1"><div><div></div></div><div><div></div></div></div>`;
-
-const _t1 = `
-  <svg width="200" height="200" class="t1">
-    <path d="M 0 0 H 200 V 200 H 0 L 0 0" />
-  </svg>
-`;
-
-const table = `
-<div class="table">
-  ${t1}
-  <div class="t2"></div>
-  <div class="t3"></div>
-</div>
+const kitchenTable = `
+  <div class="tbg">
+    <div class="t1"><div><div></div></div><div><div></div></div></div>
+    <div class="t2"></div>
+    <div class="t3"></div>
+  </div>
 `;

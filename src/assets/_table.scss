@@ -2,11 +2,15 @@ $skew-angle: 32deg;
 $x-position-compensation: 82px;
 $up-side-color: #4d2d15;
 
-.table {
+// table background
+.tbg {
   width: 600px;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin-left: -300px;
 
   & > div {
-    border: 1px solid #28170b;
     border-bottom: 0;
   }
 
@@ -35,11 +39,20 @@ $up-side-color: #4d2d15;
   .t2 {
     height: 25px;
     background: #724220;
+    border: 1px solid #28170b;
   }
   .t3 {
     height: 60px;
     background: $up-side-color;
     margin: 0 60px;
-    box-shadow: 0 20px 20px -20px inset rgba(0,0,0,0.5)
+    box-shadow: 0 20px 20px -20px inset rgba(0,0,0,0.5);
+    border: 1px solid #28170b;
+    border-width: 0 1px;
+  }
+}
+
+@media (min-width: 600px) {
+  .tbg {
+    bottom: calc((100vh - 260px) / 5);
   }
 }
