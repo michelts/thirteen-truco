@@ -20,10 +20,8 @@ export function renderApp(game: Game) {
     });
   });
   root.innerHTML =
-    kitchenTable +
+    renderKitchenTable(renderTableCards(game) + renderCardDeck()) +
     renderMyCards(game, game.players[0]) +
-    renderTableCards(game) +
-    renderCardDeck(game) +
     game.players
       .slice(1)
       .map((player) => renderOthersCards(game, player))
@@ -51,10 +49,13 @@ export function renderApp(game: Game) {
   `;
 }
 
-const kitchenTable = `
+function renderKitchenTable(content: string) {
+  return `
   <div class="tbg">
     <div class="t1"></div>
     <div class="t2"></div>
     <div class="t3"></div>
+    ${content}
   </div>
 `;
+}
