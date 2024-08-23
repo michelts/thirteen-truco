@@ -1,0 +1,51 @@
+$pattern-color-1: #a00;
+$pattern-color-2: transparent;
+$pattern-color-3: #ffd5d5;
+
+// Card back
+.cdb {
+  // TODO mixin for common card props?
+  width: 70px;
+  height: 98px;
+  background: red;
+  border-radius: 6px;
+  box-shadow: -2px 2px 5px -1px rgba(0, 0, 0, 0.4);
+  background:
+      repeating-linear-gradient(
+        45deg,
+        $pattern-color-2 calc(-650%/13) calc(50%/13),
+        $pattern-color-1 0 calc(100%/13),
+        $pattern-color-2 0 calc(150%/13),
+        $pattern-color-1 0 calc(200%/13),
+        $pattern-color-2 0 calc(250%/13),
+        $pattern-color-1 0 calc(300%/13)
+      ),
+      repeating-linear-gradient(
+        45deg,
+        $pattern-color-2 calc(-650%/13) calc(50%/13),
+        $pattern-color-1 0 calc(100%/13),
+        $pattern-color-2 0 calc(150%/13),
+        $pattern-color-1 0 calc(200%/13),
+        $pattern-color-2 0 calc(250%/13),
+        $pattern-color-1 0 calc(300%/13)
+      ) 12px 12px,
+      repeating-linear-gradient(
+        -45deg,
+        $pattern-color-2 calc(-650%/13) calc(50%/13),
+        $pattern-color-1 0 calc(100%/13),
+        $pattern-color-2 0 calc(150%/13),
+        $pattern-color-1 0 calc(200%/13),
+        $pattern-color-2 0 calc(250%/13),
+        $pattern-color-1 0 calc(300%/13)
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        $pattern-color-2 calc(-650%/13) calc(50%/13),
+        $pattern-color-1 0 calc(100%/13),
+        $pattern-color-2 0 calc(150%/13),
+        $pattern-color-1 0 calc(200%/13),
+        $pattern-color-2 0 calc(250%/13),
+        $pattern-color-1 0 calc(300%/13)
+      ) 12px 12px $pattern-color-3;
+background-size: 24px 24px;
+}
