@@ -2,7 +2,7 @@ import type { Game } from "@/types";
 import { renderCard } from "./card";
 import { getElement } from "@/utils/getElement";
 
-export function renderTable(game: Game) {
+export function renderTableCards(game: Game) {
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
       redraw(event.detail.game);

@@ -1,6 +1,7 @@
 import type { Game } from "@/types";
 import { renderMyCards } from "./myCards";
-import { renderTable } from "./table";
+import { renderTableCards } from "./tableCards";
+import { renderCardDeck } from "./cardDeck";
 import { renderToggle } from "./toggle";
 import { renderAvatar, AvatarDirection } from "./avatar";
 import { renderOthersCards } from "./othersCards";
@@ -21,7 +22,8 @@ export function renderApp(game: Game) {
   root.innerHTML =
     kitchenTable +
     renderMyCards(game, game.players[0]) +
-    renderTable(game) +
+    renderTableCards(game) +
+    renderCardDeck(game) +
     game.players
       .slice(1)
       .map((player) => renderOthersCards(game, player))
