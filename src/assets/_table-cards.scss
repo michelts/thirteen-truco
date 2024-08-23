@@ -1,0 +1,45 @@
+#t {
+  position: absolute;
+  top: 42%;
+  left: 10%;
+
+  & > div {
+    display: flex;
+    width: 210px;
+    height: 68px;
+    z-index: 1;
+    margin-bottom: -20px;
+
+    & + div {
+      margin-left: 20px;
+      z-index: 2;
+    }
+
+    & + div + div {
+      margin-left: -20px;
+      z-index: 3;
+    }
+  }
+
+  .tc {
+    //transform: scale(0.6) skewX(-9deg);
+    transform: scale(0.7) matrix3d(
+      1, 0, 0, 0,
+      0, 1, 0, -0.0012,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ) skewX(-10deg);
+    transform-origin: bottom center;
+    width: 42px;
+    height: 58.8px;
+
+    &:nth-child(4n+1) {
+      margin-top: 5px;
+    }
+
+    &:nth-child(4n+3) {
+      margin-top: 6px;
+      margin-left: -2px;
+    }
+  }
+}

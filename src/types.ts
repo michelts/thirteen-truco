@@ -14,6 +14,7 @@ export interface Round {
 
 export interface Step {
   cards: Card[];
+  isDone: boolean;
 }
 
 export interface Player {

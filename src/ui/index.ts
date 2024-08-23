@@ -11,6 +11,13 @@ export function renderApp(game: Game) {
     throw new Error("App container not found");
   }
 
+  setTimeout(() => {
+    window.addEventListener("cardDropped", (event) => {
+      if (event.detail.game.currentRound.currentStep.isDone) {
+        event.detail.game.currentRound.advanceStep();
+      }
+    });
+  });
   root.innerHTML =
     kitchenTable +
     renderMyCards(game, game.players[0]) +

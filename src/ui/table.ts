@@ -8,22 +8,18 @@ export function renderTable(game: Game) {
       redraw(event.detail.game);
     });
   });
-  return render(game);
+  return `<div id="t">${render(game)}</div>`;
 }
 
 function render(game: Game) {
-  return `
-      <div id="t">
-          ${game.currentRound.steps
-            .map(
-              (step) =>
-                `<div>${step.cards
-                  .map((card) => `<div class="tc">${renderCard(card)}</div>`)
-                  .join(" ")}</div>`,
-            )
-            .join("")}
-        </div>
-      </div>`;
+  return game.currentRound.steps
+    .map(
+      (step) =>
+        `<div>${step.cards
+          .map((card) => `<div class="tc">${renderCard(card)}</div>`)
+          .join(" ")}</div>`,
+    )
+    .join("");
 }
 
 function redraw(game: Game) {
