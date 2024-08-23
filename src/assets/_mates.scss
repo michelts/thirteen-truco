@@ -1,0 +1,26 @@
+// mate player
+.mt {
+  position: absolute;
+  width: 120px;
+  height: 50px;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 3px;
+  margin-bottom: 3px;
+
+  & > * {
+    transform: scale(0.5);
+    transform-origin: 0 0;
+    width: 35px;
+    height: 49px;
+  }
+
+  & + .mt {
+    top: 60px;
+  }
+
+  & + .mt + .mt {
+    top: 120px;
+  }
+}

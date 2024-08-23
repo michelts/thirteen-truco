@@ -11,7 +11,14 @@ export function renderApp(game: Game) {
     throw new Error("App container not found");
   }
 
-  root.innerHTML = kitchenTable + renderMyCards(game, game.players[0]);
+  root.innerHTML =
+    kitchenTable +
+    renderMyCards(game, game.players[0]) +
+    renderTable(game) +
+    game.players
+      .slice(1)
+      .map((player) => renderOthersCards(game, player))
+      .join("");
   return;
   root.innerHTML = `
     <div class="hd">
@@ -23,20 +30,14 @@ export function renderApp(game: Game) {
     </div>
     <div class="tb">
       <div>${renderAvatar(game.players[2], AvatarDirection.Bottom)}</div>
-      <div class="c cr">${renderOthersCards(game.players[1])}</div>
       <div>${renderAvatar(game.players[1], AvatarDirection.Left)}</div>
 
       <div class="c ct">${renderOthersCards(game.players[2])}</div>
-      <div class="cn">
-        table cards<br/>
-        ${renderTable(game)}
-      </div>
       <div class="c cb">${renderOthersCards(game.players[3])}</div>
 
       <div>${renderAvatar(game.players[0], AvatarDirection.Bottom)}</div>
       <div>${renderAvatar(game.players[3], AvatarDirection.Top)}</div>
 
-      <div class="me">${renderMyCards(game, game.players[0])}</div>
     </div>
   `;
 }
