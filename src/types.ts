@@ -9,6 +9,7 @@ export interface Game {
 export interface Round {
   steps: Step[];
   currentStep: Step;
+  advanceStep: () => void;
 }
 
 export interface Step {

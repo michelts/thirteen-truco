@@ -41,10 +41,10 @@ class Round {
 
   constructor(game: Game) {
     this.game = game;
-    this.nextStep();
+    this.advanceStep();
   }
 
-  nextStep() {
+  advanceStep() {
     this.steps.push(new RoundStep(this.game));
   }
 
