@@ -1,6 +1,9 @@
 $skew-angle: 32deg;
 $x-position-compensation: 82px;
 $up-side-color: #4d2d15;
+$up-side-color-2: lighten($up-side-color, 1);
+$up-side-color-3: darken($up-side-color, 1);
+$up-side-color-border: darken($up-side-color, 10);
 $border-color: #28170b;
 
 // table background
@@ -16,7 +19,18 @@ $border-color: #28170b;
     height: 650px;
     border: 1px solid $border-color;
     background: $up-side-color;
-    background: linear-gradient(0, $up-side-color 0%, darken($up-side-color, 5) 100%);
+    background: linear-gradient(
+      0, $up-side-color-border 0%,
+      $up-side-color-3 1%, $up-side-color-3 25%,
+      $up-side-color-border 25%, $up-side-color-border 25%,
+      $up-side-color-2 26%, $up-side-color-2 50%,
+      $up-side-color-border 50%, $up-side-color-border 50%,
+      $up-side-color-3 51%, $up-side-color-3 75%,
+      $up-side-color-border 75%, $up-side-color-border 75%,
+      $up-side-color-2 76%, $up-side-color-2 100%
+    ) 0 / 10px 350px;
+    box-shadow: 0 500px 500px -200px inset rgba(0, 0, 0, 0.5);
+
     transform: matrix3d(
       1, 0, 0, 0,
       0, 1, 0, -0.0018,
