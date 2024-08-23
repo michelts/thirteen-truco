@@ -30,8 +30,8 @@ class Game {
   }
 
   dropCard(player: Pick<Player, "id">, card: Card) {
-    player.takeCard(card);
     this.currentRound.currentStep.addPlayerCard(player, card);
+    player.takeCard(card);
   }
 }
 
@@ -70,7 +70,11 @@ class RoundStep {
   }
 
   addPlayerCard(player: Pick<Player, "id">, card: Card) {
-    this._cards[player.id] = card;
+    if (!this._cards[player.id]) {
+      this._cards[player.id] = card;
+    } else {
+      throw new Error("Cant add card twice");
+    }
   }
 
   get isDone() {

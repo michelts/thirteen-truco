@@ -64,3 +64,28 @@ it("should allow player to drop cards on the table", () => {
   expect(game.currentRound.getSteps()).toHaveLength(2);
   expect(game.currentRound.currentStep.cards).toEqual([]);
 });
+
+it("should prevent player dropping cards twice in the same round", () => {
+  const player1 = new Player("A");
+  const player2 = new Player("B");
+  const game = new Game([player1, player2], customDeck);
+  game.dropCard(player1, new Card(1, Suit.Hearts));
+  expect(game.currentRound.currentStep.cards).toEqual([
+    new Card(1, Suit.Hearts),
+  ]);
+  expect(() => game.dropCard(player1, new Card(2, Suit.Hearts))).toThrowError();
+
+  // game can continue after that
+  game.dropCard(player2, new Card(1, Suit.Clubs));
+  expect(game.currentRound.currentStep.cards).toEqual([
+    new Card(1, Suit.Hearts),
+    new Card(1, Suit.Clubs),
+  ]);
+  expect(game.currentRound.currentStep.isDone).toEqual(true);
+
+  game.currentRound.advanceStep();
+  game.dropCard(player1, new Card(2, Suit.Hearts));
+  expect(game.currentRound.currentStep.cards).toEqual([
+    new Card(2, Suit.Hearts),
+  ]);
+});
