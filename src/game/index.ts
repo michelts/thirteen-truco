@@ -25,13 +25,13 @@ class Game {
     return this.rounds;
   }
 
-  getCurrentRound() {
+  get currentRound() {
     return this.rounds[this.rounds.length - 1];
   }
 
   dropCard(player: Pick<Player, "id">, card: Card) {
     player.takeCard(card);
-    this.getCurrentRound().getCurrentStep().addPlayerCard(player, card);
+    this.currentRound.currentStep.addPlayerCard(player, card);
   }
 }
 
@@ -46,20 +46,20 @@ class Round {
     return this.steps;
   }
 
-  getCurrentStep() {
+  get currentStep() {
     return this.steps[this.steps.length - 1];
   }
 }
 
 class RoundStep {
-  private cards: Record<Player["id"], Card> = {};
+  private _cards: Record<Player["id"], Card> = {};
 
-  getCards() {
-    return Object.values(this.cards);
+  get cards() {
+    return Object.values(this._cards);
   }
 
   addPlayerCard(player: Pick<Player, "id">, card: Card) {
-    this.cards[player.id] = card;
+    this._cards[player.id] = card;
   }
 }
 

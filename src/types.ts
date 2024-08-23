@@ -2,20 +2,21 @@ import type { Card } from "@/core";
 
 export interface Game {
   players: Player[];
-  getCurrentRound: () => Round;
+  currentRound: Round;
   dropCard: (player: Player, card: Card) => void;
 }
 
 export interface Round {
-  getCurrentStep: () => Step;
+  steps: Step[];
+  currentStep: Step;
 }
 
 export interface Step {
-  getCards: () => Card[];
+  cards: Card[];
 }
 
 export interface Player {
   id: number;
   name: string;
-  getCards: () => Card[];
+  cards: Card[];
 }

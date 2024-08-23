@@ -9,8 +9,7 @@ export function renderMyCards(game: Game, player: Player) {
 }
 
 function render(game: Game, player: Player) {
-  return player
-    .getCards()
+  return player.cards
     .map((card) => renderPlayerCard(game, player, card))
     .join(" ");
 }

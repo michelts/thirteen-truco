@@ -5,7 +5,7 @@ export class Player {
   private _id: ReturnType<typeof getId>;
   private _name = "";
 
-  private cards: [] | [Card, Card, Card] = [];
+  private _cards: [] | [Card, Card, Card] = [];
 
   constructor(name: string) {
     this._id = getId();
@@ -21,11 +21,11 @@ export class Player {
   }
 
   receiveCards(cards: [Card, Card, Card]) {
-    this.cards = cards;
+    this._cards = cards;
   }
 
-  getCards() {
-    return this.cards;
+  get cards() {
+    return this._cards;
   }
 
   takeCard(takenCard: Card) {
@@ -33,6 +33,6 @@ export class Player {
     if (cardIndex === -1) {
       throw new Error("Card not found");
     }
-    this.cards.splice(cardIndex, 1);
+    this._cards.splice(cardIndex, 1);
   }
 }

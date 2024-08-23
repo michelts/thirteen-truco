@@ -14,16 +14,16 @@ export function renderTable(game: Game) {
 function render(game: Game) {
   return `
       <div id="t">
-        <div>Table cards:</div>
-        <div>
-          ${game
-            .getCurrentRound()
-            .getCurrentStep()
-            .getCards()
-            .map((card) => renderCard(card))
-            .join(" ")}
+          ${game.currentRound.steps
+            .map(
+              (step) =>
+                `<div>${step.cards
+                  .map((card) => `<div class="tc">${renderCard(card)}</div>`)
+                  .join(" ")}</div>`,
+            )
+            .join("")}
         </div>
-      </div><br />`;
+      </div>`;
 }
 
 function redraw(game: Game) {
