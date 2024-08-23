@@ -4,7 +4,7 @@ import { Player } from "./player";
 class Game {
   private _players: Player[];
   private deck: Deck;
-  private rounds: Round[] = [];
+  private _rounds: Round[] = [];
 
   constructor(players: Player[], pack: Deck) {
     this._players = players;
@@ -14,19 +14,19 @@ class Game {
     for (const player of this._players) {
       player.receiveCards(pack.getHand());
     }
-    this.rounds.push(new Round());
+    this._rounds.push(new Round(this));
   }
 
   get players() {
     return this._players;
   }
 
-  getRounds() {
-    return this.rounds;
+  get rounds() {
+    return this._rounds;
   }
 
   get currentRound() {
-    return this.rounds[this.rounds.length - 1];
+    return this._rounds[this._rounds.length - 1];
   }
 
   dropCard(player: Pick<Player, "id">, card: Card) {
@@ -36,10 +36,16 @@ class Game {
 }
 
 class Round {
+  private game: Game;
   private steps: RoundStep[] = [];
 
-  constructor() {
-    this.steps.push(new RoundStep());
+  constructor(game: Game) {
+    this.game = game;
+    this.nextStep();
+  }
+
+  nextStep() {
+    this.steps.push(new RoundStep(this.game));
   }
 
   getSteps() {
@@ -52,7 +58,12 @@ class Round {
 }
 
 class RoundStep {
+  private game: Game;
   private _cards: Record<Player["id"], Card> = {};
+
+  constructor(game: Game) {
+    this.game = game;
+  }
 
   get cards() {
     return Object.values(this._cards);
@@ -60,6 +71,10 @@ class RoundStep {
 
   addPlayerCard(player: Pick<Player, "id">, card: Card) {
     this._cards[player.id] = card;
+  }
+
+  get isDone() {
+    return this.cards.length === this.game.players.length;
   }
 }
 
