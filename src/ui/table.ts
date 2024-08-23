@@ -8,7 +8,7 @@ export function renderTable(game: Game) {
       redraw(event.detail.game);
     });
   });
-  return `<div id="t">${render(game)}</div>`;
+  return `<div class="t"><div id="t">${render(game)}</div></div>`;
 }
 
 function render(game: Game) {
