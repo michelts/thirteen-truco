@@ -1,8 +1,26 @@
 $card-gap: 2px;
 
+$a: 0.001;
+$b: 0;
+
 // Card deck
 .cdd {
-  position: relative;
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  right: 0;
+  width: 71px + 6px;
+  height: 99px + 6px;
+  margin-right: 20px;
+  margin-bottom: 190px;
+
+  transform: scale(0.8) matrix3d(
+    1, -0.15, 0, 0.0001,
+    0, 1, 0, -0.003,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ) skewX(-2deg);
+  transform-origin: top center;
 
   & > div {
     position: absolute;
