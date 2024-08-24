@@ -26,7 +26,6 @@ function render(game: Game) {
             const latestCard =
               stepIndex + 1 === game.currentRound.steps.length &&
               cardIndex + 1 === game.currentRound.currentStep.cards.length;
-            console.log("latestCard", latestCard);
             return `<div ${latestCard ? 'id="ltc"' : ""} class="tc">${renderCard(card)}</div>`;
           })
           .join(" ")}</div>`,

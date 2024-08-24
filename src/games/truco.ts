@@ -18,7 +18,9 @@ export class TrucoGame implements Game {
   }
 
   get currentPlayer() {
-    return this._players[this._currentPlayerIndex];
+    return !this.currentRound.currentStep.isDone
+      ? this._players[this._currentPlayerIndex]
+      : null;
   }
 
   passToNextPlayer() {

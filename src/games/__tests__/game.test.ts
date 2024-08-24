@@ -65,7 +65,7 @@ it("should allow player to drop cards on the table", () => {
     new Card(1, Suit.Clubs),
   ]);
   expect(game.currentRound.currentStep.isDone).toEqual(true);
-  expect(game.currentPlayer).toEqual(game.players[0]);
+  expect(game.currentPlayer).toEqual(null);
 
   game.currentRound.advanceStep();
   expect(game.rounds).toHaveLength(1);
