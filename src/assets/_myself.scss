@@ -1,29 +1,14 @@
 #me {
   position: absolute;
   z-index: 3;
-  bottom: 70px;
+  bottom: 10px;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
 
-  button {
-    cursor: pointer;
-  }
-
-  button:first-child {
-    transform: rotate(-5deg) translateY(5px);
-  }
-
-  button:last-child {
-    transform: rotate(5deg) translateY(5px);
-  }
-}
-
-@media (min-width: 600px) {
-  #me {
-    bottom: calc((100vh - 100px) / 5);
-    margin-bottom: 40px;
+  & > div {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 }

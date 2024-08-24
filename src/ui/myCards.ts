@@ -5,7 +5,7 @@ import { getElement } from "@/utils/getElement";
 import { cardDropped } from "./events";
 
 export function renderMyCards(game: Game, player: Player) {
-  return `<div id="me">${render(game, player)}</div>`;
+  return `<div id="mc">${render(game, player)}</div>`;
 }
 
 function render(game: Game, player: Player) {
@@ -15,7 +15,7 @@ function render(game: Game, player: Player) {
 }
 
 function renderPlayerCard(game: Game, player: Player, card: Card) {
-  const id = `me-${card.cardNumber}-${card.suit}`;
+  const id = `mc-${card.cardNumber}-${card.suit}`;
   setTimeout(() => {
     getElement(id).addEventListener("click", () => {
       game.dropCard(player, card);
@@ -27,5 +27,5 @@ function renderPlayerCard(game: Game, player: Player, card: Card) {
 }
 
 function redraw(game: Game, player: Player) {
-  getElement("me").innerHTML = render(game, player);
+  getElement("mc").innerHTML = render(game, player);
 }

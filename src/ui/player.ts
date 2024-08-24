@@ -1,3 +1,3 @@
 export function renderPlayer(avatar: string, cards: string) {
-  return avatar + cards;
+  return `<div class="pl">${avatar}${cards}</div>`;
 }

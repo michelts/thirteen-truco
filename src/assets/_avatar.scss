@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   filter: drop-shadow(-3px 3px 3px rgba(0, 0, 0, 0.5));
-
+  width: 120px;
 
   position: relative;
   z-index: 9;
@@ -25,6 +25,17 @@
   div div {
     background: url('./avatar.gif');
     background-position: 32px 0;
+
+    &.av-1 {
+        background-position: 0 0;
+    }
+
+    &.av-2 {
+        background-position: 0 32px;
+    }
+    &.av-y {
+        background-position: 32px 32px;
+    }
   }
 
   span {
@@ -39,17 +50,5 @@
     color: #fff;
     border-radius: 0 3px 3px 0;
     text-shadow: 1px 1px 2px #300;
-  }
-}
-
-.av-1 {
-  div div {
-    background-position: 0 0;
-  }
-}
-
-.av-2 {
-  div div {
-    background-position: 0 32px;
   }
 }

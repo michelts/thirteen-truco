@@ -1,0 +1,18 @@
+#mc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  button {
+    cursor: pointer;
+  }
+
+  button:first-child {
+    transform: rotate(-5deg) translateY(5px);
+  }
+
+  button:last-child {
+    transform: rotate(5deg) translateY(5px);
+  }
+}

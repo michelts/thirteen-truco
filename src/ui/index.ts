@@ -1,6 +1,7 @@
 import type { Game } from "@/types";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
+import { renderMyself } from "./myself";
 import { renderMyCards } from "./myCards";
 import { renderOthersCards } from "./othersCards";
 import { renderPlayer } from "./player";
@@ -27,8 +28,14 @@ export function renderApp(game: Game) {
       renderToggle("MUSIC", false, () => true) +
         renderToggle("SFX", false, () => true),
     ) +
-    renderKitchenTable(renderTableCards(game) + renderCardDeck()) +
-    renderMyCards(game, game.players[0]) +
+    renderKitchenTable(
+      renderTableCards(game) +
+        renderCardDeck() +
+        renderMyself(
+          renderMyCards(game, game.players[0]) +
+            renderAvatar(game.players[0], "y"),
+        ),
+    ) +
     game.players
       .slice(1)
       .map((player, index) =>
