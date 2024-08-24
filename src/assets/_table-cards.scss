@@ -46,12 +46,6 @@
       margin-left: -2px;
     }
   }
-
-  & > div:last-child {
-    &:nth-child(4n+2) {
-      transform: rotate(-2deg);
-    }
-  }
 }
 
 @media (min-width: 600px) {
