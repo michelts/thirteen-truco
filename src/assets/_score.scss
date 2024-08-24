@@ -1,0 +1,36 @@
+@import "./_settings.scss";
+
+#scr {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  span {
+    font-size: 14px;
+  }
+
+  & > div {
+    display: flex;
+    padding: 2px;
+    justify-content: center;
+    margin-top: 4px;
+    box-shadow: -5px 5px 5px rgba(0, 0, 0, 0.2);
+    background: #000;
+
+    div {
+      font-weight: bold;
+      padding: 2px 4px;
+      text-align: center;
+      width: 1.5em;
+    }
+
+    div:first-child {
+      background: $color-us;
+    }
+
+    div:last-child {
+      background: $color-them;
+    }
+  }
+}

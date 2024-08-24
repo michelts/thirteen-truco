@@ -1,4 +1,5 @@
 import type { Game } from "@/types";
+import { renderScore } from "./score";
 import { renderMyCards } from "./myCards";
 import { renderTableCards } from "./tableCards";
 import { renderCardDeck } from "./cardDeck";
@@ -21,7 +22,7 @@ export function renderApp(game: Game) {
   });
   root.innerHTML =
     renderHeader(
-      "",
+      renderScore(),
       renderToggle("MUSIC", false, () => true) +
         renderToggle("SFX", false, () => true),
     ) +
