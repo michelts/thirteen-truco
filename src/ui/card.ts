@@ -12,10 +12,10 @@ export function renderCard(card: Card) {
 }
 
 const suitRepresentation = {
-  [Suit.Diamonds]: "♦️",
-  [Suit.Spades]: "♠️",
+  [Suit.Diamonds]: "♦",
+  [Suit.Spades]: "♠",
   [Suit.Hearts]: "♥",
-  [Suit.Clubs]: "♣️",
+  [Suit.Clubs]: "♣",
 };
 
 const cardRepresentation: Record<number, string> = {
