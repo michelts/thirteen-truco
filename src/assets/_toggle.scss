@@ -1,7 +1,10 @@
 $toggle-width: 18px;
+$color: #fff;
+$bg-off: #444;
+$bg-on: #680;
 
 .tg {
-  color: #2e524d;
+  color: $color;
   cursor: pointer;
 
   & div {
@@ -12,7 +15,7 @@ $toggle-width: 18px;
     border-radius: $toggle-width;
     padding: 4px;
     display: block;
-    background: #4d4d4d;
+    background: $bg-off;
     color: #fff;
     text-align: right;
     font-size: 10px;
@@ -38,7 +41,7 @@ $toggle-width: 18px;
 
   &.on div {
     text-align: left;
-    background: #680;
+    background: $bg-on;
 
     &:before {
       content: 'ON'

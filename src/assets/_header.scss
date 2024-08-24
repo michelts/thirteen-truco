@@ -2,22 +2,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
-  background: linear-gradient(180deg, #e1e2d9 0%, #c8caca 100%);
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.4);
   font-family: sans-serif;
   padding: 1rem;
   gap: 1rem;
-  color: #2e524d;
+  position: relative;
   z-index: 9;
+  max-width: 500px;
+  margin: 0 auto;
 
   & > div {
     display: flex;
     gap: 1rem;
     align-items: center;
-  }
-
-  & h1 {
-    margin: 0;
+    justify-content: flex-end;
   }
 }

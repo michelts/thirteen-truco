@@ -20,6 +20,11 @@ export function renderApp(game: Game) {
     });
   });
   root.innerHTML =
+    renderHeader(
+      "",
+      renderToggle("MUSIC", false, () => true) +
+        renderToggle("SFX", false, () => true),
+    ) +
     renderKitchenTable(renderTableCards(game) + renderCardDeck()) +
     renderMyCards(game, game.players[0]) +
     game.players
@@ -28,13 +33,6 @@ export function renderApp(game: Game) {
       .join("");
   return;
   root.innerHTML = `
-    <div class="hd">
-      <h1>13 Truco</h1>
-      <div>
-        ${renderToggle("Music", false, () => true)}
-        ${renderToggle("SFX", false, () => true)}
-      </div>
-    </div>
     <div class="tb">
       <div>${renderAvatar(game.players[2], AvatarDirection.Bottom)}</div>
       <div>${renderAvatar(game.players[1], AvatarDirection.Left)}</div>
@@ -47,6 +45,10 @@ export function renderApp(game: Game) {
 
     </div>
   `;
+}
+
+function renderHeader(left: string, right: string) {
+  return `<div class="hd"><div>${left}</div><div>${right}</div></div>`;
 }
 
 function renderKitchenTable(content: string) {

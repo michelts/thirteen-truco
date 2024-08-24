@@ -3,7 +3,7 @@
   position: absolute;
   width: 120px;
   height: 50px;
-  top: 0;
+  top: 100px;
   right: 0;
   display: flex;
   gap: 3px;
@@ -17,10 +17,10 @@
   }
 
   & + .mt {
-    top: 60px;
+    top: 160px;
   }
 
   & + .mt + .mt {
-    top: 120px;
+    top: 220px;
   }
 }
