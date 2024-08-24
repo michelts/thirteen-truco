@@ -5,6 +5,13 @@ import { renderCard } from "./card";
 import { cardDropped } from "./events";
 
 export function renderOthersCards(game: Game, player: Player) {
+  setTimeout(() => {
+    window.addEventListener("cardDropped", (event) => {
+      if (event.detail.player === player) {
+        redraw(game, player);
+      }
+    });
+  });
   return `<div class="otc" id="p${player.id}">${render(game, player)}</div>`;
 }
 
@@ -18,8 +25,6 @@ function renderPlayerCard(game: Game, player: Player, card: Card) {
   const id = `p${player.id}-${card.cardNumber}-${card.suit}`;
   setTimeout(() => {
     getElement(id).addEventListener("click", () => {
-      player.dropCard(card);
-      redraw(game, player);
       dispatchEvent(cardDropped(game, player, card));
     });
   });

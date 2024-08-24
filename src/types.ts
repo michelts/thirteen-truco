@@ -24,7 +24,7 @@ export interface Player {
   id: number;
   name: string;
   cards: Card[];
-  pickCard?: () => Card;
+  autoPickCard?: () => Card;
   dropCard: (card: Card) => void;
   receiveCards: (cards: Card[]) => void;
 }

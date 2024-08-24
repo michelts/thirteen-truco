@@ -9,6 +9,7 @@ import { renderPlayer } from "./player";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
+import { cardDropped } from "./events";
 
 export function renderApp(game: Game) {
   const root = document.getElementById("app");
@@ -18,8 +19,15 @@ export function renderApp(game: Game) {
 
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
+      event.detail.player.dropCard(event.detail.card);
+
       if (event.detail.game.currentRound.currentStep.isDone) {
         event.detail.game.currentRound.advanceStep();
+      }
+
+      if (game.currentPlayer.autoPickCard) {
+        const card = game.currentPlayer.autoPickCard();
+        dispatchEvent(cardDropped(game, game.currentPlayer, card));
       }
     });
   });
