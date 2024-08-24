@@ -30,6 +30,7 @@
       margin-left: 0px;
       z-index: 3;
     }
+
   }
 
   .tc {
@@ -48,8 +49,20 @@
   }
 }
 
+// latest card
+#ltc {
+  opacity: 0;
+  animation: ease-out 650ms 1 fade-in;
+  animation-fill-mode: forwards;
+}
+
 @media (min-width: 600px) {
   .tbg {
     bottom: calc((100vh - 300px) / 5);
   }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
 }

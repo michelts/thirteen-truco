@@ -9,28 +9,29 @@ import { renderPlayer } from "./player";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
-import { cardDropped, cardPicked } from "./events";
+import { cardPicked } from "./events";
+import { getElement } from "@/utils/getElement";
 
 export function renderApp(game: Game) {
-  const root = document.getElementById("app");
-  if (!root) {
-    throw new Error("App container not found");
-  }
+  const root = getElement("app");
 
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
       event.detail.player.dropCard(event.detail.card);
-
-      if (event.detail.game.currentRound.currentStep.isDone) {
-        event.detail.game.currentRound.advanceStep();
-      }
 
       if (game.currentPlayer.autoPickCard) {
         const card = game.currentPlayer.autoPickCard();
         dispatchEvent(cardPicked(game.currentPlayer, card));
       }
     });
+
+    window.addEventListener("cardPlaced", (event) => {
+      if (event.detail.game.currentRound.currentStep.isDone) {
+        event.detail.game.currentRound.advanceStep();
+      }
+    });
   });
+
   root.innerHTML =
     renderHeader(
       renderScore(),
