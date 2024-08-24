@@ -1,10 +1,7 @@
 // mate player
-.mt {
-  position: absolute;
+.otc {
   width: 120px;
   height: 50px;
-  top: 100px;
-  right: 0;
   display: flex;
   gap: 3px;
   margin-bottom: 3px;
@@ -14,13 +11,5 @@
     transform-origin: 0 0;
     width: 35px;
     height: 49px;
-  }
-
-  & + .mt {
-    top: 160px;
-  }
-
-  & + .mt + .mt {
-    top: 220px;
   }
 }

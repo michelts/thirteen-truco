@@ -5,7 +5,7 @@ import { renderCard } from "./card";
 import { cardDropped } from "./events";
 
 export function renderOthersCards(game: Game, player: Player) {
-  return `<div class="mt" id="p${player.id}">${render(game, player)}</div>`;
+  return `<div class="otc" id="p${player.id}">${render(game, player)}</div>`;
 }
 
 function render(game: Game, player: Player) {

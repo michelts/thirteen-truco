@@ -1,11 +1,12 @@
 import type { Game } from "@/types";
-import { renderScore } from "./score";
-import { renderMyCards } from "./myCards";
-import { renderTableCards } from "./tableCards";
+import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
-import { renderToggle } from "./toggle";
-import { renderAvatar, AvatarDirection } from "./avatar";
+import { renderMyCards } from "./myCards";
 import { renderOthersCards } from "./othersCards";
+import { renderPlayer } from "./player";
+import { renderScore } from "./score";
+import { renderTableCards } from "./tableCards";
+import { renderToggle } from "./toggle";
 
 export function renderApp(game: Game) {
   const root = document.getElementById("app");
@@ -30,7 +31,12 @@ export function renderApp(game: Game) {
     renderMyCards(game, game.players[0]) +
     game.players
       .slice(1)
-      .map((player) => renderOthersCards(game, player))
+      .map((player, index) =>
+        renderPlayer(
+          renderAvatar(player, index),
+          renderOthersCards(game, player),
+        ),
+      )
       .join("");
   return;
   root.innerHTML = `

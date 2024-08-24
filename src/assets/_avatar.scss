@@ -1,70 +1,55 @@
-$avatar-label-color: #520;
-$avatar-arrow-size: 12px;
+@import '_settings.scss';
 
 .av {
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(-3px 3px 3px rgba(0, 0, 0, 0.5));
+
+
   position: relative;
-  display: grid;
-  grid-template-rows: 1fr 1.5rem;
-  width: 80px;
-  height: 100px;
-  background: #c83771;
-  border: 1px solid $avatar-label-color;
-  box-sizing: border-box;
-  box-shadow: 0 0 10px 10px #000;
-  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
+  z-index: 9;
+
+  div {
+    width: 32px;
+    height: 32px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: $color-us;
+  }
+
+  & > div {
+    border: 5px solid $color-us;
+  }
+
+  div div {
+    background: url('./avatar.gif');
+    background-position: 32px 0;
+  }
 
   span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: $avatar-label-color;
-    color: #fff;
-    font-size: sans-serif;
+    display: block;
+    background: $color-us;
+    width: 70px;
+    height: 1em;
+    padding: 4px;
+    line-height: 1;
+    height: 1em;
     text-transform: uppercase;
-  }
-
-  &:after {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 0;
-    z-index: 9;
-  }
-
-  // bottom
-  &.b:after {
-    border-left: $avatar-arrow-size solid transparent;
-    border-right: $avatar-arrow-size solid transparent;
-    border-top: $avatar-arrow-size solid $avatar-label-color;
-    bottom: -1 * $avatar-arrow-size;
-    left: 50%;
-    margin-left: -1 * $avatar-arrow-size;
-  }
-
-  // left
-  &.l:after {
-    border-top: $avatar-arrow-size solid transparent;
-    border-bottom: $avatar-arrow-size solid transparent;
-    border-right: $avatar-arrow-size solid $avatar-label-color;
-    top: 50%;
-    left: -1 * $avatar-arrow-size;
-    margin-top: -1 * $avatar-arrow-size;
-  }
-
-  // top
-  &.t:after {
-    border-left: $avatar-arrow-size solid transparent;
-    border-right: $avatar-arrow-size solid transparent;
-    border-bottom: $avatar-arrow-size solid $avatar-label-color;
-    top: -1 * $avatar-arrow-size;
-    left: 50%;
-    margin-left: -1 * $avatar-arrow-size;
+    color: #fff;
+    border-radius: 0 3px 3px 0;
+    text-shadow: 1px 1px 2px #300;
   }
 }
 
-@media (min-width: 600px) {
-  .av {
-    width: 92px;
-    height: 115px;
+.av-1 {
+  div div {
+    background-position: 0 0;
+  }
+}
+
+.av-2 {
+  div div {
+    background-position: 0 32px;
   }
 }
