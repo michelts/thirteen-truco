@@ -3,8 +3,9 @@ import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
 import { renderMyself } from "./myself";
 import { renderMyCards } from "./myCards";
-import { renderOthersCards } from "./othersCards";
+import { renderOthers } from "./others";
 import { renderPlayer } from "./player";
+import { renderOthersCards } from "./othersCards";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
@@ -34,31 +35,18 @@ export function renderApp(game: Game) {
         renderMyself(
           renderMyCards(game, game.players[0]) +
             renderAvatar(game.players[0], "y"),
+        ) +
+        renderOthers(
+          game.players
+            .slice(1)
+            .map((player, index) =>
+              renderPlayer(
+                renderAvatar(player, index),
+                renderOthersCards(game, player),
+              ),
+            ),
         ),
-    ) +
-    game.players
-      .slice(1)
-      .map((player, index) =>
-        renderPlayer(
-          renderAvatar(player, index),
-          renderOthersCards(game, player),
-        ),
-      )
-      .join("");
-  return;
-  root.innerHTML = `
-    <div class="tb">
-      <div>${renderAvatar(game.players[2], AvatarDirection.Bottom)}</div>
-      <div>${renderAvatar(game.players[1], AvatarDirection.Left)}</div>
-
-      <div class="c ct">${renderOthersCards(game.players[2])}</div>
-      <div class="c cb">${renderOthersCards(game.players[3])}</div>
-
-      <div>${renderAvatar(game.players[0], AvatarDirection.Bottom)}</div>
-      <div>${renderAvatar(game.players[3], AvatarDirection.Top)}</div>
-
-    </div>
-  `;
+    );
 }
 
 function renderHeader(left: string, right: string) {

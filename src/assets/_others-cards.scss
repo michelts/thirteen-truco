@@ -4,12 +4,12 @@
   height: 50px;
   display: flex;
   gap: 3px;
-  margin-bottom: 3px;
+  margin: 0 0 0 44px;
 
   & > * {
-    transform: scale(0.5);
+    transform: scale(0.4);
     transform-origin: 0 0;
-    width: 35px;
-    height: 49px;
+    width: 28px;
+    height: 39px;
   }
 }

@@ -1,0 +1,36 @@
+#ot {
+  position: absolute;
+  bottom: 350px;
+  left: 140px;
+  width: 90vw;
+
+  & > div {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-columns: 50% 50%;
+    align-items: center;
+    max-width: 90vw;
+    margin: 0 auto;
+    gap: 15px;
+
+    & > div:first-child {
+      grid-row: span 2;
+    }
+
+    & > div:nth-child(2n) {
+      margin: 0 0 20px -20vw;
+    }
+  }
+}
+
+@media (min-width: 600px) {
+  #ot {
+    width: 540px;
+    bottom: 310px;
+    left: 100px;
+
+    & > div > div:nth-child(2n) {
+      margin-left: -120px;
+    }
+  }
+}
