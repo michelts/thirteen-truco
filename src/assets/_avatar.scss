@@ -1,6 +1,7 @@
 @import '_settings.scss';
 
 .av {
+  --color: #{$color-them};
   font-family: sans-serif;
   display: flex;
   align-items: center;
@@ -15,32 +16,21 @@
     height: 32px;
     border-radius: 3px;
     overflow: hidden;
-    background: $color-us;
+    background: var(--color);
   }
 
   & > div {
-    border: 5px solid $color-us;
+    border: 5px solid var(--color);
   }
 
   div div {
     background: url('./avatar.gif');
     background-position: 32px 0;
-
-    &.av-1 {
-        background-position: 0 0;
-    }
-
-    &.av-2 {
-        background-position: 0 32px;
-    }
-    &.av-y {
-        background-position: 32px 32px;
-    }
   }
 
   span {
     display: block;
-    background: $color-us;
+    background: var(--color);
     width: 70px;
     height: 1em;
     padding: 4px;
@@ -50,5 +40,27 @@
     color: #fff;
     border-radius: 0 3px 3px 0;
     text-shadow: 1px 1px 2px #300;
+  }
+}
+
+.av-1 {
+  --color: #{$color-us};
+
+  div div {
+    background-position: 0 0;
+  }
+}
+
+.av-2 {
+  div div {
+    background-position: 0 32px;
+  }
+}
+
+.av-y {
+  --color: #{$color-us};
+
+  div div {
+    background-position: 32px 32px;
   }
 }

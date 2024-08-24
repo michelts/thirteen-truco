@@ -1,5 +1,5 @@
 import type { Player } from "@/types";
 
 export function renderAvatar(player: Player, index: number | string) {
-  return `<div class="av"><div><div class="av-${index}"></div></div><span>${player.name}</span></div>`;
+  return `<div class="av av-${index}"><div><div></div></div><span>${player.name}</span></div>`;
 }
