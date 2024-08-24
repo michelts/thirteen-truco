@@ -35,9 +35,12 @@ export class TrucoPlayer implements Player {
   }
 
   dropCard(card: Card) {
-    this._game.currentRound.currentStep.addPlayerCard(this, card);
-    this.takeCard(card);
-    this._game.passToNextPlayer();
+    if (this._game.currentPlayer === this) {
+      this.takeCard(card);
+      this._game.currentRound.currentStep.addPlayerCard(this, card);
+    } else {
+      throw new Error("This is not your turn");
+    }
   }
 
   takeCard(takenCard: Card) {

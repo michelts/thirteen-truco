@@ -64,11 +64,11 @@ class TrucoRound implements Round {
 }
 
 class TrucoRoundStep implements Step {
-  private game: TrucoGame;
+  private _game: TrucoGame;
   private _cards: Record<Player["id"], Card> = {};
 
   constructor(game: TrucoGame) {
-    this.game = game;
+    this._game = game;
   }
 
   get cards() {
@@ -76,14 +76,11 @@ class TrucoRoundStep implements Step {
   }
 
   addPlayerCard(player: Pick<Player, "id">, card: Card) {
-    if (!this._cards[player.id]) {
-      this._cards[player.id] = card;
-    } else {
-      throw new Error("Cant add card twice");
-    }
+    this._cards[player.id] = card;
+    this._game.passToNextPlayer();
   }
 
   get isDone() {
-    return this.cards.length === this.game.players.length;
+    return this.cards.length === this._game.players.length;
   }
 }
