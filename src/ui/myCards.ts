@@ -24,11 +24,16 @@ function render(game: Game, player: Player) {
 function renderPlayerCard(game: Game, player: Player, card: Card) {
   const id = `mc-${card.cardNumber}-${card.suit}`;
   setTimeout(() => {
-    getElement(id).addEventListener("click", () => {
-      dispatchEvent(cardDropped(game, player, card));
+    getElement(id).addEventListener("dragend", (event) => {
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      if (event.clientY < rect.top) {
+        dispatchEvent(cardDropped(game, player, card));
+      } else if (event.clientY > rect.top + rect.height) {
+        dispatchEvent(cardDropped(game, player, card));
+      }
     });
   });
-  return `<button id="${id}">${renderCard(card)}</button>`;
+  return `<button id="${id}" draggable="true">${renderCard(card)}</button>`;
 }
 
 function redraw(game: Game, player: Player) {
