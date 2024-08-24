@@ -1,6 +1,7 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/getElement";
 import { renderCard } from "./card";
+import { renderCardBack } from "./cardBack";
 import { cardPlaced } from "./events";
 
 export function renderTableCards(game: Game) {
@@ -26,7 +27,7 @@ function render(game: Game) {
             const latestCard =
               stepIndex + 1 === game.currentRound.steps.length &&
               cardIndex + 1 === game.currentRound.currentStep.cards.length;
-            return `<div ${latestCard ? 'id="ltc"' : ""} class="tc">${renderCard(card)}</div>`;
+            return `<div ${latestCard ? 'id="ltc"' : ""} class="tc">${card.isHidden ? renderCardBack() : renderCard(card.card)}</div>`;
           })
           .join(" ")}</div>`,
     )

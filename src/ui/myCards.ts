@@ -69,7 +69,8 @@ function listenToEvents(game: Game, player: Player, card: Card, id: string) {
     if (newTop < -1 * rect.height) {
       dispatchEvent(cardDropped(game, player, card));
     } else if (newTop > rect.height) {
-      dispatchEvent(cardDropped(game, player, card)); // hide card
+      const isHidden = true;
+      dispatchEvent(cardDropped(game, player, card, isHidden));
     }
     dragCancel();
   }

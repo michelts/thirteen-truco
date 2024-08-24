@@ -34,10 +34,10 @@ export class TrucoPlayer implements Player {
     return this._cards;
   }
 
-  dropCard(card: Card) {
+  dropCard(card: Card, isHidden?: boolean) {
     if (this._game.currentPlayer === this) {
       this.takeCard(card);
-      this._game.currentRound.currentStep.addPlayerCard(this, card);
+      this._game.currentRound.currentStep.addPlayerCard(this, card, isHidden);
     } else {
       throw new Error("This is not your turn");
     }

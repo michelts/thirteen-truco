@@ -1,5 +1,5 @@
 import type { Card, Deck } from "@/core";
-import type { Game, Player, Round, Step } from "@/types";
+import type { Game, Player, Round, Step, StepCard } from "@/types";
 
 export class TrucoGame implements Game {
   deck: Deck;
@@ -67,7 +67,7 @@ class TrucoRound implements Round {
 
 class TrucoRoundStep implements Step {
   private _game: TrucoGame;
-  private _cards: Record<Player["id"], Card> = {};
+  private _cards: TrucoStepCard[] = [];
 
   constructor(game: TrucoGame) {
     this._game = game;
@@ -77,12 +77,24 @@ class TrucoRoundStep implements Step {
     return Object.values(this._cards);
   }
 
-  addPlayerCard(player: Pick<Player, "id">, card: Card) {
-    this._cards[player.id] = card;
+  addPlayerCard(player: Player, card: Card, isHidden?: boolean) {
+    this._cards.push(new TrucoStepCard(player, card, isHidden ?? false));
     this._game.passToNextPlayer();
   }
 
   get isDone() {
     return this.cards.length === this._game.players.length;
+  }
+}
+
+class TrucoStepCard implements StepCard {
+  player: Player;
+  card: Card;
+  isHidden: boolean;
+
+  constructor(player: Player, card: Card, isHidden: boolean) {
+    this.player = player;
+    this.card = card;
+    this.isHidden = isHidden;
   }
 }

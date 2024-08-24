@@ -17,7 +17,7 @@ export function renderApp(game: Game) {
 
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
-      event.detail.player.dropCard(event.detail.card);
+      event.detail.player.dropCard(event.detail.card, event.detail.isHidden);
 
       if (game.currentPlayer?.autoPickCard) {
         const card = game.currentPlayer.autoPickCard();

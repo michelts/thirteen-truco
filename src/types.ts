@@ -15,9 +15,14 @@ export interface Round {
 }
 
 export interface Step {
-  cards: Card[];
+  cards: StepCard[];
   isDone: boolean;
-  addPlayerCard: (player: Player, card: Card) => void;
+  addPlayerCard: (player: Player, card: Card, isHidden?: boolean) => void;
+}
+
+export interface StepCard {
+  card: Card;
+  isHidden: boolean;
 }
 
 export interface Player {
@@ -25,6 +30,6 @@ export interface Player {
   name: string;
   cards: Card[];
   autoPickCard?: () => Card;
-  dropCard: (card: Card) => void;
+  dropCard: (card: Card, isHidden?: boolean) => void;
   receiveCards: (cards: Card[]) => void;
 }

@@ -7,10 +7,15 @@ export const cardPicked = (player: Player, card: Card) =>
     detail: { player, card },
   });
 
-export const cardDropped = (game: Game, player: Player, card: Card) =>
+export const cardDropped = (
+  game: Game,
+  player: Player,
+  card: Card,
+  isHidden?: boolean,
+) =>
   new CustomEvent("cardDropped", {
     bubbles: true,
-    detail: { game, player, card },
+    detail: { game, player, card, isHidden },
   });
 
 export const cardPlaced = (game: Game, player: Player, card: Card) =>
