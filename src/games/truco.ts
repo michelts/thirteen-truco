@@ -5,6 +5,7 @@ export class TrucoGame implements Game {
   deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
+  private _currentPlayerIndex = 0;
 
   constructor(pack: Deck) {
     this.deck = pack;
@@ -14,6 +15,17 @@ export class TrucoGame implements Game {
 
   get players() {
     return this._players;
+  }
+
+  get currentPlayer() {
+    return this._players[this._currentPlayerIndex];
+  }
+
+  passToNextPlayer() {
+    this._currentPlayerIndex++;
+    if (this._currentPlayerIndex === this._players.length) {
+      this._currentPlayerIndex = 0;
+    }
   }
 
   set players(players) {

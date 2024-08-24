@@ -37,6 +37,7 @@ export class TrucoPlayer implements Player {
   dropCard(card: Card) {
     this._game.currentRound.currentStep.addPlayerCard(this, card);
     this.takeCard(card);
+    this._game.passToNextPlayer();
   }
 
   takeCard(takenCard: Card) {

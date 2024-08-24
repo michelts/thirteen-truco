@@ -3,6 +3,8 @@ import type { Card, Deck } from "@/core";
 export interface Game {
   deck: Deck;
   players: Player[];
+  currentPlayer: Player;
+  passToNextPlayer: () => void;
   currentRound: Round;
 }
 

@@ -46,6 +46,7 @@ it("should allow player to drop cards on the table", () => {
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.steps).toHaveLength(1);
   expect(game.currentRound.currentStep.cards).toEqual([]);
+  expect(game.currentPlayer).toEqual(game.players[0]);
 
   game.players[0].dropCard(new Card(1, Suit.Hearts));
   expect(game.rounds).toHaveLength(1);
@@ -54,6 +55,7 @@ it("should allow player to drop cards on the table", () => {
     new Card(1, Suit.Hearts),
   ]);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
+  expect(game.currentPlayer).toEqual(game.players[1]);
 
   game.players[1].dropCard(new Card(1, Suit.Clubs));
   expect(game.rounds).toHaveLength(1);
@@ -63,14 +65,16 @@ it("should allow player to drop cards on the table", () => {
     new Card(1, Suit.Clubs),
   ]);
   expect(game.currentRound.currentStep.isDone).toEqual(true);
+  expect(game.currentPlayer).toEqual(game.players[0]);
 
   game.currentRound.advanceStep();
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.steps).toHaveLength(2);
   expect(game.currentRound.currentStep.cards).toEqual([]);
+  expect(game.currentPlayer).toEqual(game.players[0]);
 });
 
-it("should prevent player dropping cards twice in the same round", () => {
+it("should prevent player dropping multiple cards in the same round", () => {
   const game = new TrucoGame(customDeck);
   game.players = [
     new TrucoPlayer(game, "Jack"),
