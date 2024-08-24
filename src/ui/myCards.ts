@@ -18,7 +18,7 @@ function renderPlayerCard(game: Game, player: Player, card: Card) {
   const id = `mc-${card.cardNumber}-${card.suit}`;
   setTimeout(() => {
     getElement(id).addEventListener("click", () => {
-      game.dropCard(player, card);
+      player.dropCard(card);
       redraw(game, player);
       dispatchEvent(cardDropped(game, player, card));
     });

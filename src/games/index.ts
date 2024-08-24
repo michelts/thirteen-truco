@@ -1,0 +1,1 @@
+export { TrucoGame } from "./truco";

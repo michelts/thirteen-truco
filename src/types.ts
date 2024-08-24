@@ -1,9 +1,9 @@
-import type { Card } from "@/core";
+import type { Card, Deck } from "@/core";
 
 export interface Game {
+  deck: Deck;
   players: Player[];
   currentRound: Round;
-  dropCard: (player: Player, card: Card) => void;
 }
 
 export interface Round {
@@ -15,10 +15,14 @@ export interface Round {
 export interface Step {
   cards: Card[];
   isDone: boolean;
+  addPlayerCard: (player: Player, card: Card) => void;
 }
 
 export interface Player {
   id: number;
   name: string;
   cards: Card[];
+  pickCard?: () => Card;
+  dropCard: (card: Card) => void;
+  receiveCards: (cards: Card[]) => void;
 }

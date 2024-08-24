@@ -1,24 +1,23 @@
 import type { Card, Deck } from "@/core";
-import { Player } from "./player";
+import type { Game, Player, Round, Step } from "@/types";
 
-class Game {
-  private _players: Player[];
-  private deck: Deck;
+export class TrucoGame implements Game {
+  deck: Deck;
+  private _players: Player[] = [];
   private _rounds: Round[] = [];
 
-  constructor(players: Player[], pack: Deck) {
-    this._players = players;
+  constructor(pack: Deck) {
     this.deck = pack;
-
     this.deck.shuffle();
-    for (const player of this._players) {
-      player.receiveCards(pack.getHand());
-    }
-    this._rounds.push(new Round(this));
+    this._rounds.push(new TrucoRound(this));
   }
 
   get players() {
     return this._players;
+  }
+
+  set players(players) {
+    this._players = players;
   }
 
   get rounds() {
@@ -28,40 +27,35 @@ class Game {
   get currentRound() {
     return this._rounds[this._rounds.length - 1];
   }
-
-  dropCard(player: Pick<Player, "id">, card: Card) {
-    this.currentRound.currentStep.addPlayerCard(player, card);
-    player.takeCard(card);
-  }
 }
 
-class Round {
-  private game: Game;
-  private steps: RoundStep[] = [];
+class TrucoRound implements Round {
+  private game: TrucoGame;
+  private _steps: TrucoRoundStep[] = [];
 
-  constructor(game: Game) {
+  constructor(game: TrucoGame) {
     this.game = game;
     this.advanceStep();
   }
 
   advanceStep() {
-    this.steps.push(new RoundStep(this.game));
+    this._steps.push(new TrucoRoundStep(this.game));
   }
 
-  getSteps() {
-    return this.steps;
+  get steps() {
+    return this._steps;
   }
 
   get currentStep() {
-    return this.steps[this.steps.length - 1];
+    return this._steps[this._steps.length - 1];
   }
 }
 
-class RoundStep {
-  private game: Game;
+class TrucoRoundStep implements Step {
+  private game: TrucoGame;
   private _cards: Record<Player["id"], Card> = {};
 
-  constructor(game: Game) {
+  constructor(game: TrucoGame) {
     this.game = game;
   }
 
@@ -81,5 +75,3 @@ class RoundStep {
     return this.cards.length === this.game.players.length;
   }
 }
-
-export { Player, Game };

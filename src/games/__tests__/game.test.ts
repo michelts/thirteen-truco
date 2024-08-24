@@ -1,6 +1,7 @@
 import { Card, Deck, Suit } from "@/core";
-import { Game, Player } from "@/game";
+import { TrucoPlayer } from "@/players";
 import { expect, it } from "vitest";
+import { TrucoGame } from "../index";
 
 function customShuffle<T>(cards: T[]): void {
   cards.reverse();
@@ -19,15 +20,17 @@ const customDeck = new Deck(
 );
 
 it("should shuffle the deck and give 3 distinct cards to each player", () => {
-  const player1 = new Player("A");
-  const player2 = new Player("B");
-  new Game([player1, player2], customDeck);
-  expect(player1.cards).toEqual([
+  const game = new TrucoGame(customDeck);
+  game.players = [
+    new TrucoPlayer(game, "Jack"),
+    new TrucoPlayer(game, "Curtis"),
+  ];
+  expect(game.players[0].cards).toEqual([
     new Card(1, Suit.Hearts),
     new Card(2, Suit.Hearts),
     new Card(3, Suit.Hearts),
   ]);
-  expect(player2.cards).toEqual([
+  expect(game.players[1].cards).toEqual([
     new Card(1, Suit.Clubs),
     new Card(2, Suit.Clubs),
     new Card(3, Suit.Clubs),
@@ -35,24 +38,26 @@ it("should shuffle the deck and give 3 distinct cards to each player", () => {
 });
 
 it("should allow player to drop cards on the table", () => {
-  const player1 = new Player("A");
-  const player2 = new Player("B");
-  const game = new Game([player1, player2], customDeck);
+  const game = new TrucoGame(customDeck);
+  game.players = [
+    new TrucoPlayer(game, "Jack"),
+    new TrucoPlayer(game, "Curtis"),
+  ];
   expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.getSteps()).toHaveLength(1);
+  expect(game.currentRound.steps).toHaveLength(1);
   expect(game.currentRound.currentStep.cards).toEqual([]);
 
-  game.dropCard(player1, new Card(1, Suit.Hearts));
+  game.players[0].dropCard(new Card(1, Suit.Hearts));
   expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.getSteps()).toHaveLength(1);
+  expect(game.currentRound.steps).toHaveLength(1);
   expect(game.currentRound.currentStep.cards).toEqual([
     new Card(1, Suit.Hearts),
   ]);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  game.dropCard(player2, new Card(1, Suit.Clubs));
+  game.players[1].dropCard(new Card(1, Suit.Clubs));
   expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.getSteps()).toHaveLength(1);
+  expect(game.currentRound.steps).toHaveLength(1);
   expect(game.currentRound.currentStep.cards).toEqual([
     new Card(1, Suit.Hearts),
     new Card(1, Suit.Clubs),
@@ -61,22 +66,26 @@ it("should allow player to drop cards on the table", () => {
 
   game.currentRound.advanceStep();
   expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.getSteps()).toHaveLength(2);
+  expect(game.currentRound.steps).toHaveLength(2);
   expect(game.currentRound.currentStep.cards).toEqual([]);
 });
 
 it("should prevent player dropping cards twice in the same round", () => {
-  const player1 = new Player("A");
-  const player2 = new Player("B");
-  const game = new Game([player1, player2], customDeck);
-  game.dropCard(player1, new Card(1, Suit.Hearts));
+  const game = new TrucoGame(customDeck);
+  game.players = [
+    new TrucoPlayer(game, "Jack"),
+    new TrucoPlayer(game, "Curtis"),
+  ];
+  game.players[0].dropCard(new Card(1, Suit.Hearts));
   expect(game.currentRound.currentStep.cards).toEqual([
     new Card(1, Suit.Hearts),
   ]);
-  expect(() => game.dropCard(player1, new Card(2, Suit.Hearts))).toThrowError();
+  expect(() =>
+    game.players[0].dropCard(new Card(2, Suit.Hearts)),
+  ).toThrowError();
 
   // game can continue after that
-  game.dropCard(player2, new Card(1, Suit.Clubs));
+  game.players[1].dropCard(new Card(1, Suit.Clubs));
   expect(game.currentRound.currentStep.cards).toEqual([
     new Card(1, Suit.Hearts),
     new Card(1, Suit.Clubs),
@@ -84,7 +93,7 @@ it("should prevent player dropping cards twice in the same round", () => {
   expect(game.currentRound.currentStep.isDone).toEqual(true);
 
   game.currentRound.advanceStep();
-  game.dropCard(player1, new Card(2, Suit.Hearts));
+  game.players[0].dropCard(new Card(2, Suit.Hearts));
   expect(game.currentRound.currentStep.cards).toEqual([
     new Card(2, Suit.Hearts),
   ]);
