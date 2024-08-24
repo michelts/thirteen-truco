@@ -1,7 +1,7 @@
 import type { Card } from "@/core";
 import type { Game, Player } from "@/types";
-import { renderCard } from "./card";
 import { getElement } from "@/utils/getElement";
+import { renderCard } from "./card";
 import { cardDropped } from "./events";
 
 export function renderMyCards(game: Game, player: Player) {

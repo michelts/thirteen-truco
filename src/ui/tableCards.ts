@@ -1,6 +1,6 @@
 import type { Game } from "@/types";
-import { renderCard } from "./card";
 import { getElement } from "@/utils/getElement";
+import { renderCard } from "./card";
 
 export function renderTableCards(game: Game) {
   setTimeout(() => {

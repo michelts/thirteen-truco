@@ -1,11 +1,11 @@
 import type { Game } from "@/types";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
-import { renderMyself } from "./myself";
 import { renderMyCards } from "./myCards";
+import { renderMyself } from "./myself";
 import { renderOthers } from "./others";
-import { renderPlayer } from "./player";
 import { renderOthersCards } from "./othersCards";
+import { renderPlayer } from "./player";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
