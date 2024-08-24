@@ -15,7 +15,7 @@ function createGame() {
   game.players = [
     new HumanPlayer(game, "You"),
     new AutoPlayer(game, "Molly"),
-    new HumanPlayer(game, "Curtis"),
+    new AutoPlayer(game, "Curtis"),
     new AutoPlayer(game, "Bret"),
   ];
   return game;
