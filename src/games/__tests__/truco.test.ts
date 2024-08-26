@@ -1,46 +1,48 @@
-import { defaultDeck } from "@/config";
 import type { Step, StepCard } from "@/types";
 import { Card, Deck, Suit } from "@/core";
 import { TrucoPlayer } from "@/players";
 import { expect, it } from "vitest";
 import { TrucoGame } from "../index";
 
-function customShuffle<T>(cards: T[]): void {
-  cards.reverse();
-}
+const cards = [
+  new Card(1, Suit.Hearts),
+  new Card(2, Suit.Hearts),
+  new Card(3, Suit.Hearts),
+  new Card(1, Suit.Clubs),
+  new Card(2, Suit.Clubs),
+  new Card(3, Suit.Clubs),
+  new Card(4, Suit.Hearts),
+  new Card(5, Suit.Hearts),
+  new Card(6, Suit.Hearts),
+  new Card(4, Suit.Clubs),
+  new Card(5, Suit.Clubs),
+  new Card(6, Suit.Clubs),
+];
 
-const customDeck = new Deck(
-  [
-    new Card(3, Suit.Clubs),
-    new Card(2, Suit.Clubs),
-    new Card(1, Suit.Clubs),
-    new Card(3, Suit.Hearts),
-    new Card(2, Suit.Hearts),
-    new Card(1, Suit.Hearts),
-  ],
-  customShuffle,
-);
+const directOrderDeck = new Deck(cards, (cards) => cards);
+
+const reverseOrderDeck = new Deck(cards, (cards) => cards.reverse());
 
 it("should shuffle the deck and give 3 distinct cards to each player", () => {
-  const game = new TrucoGame(customDeck);
+  const game = new TrucoGame(reverseOrderDeck);
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
   ];
   expect(game.players[0].cards).toEqual([
-    new Card(1, Suit.Hearts),
-    new Card(2, Suit.Hearts),
-    new Card(3, Suit.Hearts),
+    new Card(6, Suit.Clubs),
+    new Card(5, Suit.Clubs),
+    new Card(4, Suit.Clubs),
   ]);
   expect(game.players[1].cards).toEqual([
-    new Card(1, Suit.Clubs),
-    new Card(2, Suit.Clubs),
-    new Card(3, Suit.Clubs),
+    new Card(6, Suit.Hearts),
+    new Card(5, Suit.Hearts),
+    new Card(4, Suit.Hearts),
   ]);
 });
 
 it("should allow player to drop cards on the table", () => {
-  const game = new TrucoGame(customDeck);
+  const game = new TrucoGame(directOrderDeck);
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
@@ -68,8 +70,8 @@ it("should allow player to drop cards on the table", () => {
   ]);
 });
 
-it("should fill rounds, steps, currentRound, currentStep and currentPlayer as players drop cards", () => {
-  const game = new TrucoGame(defaultDeck); // use a deck with enough cards
+it("should fill rounds, steps and score as players drop cards", () => {
+  const game = new TrucoGame(directOrderDeck); // use a deck with enough cards
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
@@ -157,7 +159,7 @@ it("should fill rounds, steps, currentRound, currentStep and currentPlayer as pl
 });
 
 it("should allow player to drop card as hidden", () => {
-  const game = new TrucoGame(customDeck);
+  const game = new TrucoGame(directOrderDeck);
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
@@ -169,7 +171,7 @@ it("should allow player to drop card as hidden", () => {
 });
 
 it("should prevent player dropping multiple cards in the same round", () => {
-  const game = new TrucoGame(customDeck);
+  const game = new TrucoGame(directOrderDeck);
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
