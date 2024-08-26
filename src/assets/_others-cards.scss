@@ -1,3 +1,5 @@
+@import "./_settings.scss";
+
 // others card
 .otc {
   width: 120px;
@@ -13,7 +15,7 @@
 
   // others card visible
   & > .otcv {
-    animation: 350ms ease-out 650ms 1 fade-out;
+    animation: $other-card-animation-delay ease-out $other-card-animation-timeout 1 fade-out;
     animation-fill-mode: forwards;
   }
 

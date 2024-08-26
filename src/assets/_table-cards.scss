@@ -1,3 +1,5 @@
+@import "./_settings.scss";
+
 .t {
   position: absolute;
   z-index: 2;
@@ -52,7 +54,7 @@
 // latest card
 #ltc {
   opacity: 0;
-  animation: ease-out 650ms 1 fade-in;
+  animation: ease-out $table-card-animation-timeout 1 fade-in;
   animation-fill-mode: forwards;
 }
 
