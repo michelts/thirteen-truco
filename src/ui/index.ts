@@ -27,7 +27,7 @@ export function renderApp(game: Game) {
 
     window.addEventListener("cardPlaced", (event) => {
       if (event.detail.game.currentRound.currentStep.isDone) {
-        event.detail.game.currentRound.advanceStep();
+        event.detail.game.currentRound.continue();
       }
     });
   });

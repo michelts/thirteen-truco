@@ -1,8 +1,10 @@
+import { RoundFullError } from "@/utils/errors";
 import type { Card, Deck } from "@/core";
 import type { Game, Player, Round, Step, StepCard } from "@/types";
 
 export class TrucoGame implements Game {
   deck: Deck;
+  isDone = false;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
   private _currentPlayerIndex = 0;
@@ -21,6 +23,14 @@ export class TrucoGame implements Game {
     return !this.currentRound.currentStep.isDone
       ? this._players[this._currentPlayerIndex]
       : null;
+  }
+
+  continue() {
+    if (!this.currentRound.isDone) {
+      this.currentRound.continue();
+    } else {
+      this._rounds.push(new TrucoRound(this));
+    }
   }
 
   passToNextPlayer() {
@@ -46,14 +56,19 @@ export class TrucoGame implements Game {
 class TrucoRound implements Round {
   private game: TrucoGame;
   private _steps: TrucoRoundStep[] = [];
+  private _roundSteps = 3;
 
   constructor(game: TrucoGame) {
     this.game = game;
-    this.advanceStep();
+    this.continue();
   }
 
-  advanceStep() {
-    this._steps.push(new TrucoRoundStep(this.game));
+  continue() {
+    if (this._steps.length < this._roundSteps) {
+      this._steps.push(new TrucoRoundStep(this.game));
+    } else {
+      throw new RoundFullError();
+    }
   }
 
   get steps() {
@@ -62,6 +77,10 @@ class TrucoRound implements Round {
 
   get currentStep() {
     return this._steps[this._steps.length - 1];
+  }
+
+  get isDone() {
+    return this._steps.length === 3 && this.currentStep.isDone;
   }
 }
 

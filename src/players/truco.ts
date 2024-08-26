@@ -1,3 +1,8 @@
+import {
+  NotEnoughCardsError,
+  CardNotFoundError,
+  NotYourTurnError,
+} from "@/utils/errors";
 import type { Card } from "@/core";
 import type { Game, Player } from "@/types";
 import { getId } from "@/utils/getId";
@@ -25,7 +30,7 @@ export class TrucoPlayer implements Player {
 
   receiveCards(cards: Card[]) {
     if (cards.length !== 3) {
-      throw new Error("receiveCards expects 3 cards");
+      throw new NotEnoughCardsError();
     }
     this._cards = cards as [Card, Card, Card];
   }
@@ -39,14 +44,14 @@ export class TrucoPlayer implements Player {
       this.takeCard(card);
       this._game.currentRound.currentStep.addPlayerCard(this, card, isHidden);
     } else {
-      throw new Error("This is not your turn");
+      throw new NotYourTurnError();
     }
   }
 
   takeCard(takenCard: Card) {
     const cardIndex = this.cards.findIndex((card) => card.isEqual(takenCard));
     if (cardIndex === -1) {
-      throw new Error("Card not found");
+      throw new CardNotFoundError();
     }
     return this._cards.splice(cardIndex, 1);
   }

@@ -44,35 +44,113 @@ it("should allow player to drop cards on the table", () => {
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
   ];
-  expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.steps).toHaveLength(1);
-  expect(game.currentRound.currentStep.cards).toEqual([]);
-  expect(game.currentPlayer).toEqual(game.players[0]);
-
-  game.players[0].dropCard(new Card(1, Suit.Hearts));
-  expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.steps).toHaveLength(1);
+  const [player1, player2] = game.players;
+  player1.dropCard(new Card(1, Suit.Hearts));
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(1, Suit.Hearts), isHidden: false },
   ]);
-  expect(game.currentRound.currentStep.isDone).toEqual(false);
-  expect(game.currentPlayer).toEqual(game.players[1]);
-
-  game.players[1].dropCard(new Card(1, Suit.Clubs));
-  expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.steps).toHaveLength(1);
+  player2.dropCard(new Card(1, Suit.Clubs));
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(1, Suit.Hearts), isHidden: false },
     { card: new Card(1, Suit.Clubs), isHidden: false },
   ]);
-  expect(game.currentRound.currentStep.isDone).toEqual(true);
-  expect(game.currentPlayer).toEqual(null);
 
-  game.currentRound.advanceStep();
-  expect(game.rounds).toHaveLength(1);
-  expect(game.currentRound.steps).toHaveLength(2);
-  expect(game.currentRound.currentStep.cards).toEqual([]);
+  game.currentRound.continue();
+  player1.dropCard(new Card(2, Suit.Hearts));
+  assertStepHasCards(game.currentRound.currentStep, [
+    { card: new Card(2, Suit.Hearts), isHidden: false },
+  ]);
+  player2.dropCard(new Card(2, Suit.Clubs));
+  assertStepHasCards(game.currentRound.currentStep, [
+    { card: new Card(2, Suit.Hearts), isHidden: false },
+    { card: new Card(2, Suit.Clubs), isHidden: false },
+  ]);
+});
+
+it("should fill rounds, steps, currentRound, currentStep and currentPlayer as players drop cards", () => {
+  const game = new TrucoGame(customDeck);
+  game.players = [
+    new TrucoPlayer(game, "Jack"),
+    new TrucoPlayer(game, "Curtis"),
+  ];
+  const [player1, player2] = game.players;
   expect(game.currentPlayer).toEqual(game.players[0]);
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.steps).toHaveLength(1);
+  expect(game.currentRound.currentStep.cards).toEqual([]);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
+
+  player1.dropCard(player1.cards[0]);
+  expect(game.currentPlayer).toEqual(player2);
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.steps).toHaveLength(1);
+  expect(game.currentRound.currentStep.cards).toHaveLength(1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
+
+  player2.dropCard(player2.cards[0]);
+  expect(game.currentPlayer).toBeNull(); // because step is done
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(1);
+  expect(game.currentRound.currentStep.cards).toHaveLength(2);
+  expect(game.currentRound.currentStep.isDone).toEqual(true);
+
+  game.currentRound.continue(); // Has to explicitly continue game
+  expect(game.currentPlayer).toEqual(player1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(2);
+  expect(game.currentRound.currentStep.cards).toHaveLength(0);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
+
+  player1.dropCard(player1.cards[0]);
+  expect(game.currentPlayer).toEqual(player2);
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(2);
+  expect(game.currentRound.currentStep.cards).toHaveLength(1);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
+
+  player2.dropCard(player2.cards[0]);
+  expect(game.currentPlayer).toBeNull();
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(2);
+  expect(game.currentRound.currentStep.cards).toHaveLength(2);
+  expect(game.currentRound.currentStep.isDone).toEqual(true);
+
+  game.currentRound.continue();
+  expect(game.currentPlayer).toEqual(player1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(3);
+  expect(game.currentRound.currentStep.cards).toHaveLength(0);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
+
+  player1.dropCard(player1.cards[0]);
+  expect(game.currentPlayer).toEqual(player2);
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(3);
+  expect(game.currentRound.currentStep.cards).toHaveLength(1);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
+
+  player2.dropCard(player2.cards[0]);
+  expect(game.currentPlayer).toBeNull();
+  expect(game.rounds).toHaveLength(1);
+  expect(game.currentRound.isDone).toEqual(true);
+  expect(game.currentRound.steps).toHaveLength(3);
+  expect(game.currentRound.currentStep.cards).toHaveLength(2);
+  expect(game.currentRound.currentStep.isDone).toEqual(true);
+
+  expect(() => game.currentRound.continue()).toThrowError();
+  game.continue();
+  expect(game.currentPlayer).toEqual(player1);
+  expect(game.rounds).toHaveLength(2);
+  expect(game.currentRound.isDone).toEqual(false);
+  expect(game.currentRound.steps).toHaveLength(1);
+  expect(game.currentRound.currentStep.cards).toHaveLength(0);
+  expect(game.currentRound.currentStep.isDone).toEqual(false);
 });
 
 it("should allow player to drop card as hidden", () => {
@@ -93,24 +171,22 @@ it("should prevent player dropping multiple cards in the same round", () => {
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
   ];
-  game.players[0].dropCard(new Card(1, Suit.Hearts));
+  const [player1, player2] = game.players;
+  player1.dropCard(new Card(1, Suit.Hearts));
+  expect(() => player1.dropCard(new Card(2, Suit.Hearts))).toThrowError();
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(1, Suit.Hearts), isHidden: false },
   ]);
-  expect(() =>
-    game.players[0].dropCard(new Card(2, Suit.Hearts)),
-  ).toThrowError();
 
   // game can continue after that
-  game.players[1].dropCard(new Card(1, Suit.Clubs));
+  player2.dropCard(new Card(1, Suit.Clubs));
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(1, Suit.Hearts), isHidden: false },
     { card: new Card(1, Suit.Clubs), isHidden: false },
   ]);
-  expect(game.currentRound.currentStep.isDone).toEqual(true);
 
-  game.currentRound.advanceStep();
-  game.players[0].dropCard(new Card(2, Suit.Hearts));
+  game.currentRound.continue();
+  player1.dropCard(new Card(2, Suit.Hearts));
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(2, Suit.Hearts), isHidden: false },
   ]);

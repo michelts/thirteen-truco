@@ -1,3 +1,4 @@
+import { NotEnoughCardsError } from "@/utils/errors";
 import { shuffle } from "@/utils/shuffle";
 
 export enum Suit {
@@ -28,7 +29,7 @@ export class Deck {
   getHand(): [Card, Card, Card] {
     const cards = this.shuffledCards.splice(0, 3);
     if (!hasEnoughCards(cards)) {
-      throw Error("Not enough cards");
+      throw new NotEnoughCardsError();
     }
     return cards;
   }
@@ -36,7 +37,7 @@ export class Deck {
   getTrump(): Card {
     const card = this.shuffledCards.shift();
     if (!card) {
-      throw Error("Not enough cards");
+      throw new NotEnoughCardsError();
     }
     return card;
   }

@@ -4,14 +4,16 @@ export interface Game {
   deck: Deck;
   players: Player[];
   currentPlayer: Player | null;
-  passToNextPlayer: () => void;
   currentRound: Round;
+  isDone: boolean;
+  continue: () => void;
 }
 
 export interface Round {
   steps: Step[];
   currentStep: Step;
-  advanceStep: () => void;
+  isDone: boolean;
+  continue: () => void;
 }
 
 export interface Step {
