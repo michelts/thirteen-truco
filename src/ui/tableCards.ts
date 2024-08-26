@@ -6,6 +6,9 @@ import { cardPlaced } from "./events";
 
 export function renderTableCards(game: Game) {
   setTimeout(() => {
+    window.addEventListener("roundDone", (event) => {
+      redraw(event.detail.game);
+    });
     window.addEventListener("cardDropped", (event) => {
       redraw(event.detail.game);
       getElement("ltc").addEventListener("animationend", () => {

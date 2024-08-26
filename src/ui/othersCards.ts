@@ -7,6 +7,9 @@ import { cardDropped } from "./events";
 
 export function renderOthersCards(game: Game, player: Player) {
   setTimeout(() => {
+    window.addEventListener("roundDone", () => {
+      redraw(player);
+    });
     window.addEventListener("cardPicked", (event) => {
       if (event.detail.player === player) {
         redraw(player, event.detail.card);

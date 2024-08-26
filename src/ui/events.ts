@@ -23,3 +23,9 @@ export const cardPlaced = (game: Game, player: Player, card: Card) =>
     bubbles: true,
     detail: { game, player, card },
   });
+
+export const roundDone = (game: Game) =>
+  new CustomEvent("roundDone", {
+    bubbles: true,
+    detail: { game },
+  });

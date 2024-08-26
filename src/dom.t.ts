@@ -11,5 +11,6 @@ declare global {
       isHidden?: boolean;
     }>;
     cardPlaced: CustomEvent<{ game: Game; player: Player; card: Card }>;
+    roundDone: CustomEvent<{ game: Game }>;
   }
 }

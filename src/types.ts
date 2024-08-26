@@ -1,7 +1,6 @@
-import type { Card, Deck } from "@/core";
+import type { Card } from "@/core";
 
 export interface Game {
-  deck: Deck;
   players: Player[];
   currentPlayer: Player | null;
   currentRound: Round;
@@ -31,6 +30,7 @@ export interface Player {
   id: number;
   name: string;
   cards: Card[];
+  isEqual: (otherPlayer: Player) => boolean;
   autoPickCard?: () => Card;
   dropCard: (card: Card, isHidden?: boolean) => void;
   receiveCards: (cards: Card[]) => void;

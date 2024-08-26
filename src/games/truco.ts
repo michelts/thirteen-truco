@@ -3,20 +3,31 @@ import type { Card, Deck } from "@/core";
 import type { Game, Player, Round, Step, StepCard } from "@/types";
 
 export class TrucoGame implements Game {
-  deck: Deck;
   isDone = false;
+  private _deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
   private _currentPlayerIndex = 0;
 
   constructor(pack: Deck) {
-    this.deck = pack;
-    this.deck.shuffle();
+    this._deck = pack;
+    this._deck.shuffle();
     this._rounds.push(new TrucoRound(this));
   }
 
   get players() {
     return this._players;
+  }
+
+  set players(players) {
+    this._players = players;
+    this.distributeCards();
+  }
+
+  private distributeCards() {
+    for (const player of this._players) {
+      player.receiveCards(this._deck.getHand());
+    }
   }
 
   get currentPlayer() {
@@ -30,6 +41,7 @@ export class TrucoGame implements Game {
       this.currentRound.continue();
     } else {
       this._rounds.push(new TrucoRound(this));
+      this.distributeCards();
     }
   }
 
@@ -38,10 +50,6 @@ export class TrucoGame implements Game {
     if (this._currentPlayerIndex === this._players.length) {
       this._currentPlayerIndex = 0;
     }
-  }
-
-  set players(players) {
-    this._players = players;
   }
 
   get rounds() {

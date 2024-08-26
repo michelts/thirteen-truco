@@ -17,7 +17,10 @@ export class TrucoPlayer implements Player {
     this._id = getId();
     this._name = name;
     this._game = game;
-    this.receiveCards(this._game.deck.getHand());
+  }
+
+  isEqual(player: Player) {
+    return this.id === player.id;
   }
 
   get id() {

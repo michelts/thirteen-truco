@@ -1,3 +1,4 @@
+import { defaultDeck } from "@/config";
 import type { Step, StepCard } from "@/types";
 import { Card, Deck, Suit } from "@/core";
 import { TrucoPlayer } from "@/players";
@@ -68,7 +69,7 @@ it("should allow player to drop cards on the table", () => {
 });
 
 it("should fill rounds, steps, currentRound, currentStep and currentPlayer as players drop cards", () => {
-  const game = new TrucoGame(customDeck);
+  const game = new TrucoGame(defaultDeck); // use a deck with enough cards
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),
@@ -145,6 +146,8 @@ it("should fill rounds, steps, currentRound, currentStep and currentPlayer as pl
 
   expect(() => game.currentRound.continue()).toThrowError();
   game.continue();
+  expect(game.players[0].cards).toHaveLength(3);
+  expect(game.players[1].cards).toHaveLength(3);
   expect(game.currentPlayer).toEqual(player1);
   expect(game.rounds).toHaveLength(2);
   expect(game.currentRound.isDone).toEqual(false);

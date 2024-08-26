@@ -6,6 +6,9 @@ import { cardDropped } from "./events";
 
 export function renderMyCards(game: Game, player: Player) {
   setTimeout(() => {
+    window.addEventListener("roundDone", () => {
+      redraw(game, player);
+    });
     window.addEventListener("cardDropped", (event) => {
       if (event.detail.player === player) {
         redraw(game, player);
@@ -23,7 +26,7 @@ function render(game: Game, player: Player) {
 
 function renderPlayerCard(game: Game, player: Player, card: Card) {
   const id = `mc-${card.cardNumber}-${card.suit}`;
-  setTimeout(() => listenToEvents(game, player, card, id));
+  setTimeout(() => listenToCardEvents(game, player, card, id));
   return `<button id="${id}">${renderCard(card)}</button>`;
 }
 
@@ -31,7 +34,12 @@ function redraw(game: Game, player: Player) {
   getElement("mc").innerHTML = render(game, player);
 }
 
-function listenToEvents(game: Game, player: Player, card: Card, id: string) {
+function listenToCardEvents(
+  game: Game,
+  player: Player,
+  card: Card,
+  id: string,
+) {
   let isDragging = false;
   let originalX = 0;
   let originalY = 0;

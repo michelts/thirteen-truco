@@ -9,7 +9,7 @@ import { renderPlayer } from "./player";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
-import { cardPicked } from "./events";
+import { cardPicked, roundDone } from "./events";
 import { getElement } from "@/utils/getElement";
 
 export function renderApp(game: Game) {
@@ -26,7 +26,10 @@ export function renderApp(game: Game) {
     });
 
     window.addEventListener("cardPlaced", (event) => {
-      if (event.detail.game.currentRound.currentStep.isDone) {
+      if (event.detail.game.currentRound.isDone) {
+        event.detail.game.continue();
+        dispatchEvent(roundDone(game));
+      } else if (event.detail.game.currentRound.currentStep.isDone) {
         event.detail.game.currentRound.continue();
       }
     });
