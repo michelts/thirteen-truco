@@ -84,7 +84,7 @@ it("should fill rounds, steps and score as players drop cards", () => {
   expect(game.currentRound.isDone).toEqual(false);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  player1.dropCard(player1.cards[0]);
+  player1.dropCard(new Card(1, Suit.Hearts));
   expect(game.currentPlayer).toEqual(player2);
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.steps).toHaveLength(1);
@@ -92,7 +92,7 @@ it("should fill rounds, steps and score as players drop cards", () => {
   expect(game.currentRound.isDone).toEqual(false);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  player2.dropCard(player2.cards[0]);
+  player2.dropCard(new Card(1, Suit.Clubs));
   expect(game.currentPlayer).toBeNull(); // because step is done
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.isDone).toEqual(false);
@@ -107,7 +107,7 @@ it("should fill rounds, steps and score as players drop cards", () => {
   expect(game.currentRound.currentStep.cards).toHaveLength(0);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  player1.dropCard(player1.cards[0]);
+  player1.dropCard(new Card(2, Suit.Hearts));
   expect(game.currentPlayer).toEqual(player2);
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.isDone).toEqual(false);
@@ -115,7 +115,7 @@ it("should fill rounds, steps and score as players drop cards", () => {
   expect(game.currentRound.currentStep.cards).toHaveLength(1);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  player2.dropCard(player2.cards[0]);
+  player2.dropCard(new Card(2, Suit.Clubs));
   expect(game.currentPlayer).toBeNull();
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.isDone).toEqual(false);
@@ -130,7 +130,7 @@ it("should fill rounds, steps and score as players drop cards", () => {
   expect(game.currentRound.currentStep.cards).toHaveLength(0);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  player1.dropCard(player1.cards[0]);
+  player1.dropCard(new Card(3, Suit.Hearts));
   expect(game.currentPlayer).toEqual(player2);
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.isDone).toEqual(false);
@@ -138,7 +138,7 @@ it("should fill rounds, steps and score as players drop cards", () => {
   expect(game.currentRound.currentStep.cards).toHaveLength(1);
   expect(game.currentRound.currentStep.isDone).toEqual(false);
 
-  player2.dropCard(player2.cards[0]);
+  player2.dropCard(new Card(3, Suit.Clubs));
   expect(game.currentPlayer).toBeNull();
   expect(game.rounds).toHaveLength(1);
   expect(game.currentRound.isDone).toEqual(true);
