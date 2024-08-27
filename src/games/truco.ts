@@ -2,16 +2,26 @@ import { RoundFullError } from "@/utils/errors";
 import type { Card, Deck } from "@/core";
 import type { Game, Player, Round, Step, StepCard } from "@/types";
 
+type StepComparerFunc = (cards: Card[]) => Card[];
+
+const defaultStepComparer: StepComparerFunc = (cards) => {
+  return cards.slice(0, 1);
+};
+
 export class TrucoGame implements Game {
   isDone = false;
+  stepComparer: StepComparerFunc = defaultStepComparer;
   private _deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
   private _currentPlayerIndex = 0;
 
-  constructor(pack: Deck) {
+  constructor(pack: Deck, stepComparer?: StepComparerFunc) {
     this._deck = pack;
     this._deck.shuffle();
+    if (stepComparer) {
+      this.stepComparer = stepComparer;
+    }
     this._rounds.push(new TrucoRound(this));
   }
 
@@ -62,7 +72,7 @@ export class TrucoGame implements Game {
 }
 
 class TrucoRound implements Round {
-  private game: TrucoGame;
+  game: TrucoGame;
   private _steps: TrucoRoundStep[] = [];
   private _roundSteps = 3;
 
@@ -73,7 +83,7 @@ class TrucoRound implements Round {
 
   continue() {
     if (this._steps.length < this._roundSteps) {
-      this._steps.push(new TrucoRoundStep(this.game));
+      this._steps.push(new TrucoRoundStep(this));
     } else {
       throw new RoundFullError();
     }
@@ -92,12 +102,16 @@ class TrucoRound implements Round {
   }
 }
 
-class TrucoRoundStep implements Step {
-  private _game: TrucoGame;
+interface TrucoStep {
+  bestCards: Card[];
+}
+
+class TrucoRoundStep implements Step, TrucoStep {
+  private _round: TrucoRound;
   private _cards: TrucoStepCard[] = [];
 
-  constructor(game: TrucoGame) {
-    this._game = game;
+  constructor(round: TrucoRound) {
+    this._round = round;
   }
 
   get cards() {
@@ -105,27 +119,43 @@ class TrucoRoundStep implements Step {
   }
 
   addPlayerCard(player: Player, card: Card, isHidden?: boolean) {
-    this._cards.push(new TrucoStepCard(player, card, isHidden ?? false));
-    this._game.passToNextPlayer();
+    this._cards.push(new TrucoStepCard(this, player, card, isHidden ?? false));
+    this._round.game.passToNextPlayer();
   }
 
   get isDone() {
-    return this.cards.length === this._game.players.length;
+    return this.cards.length === this._round.game.players.length;
+  }
+
+  get bestCards() {
+    if (!this.isDone) {
+      return [];
+    }
+    return this._round.game.stepComparer(
+      this.cards.map((stepCard) => stepCard.card),
+    );
   }
 }
 
 class TrucoStepCard implements StepCard {
+  private _step: TrucoRoundStep;
   player: Player;
   card: Card;
   isHidden: boolean;
 
-  constructor(player: Player, card: Card, isHidden: boolean) {
+  constructor(
+    step: TrucoRoundStep,
+    player: Player,
+    card: Card,
+    isHidden: boolean,
+  ) {
+    this._step = step;
     this.player = player;
     this.card = card;
     this.isHidden = isHidden;
   }
 
   get isBest() {
-    return false;
+    return this._step.bestCards.some((card) => card.isEqual(this.card));
   }
 }

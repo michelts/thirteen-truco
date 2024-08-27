@@ -31,13 +31,13 @@ function render(game: Game, showBestCards?: boolean) {
   return game.currentRound.steps
     .map((step, stepIndex) => {
       return `<div>${step.cards
-        .map((card, cardIndex) => {
+        .map((stepCard, cardIndex) => {
           const isLatestCard =
             !showBestCards &&
             stepIndex + 1 === game.currentRound.steps.length &&
             cardIndex + 1 === game.currentRound.currentStep.cards.length;
-          const isBestCard = showBestCards && card.isBest;
-          return renderTableCard(card, [
+          const isBestCard = showBestCards && stepCard.isBest;
+          return renderTableCard(stepCard, [
             isLatestCard ? "ltc" : "",
             isBestCard ? "btc" : "",
           ]);
@@ -51,8 +51,8 @@ function redraw(game: Game, showBestCards?: boolean) {
   getElement("t").innerHTML = render(game, showBestCards);
 }
 
-function renderTableCard(card: StepCard, classNames: string[]) {
+function renderTableCard(stepCard: StepCard, classNames: string[]) {
   return `<div class="tc ${classNames.join(" ")}">
-      ${card.isHidden ? renderCardBack() : renderCard(card.card)}
+      ${stepCard.isHidden ? renderCardBack() : renderCard(stepCard.card)}
     </div>`;
 }
