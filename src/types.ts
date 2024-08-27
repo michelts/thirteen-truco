@@ -24,6 +24,7 @@ export interface Step {
 export interface StepCard {
   card: Card;
   isHidden: boolean;
+  isBest: boolean;
 }
 
 export interface Player {

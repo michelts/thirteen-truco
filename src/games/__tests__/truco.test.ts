@@ -1,3 +1,4 @@
+import type { SetRequired } from "type-fest";
 import type { Step, StepCard } from "@/types";
 import { Card, Deck, Suit } from "@/core";
 import { TrucoPlayer } from "@/players";
@@ -50,23 +51,23 @@ it("should allow player to drop cards on the table", () => {
   const [player1, player2] = game.players;
   player1.dropCard(new Card(1, Suit.Hearts));
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(1, Suit.Hearts), isHidden: false },
+    { card: new Card(1, Suit.Hearts) },
   ]);
   player2.dropCard(new Card(1, Suit.Clubs));
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(1, Suit.Hearts), isHidden: false },
-    { card: new Card(1, Suit.Clubs), isHidden: false },
+    { card: new Card(1, Suit.Hearts) },
+    { card: new Card(1, Suit.Clubs) },
   ]);
 
   game.currentRound.continue();
   player1.dropCard(new Card(2, Suit.Hearts));
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(2, Suit.Hearts), isHidden: false },
+    { card: new Card(2, Suit.Hearts) },
   ]);
   player2.dropCard(new Card(2, Suit.Clubs));
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(2, Suit.Hearts), isHidden: false },
-    { card: new Card(2, Suit.Clubs), isHidden: false },
+    { card: new Card(2, Suit.Hearts) },
+    { card: new Card(2, Suit.Clubs) },
   ]);
 });
 
@@ -180,26 +181,33 @@ it("should prevent player dropping multiple cards in the same round", () => {
   player1.dropCard(new Card(1, Suit.Hearts));
   expect(() => player1.dropCard(new Card(2, Suit.Hearts))).toThrowError();
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(1, Suit.Hearts), isHidden: false },
+    { card: new Card(1, Suit.Hearts) },
   ]);
 
   // game can continue after that
   player2.dropCard(new Card(1, Suit.Clubs));
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(1, Suit.Hearts), isHidden: false },
-    { card: new Card(1, Suit.Clubs), isHidden: false },
+    { card: new Card(1, Suit.Hearts) },
+    { card: new Card(1, Suit.Clubs) },
   ]);
 
   game.currentRound.continue();
   player1.dropCard(new Card(2, Suit.Hearts));
   assertStepHasCards(game.currentRound.currentStep, [
-    { card: new Card(2, Suit.Hearts), isHidden: false },
+    { card: new Card(2, Suit.Hearts) },
   ]);
 });
 
-function assertStepHasCards(step: Step, expectedCards: StepCard[]) {
+function assertStepHasCards(
+  step: Step,
+  expectedCards: SetRequired<Partial<StepCard>, "card">[],
+) {
   expect(step.cards).toHaveLength(expectedCards.length);
   step.cards.forEach((card, index) => {
-    expect(card).toMatchObject(expectedCards[index]);
+    expect(card).toMatchObject({
+      isHidden: false,
+      isBest: false,
+      ...expectedCards[index],
+    });
   });
 }

@@ -124,4 +124,8 @@ class TrucoStepCard implements StepCard {
     this.card = card;
     this.isHidden = isHidden;
   }
+
+  get isBest() {
+    return false;
+  }
 }

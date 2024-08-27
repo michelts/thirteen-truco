@@ -36,5 +36,8 @@
     "vite-plugin-singlefile": "^2.0.2",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "type-fest": "^4.25.0"
   }
 }

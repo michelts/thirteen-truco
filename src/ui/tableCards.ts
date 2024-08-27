@@ -36,7 +36,7 @@ function render(game: Game, showBestCards?: boolean) {
             !showBestCards &&
             stepIndex + 1 === game.currentRound.steps.length &&
             cardIndex + 1 === game.currentRound.currentStep.cards.length;
-          const isBestCard = showBestCards && cardIndex === 0;
+          const isBestCard = showBestCards && card.isBest;
           return renderTableCard(card, [
             isLatestCard ? "ltc" : "",
             isBestCard ? "btc" : "",
