@@ -14,7 +14,6 @@ export class TrucoGame implements Game {
 
   constructor(pack: Deck, filterBestCards?: BestCardsFilterFunc) {
     this.deck = pack;
-    this.deck.shuffle();
     if (filterBestCards) {
       this.filterBestCards = filterBestCards;
     }
@@ -31,6 +30,7 @@ export class TrucoGame implements Game {
   }
 
   private distributeCards() {
+    this.deck.shuffle();
     for (const player of this._players) {
       player.receiveCards(this.deck.getHand());
     }

@@ -2,7 +2,7 @@ import type { SetRequired } from "type-fest";
 import type { Step, StepCard } from "@/types";
 import { Card, Deck, Suit } from "@/core";
 import { TrucoPlayer } from "@/players";
-import { expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { TrucoGame } from "../index";
 
 const cards = [
@@ -21,26 +21,6 @@ const cards = [
 ];
 
 const directOrderDeck = new Deck(cards, (cards) => cards);
-
-const reverseOrderDeck = new Deck(cards, (cards) => cards.reverse());
-
-it("should shuffle the deck and give 3 distinct cards to each player", () => {
-  const game = new TrucoGame(reverseOrderDeck);
-  game.players = [
-    new TrucoPlayer(game, "Jack"),
-    new TrucoPlayer(game, "Curtis"),
-  ];
-  expect(game.players[0].cards).toEqual([
-    new Card(6, Suit.Clubs),
-    new Card(5, Suit.Clubs),
-    new Card(4, Suit.Clubs),
-  ]);
-  expect(game.players[1].cards).toEqual([
-    new Card(6, Suit.Hearts),
-    new Card(5, Suit.Hearts),
-    new Card(4, Suit.Hearts),
-  ]);
-});
 
 it("should allow player to drop cards on the table", () => {
   const game = new TrucoGame(directOrderDeck);
@@ -234,6 +214,51 @@ it("should prevent player dropping multiple cards in the same round", () => {
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(2, Suit.Hearts) },
   ]);
+});
+
+describe("card shuffling", () => {
+  it("should shuffle the deck and give 3 distinct cards to each players on every round", () => {
+    const sorter = vi
+      .fn<(cards: Card[]) => Card[]>()
+      .mockImplementationOnce((cards) => cards)
+      .mockImplementationOnce((cards) => cards.reverse());
+    const customDeck = new Deck(cards.slice(0, 6), sorter);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    const [player1, player2] = game.players;
+    expect(player1.cards).toEqual([
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(3, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Hearts),
+    ]);
+    for (const index of [3, 2, 1]) {
+      player1.dropCard(new Card(index, Suit.Clubs));
+      player2.dropCard(new Card(index, Suit.Hearts));
+      if (index !== 1) {
+        game.currentRound.continue();
+      }
+    }
+    // New round should shuffle again
+    game.continue();
+    expect(player1.cards).toEqual([
+      new Card(1, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(3, Suit.Hearts),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Clubs),
+    ]);
+  });
 });
 
 function assertStepHasCards(
