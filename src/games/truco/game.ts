@@ -128,7 +128,9 @@ class TrucoRoundStep implements Step, TrucoStep {
       return [];
     }
     return this._round.game.filterBestCards(
-      this.cards.map((stepCard) => stepCard.card),
+      this.cards
+        .filter((stepCard) => !stepCard.isHidden)
+        .map((stepCard) => stepCard.card),
       this._round.game.deck,
     );
   }

@@ -171,11 +171,11 @@ it("should indicate best cards when step is done", () => {
   ];
   const [player1, player2, player3, player4] = game.players;
   player1.dropCard(new Card(1, Suit.Hearts));
-  player2.dropCard(new Card(2, Suit.Clubs));
+  player2.dropCard(new Card(2, Suit.Clubs), true);
   player3.dropCard(new Card(4, Suit.Hearts));
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(1, Suit.Hearts), isBest: false },
-    { card: new Card(2, Suit.Clubs), isBest: false },
+    { card: new Card(2, Suit.Clubs), isHidden: true, isBest: false },
     { card: new Card(4, Suit.Hearts), isBest: false },
   ]);
 
@@ -183,10 +183,18 @@ it("should indicate best cards when step is done", () => {
   expect(game.currentRound.currentStep.isDone).toBe(true);
   assertStepHasCards(game.currentRound.currentStep, [
     { card: new Card(1, Suit.Hearts), isBest: true },
-    { card: new Card(2, Suit.Clubs), isBest: false },
+    { card: new Card(2, Suit.Clubs), isHidden: true, isBest: false },
     { card: new Card(4, Suit.Hearts), isBest: true },
     { card: new Card(6, Suit.Clubs), isBest: false },
   ]);
+  expect(filterBestCards).toHaveBeenCalledWith(
+    [
+      new Card(1, Suit.Hearts),
+      new Card(4, Suit.Hearts),
+      new Card(6, Suit.Clubs),
+    ],
+    directOrderDeck,
+  );
 });
 
 it("should allow player to drop card as hidden", () => {
