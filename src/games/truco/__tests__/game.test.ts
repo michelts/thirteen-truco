@@ -161,8 +161,8 @@ it("should fill rounds, steps and score as players drop cards", () => {
 
 it("should indicate best cards when step is done", () => {
   const bestCards = [new Card(1, Suit.Hearts), new Card(4, Suit.Hearts)];
-  const stepComparer = vi.fn().mockReturnValue(bestCards);
-  const game = new TrucoGame(directOrderDeck, stepComparer);
+  const filterBestCards = vi.fn().mockReturnValue(bestCards);
+  const game = new TrucoGame(directOrderDeck, filterBestCards);
   game.players = [
     new TrucoPlayer(game, "Jack"),
     new TrucoPlayer(game, "Curtis"),

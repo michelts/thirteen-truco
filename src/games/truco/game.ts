@@ -2,25 +2,25 @@ import { RoundFullError } from "@/utils/errors";
 import type { Card, Deck } from "@/core";
 import type { Game, Player, Round, Step, StepCard } from "@/types";
 
-type StepComparerFunc = (cards: Card[]) => Card[];
+type BestCardsFilterFunc = (cards: Card[]) => Card[];
 
-const trucoStepComparer: StepComparerFunc = (cards) => {
+const filterTrucoBestCards: BestCardsFilterFunc = (cards) => {
   return cards.slice(0, 1);
 };
 
 export class TrucoGame implements Game {
   isDone = false;
-  stepComparer: StepComparerFunc = trucoStepComparer;
+  filterBestCards: BestCardsFilterFunc = filterTrucoBestCards;
   private _deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
   private _currentPlayerIndex = 0;
 
-  constructor(pack: Deck, stepComparer?: StepComparerFunc) {
+  constructor(pack: Deck, filterBestCards?: BestCardsFilterFunc) {
     this._deck = pack;
     this._deck.shuffle();
-    if (stepComparer) {
-      this.stepComparer = stepComparer;
+    if (filterBestCards) {
+      this.filterBestCards = filterBestCards;
     }
     this._rounds.push(new TrucoRound(this));
   }
@@ -131,7 +131,7 @@ class TrucoRoundStep implements Step, TrucoStep {
     if (!this.isDone) {
       return [];
     }
-    return this._round.game.stepComparer(
+    return this._round.game.filterBestCards(
       this.cards.map((stepCard) => stepCard.card),
     );
   }
