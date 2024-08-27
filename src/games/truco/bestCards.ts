@@ -1,3 +1,4 @@
+import type { Card } from "@/core";
 import type { BestCardsFilterFunc } from "@/types";
 
 export const filterTrucoBestCards: BestCardsFilterFunc = (cards, deck) => {
