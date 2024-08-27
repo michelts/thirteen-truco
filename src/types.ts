@@ -1,4 +1,4 @@
-import type { Card } from "@/core";
+import type { Card, Deck } from "@/core";
 
 export interface Game {
   players: Player[];
@@ -36,3 +36,5 @@ export interface Player {
   dropCard: (card: Card, isHidden?: boolean) => void;
   receiveCards: (cards: Card[]) => void;
 }
+
+export type BestCardsFilterFunc = (cards: Card[], deck: Deck) => Card[];
