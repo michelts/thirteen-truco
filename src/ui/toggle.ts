@@ -1,4 +1,4 @@
-import { getElement } from "@/utils/getElement";
+import { getElement } from "@/utils/elements";
 import { getId } from "@/utils/getId";
 
 export function renderToggle(

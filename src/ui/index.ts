@@ -10,7 +10,7 @@ import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
 import { cardPicked, roundDone } from "./events";
-import { getElement } from "@/utils/getElement";
+import { getElement } from "@/utils/elements";
 
 export function renderApp(game: Game) {
   const root = getElement("app");

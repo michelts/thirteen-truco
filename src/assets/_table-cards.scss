@@ -52,10 +52,17 @@
 }
 
 // latest card
-#ltc {
+.ltc {
   opacity: 0;
-  animation: ease-out $table-card-animation-timeout 1 fade-in;
+  animation: ease-out $table-card-placing-animation-timeout 1 fade-in;
   animation-fill-mode: forwards;
+}
+
+// best card
+.btc {
+  box-shadow: 0 0 5px 5px rgb(213 211 39 / 60%);
+  border-radius: $card-border-radius;
+  animation: ease-out ($table-card-glowing-animation-timeout * 3) 1 glow;
 }
 
 @media (min-width: 600px) {
@@ -67,4 +74,11 @@
 @keyframes fade-in {
   0% { opacity: 0 }
   100% { opacity: 1 }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px 5px rgba(213, 211, 39, 0); }
+  33% { box-shadow: 0 0 5px 5px rgba(213, 211, 39, .6); }
+  66% { box-shadow: 0 0 5px 5px rgba(213, 211, 39, .6); }
+  100% { box-shadow: 0 0 5px 5px rgba(213, 211, 39, 0); }
 }

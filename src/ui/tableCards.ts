@@ -1,47 +1,58 @@
-import type { Game } from "@/types";
-import { getElement } from "@/utils/getElement";
+import type { Game, StepCard } from "@/types";
+import { getElement, findElement } from "@/utils/elements";
 import { renderCard } from "./card";
 import { renderCardBack } from "./cardBack";
 import { cardPlaced, roundAcknowledged } from "./events";
 
 export function renderTableCards(game: Game) {
   setTimeout(() => {
-    window.addEventListener("roundDone", (event) => {
-      setTimeout(() => {
-        dispatchEvent(roundAcknowledged(event.detail.game));
-      }, 1000);
-    });
-    window.addEventListener("roundAcknowledged", (event) => {
-      redraw(event.detail.game);
-    });
     window.addEventListener("cardDropped", (event) => {
       redraw(event.detail.game);
-      getElement("ltc").addEventListener("animationend", () => {
+      findElement(".ltc").addEventListener("animationend", () => {
         dispatchEvent(
           cardPlaced(event.detail.game, event.detail.player, event.detail.card),
         );
       });
     });
+    window.addEventListener("roundDone", (event) => {
+      redraw(event.detail.game, true);
+      findElement(".btc").addEventListener("animationend", () => {
+        dispatchEvent(roundAcknowledged(event.detail.game));
+      });
+    });
+    window.addEventListener("roundAcknowledged", (event) => {
+      redraw(event.detail.game);
+    });
   });
   return `<div class="t"><div id="t">${render(game)}</div></div>`;
 }
 
-function render(game: Game) {
+function render(game: Game, showBestCards?: boolean) {
   return game.currentRound.steps
-    .map(
-      (step, stepIndex) =>
-        `<div>${step.cards
-          .map((card, cardIndex) => {
-            const latestCard =
-              stepIndex + 1 === game.currentRound.steps.length &&
-              cardIndex + 1 === game.currentRound.currentStep.cards.length;
-            return `<div ${latestCard ? 'id="ltc"' : ""} class="tc">${card.isHidden ? renderCardBack() : renderCard(card.card)}</div>`;
-          })
-          .join(" ")}</div>`,
-    )
+    .map((step, stepIndex) => {
+      return `<div>${step.cards
+        .map((card, cardIndex) => {
+          const isLatestCard =
+            !showBestCards &&
+            stepIndex + 1 === game.currentRound.steps.length &&
+            cardIndex + 1 === game.currentRound.currentStep.cards.length;
+          const isBestCard = showBestCards && cardIndex === 0;
+          return renderTableCard(card, [
+            isLatestCard ? "ltc" : "",
+            isBestCard ? "btc" : "",
+          ]);
+        })
+        .join(" ")}</div>`;
+    })
     .join("");
 }
 
-function redraw(game: Game) {
-  getElement("t").innerHTML = render(game);
+function redraw(game: Game, showBestCards?: boolean) {
+  getElement("t").innerHTML = render(game, showBestCards);
+}
+
+function renderTableCard(card: StepCard, classNames: string[]) {
+  return `<div class="tc ${classNames.join(" ")}">
+      ${card.isHidden ? renderCardBack() : renderCard(card.card)}
+    </div>`;
 }
