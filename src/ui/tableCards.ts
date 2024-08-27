@@ -16,8 +16,12 @@ export function renderTableCards(game: Game) {
     });
     window.addEventListener("roundDone", (event) => {
       redraw(event.detail.game, true);
+      let hasBeenDispatched = false;
       findElement(".btc").addEventListener("animationend", () => {
-        dispatchEvent(roundAcknowledged(event.detail.game));
+        if (!hasBeenDispatched) {
+          dispatchEvent(roundAcknowledged(event.detail.game));
+          hasBeenDispatched = true;
+        }
       });
     });
     window.addEventListener("roundAcknowledged", (event) => {
