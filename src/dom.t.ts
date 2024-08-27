@@ -12,5 +12,6 @@ declare global {
     }>;
     cardPlaced: CustomEvent<{ game: Game; player: Player; card: Card }>;
     roundDone: CustomEvent<{ game: Game }>;
+    roundAcknowledged: CustomEvent<{ game: Game }>;
   }
 }

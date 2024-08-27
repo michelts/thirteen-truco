@@ -7,7 +7,7 @@ import { cardDropped } from "./events";
 
 export function renderOthersCards(game: Game, player: Player) {
   setTimeout(() => {
-    window.addEventListener("roundDone", () => {
+    window.addEventListener("roundAcknowledged", () => {
       redraw(player);
     });
     window.addEventListener("cardPicked", (event) => {

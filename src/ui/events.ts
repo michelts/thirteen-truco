@@ -29,3 +29,9 @@ export const roundDone = (game: Game) =>
     bubbles: true,
     detail: { game },
   });
+
+export const roundAcknowledged = (game: Game) =>
+  new CustomEvent("roundAcknowledged", {
+    bubbles: true,
+    detail: { game },
+  });

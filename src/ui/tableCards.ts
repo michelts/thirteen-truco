@@ -2,11 +2,16 @@ import type { Game } from "@/types";
 import { getElement } from "@/utils/getElement";
 import { renderCard } from "./card";
 import { renderCardBack } from "./cardBack";
-import { cardPlaced } from "./events";
+import { cardPlaced, roundAcknowledged } from "./events";
 
 export function renderTableCards(game: Game) {
   setTimeout(() => {
     window.addEventListener("roundDone", (event) => {
+      setTimeout(() => {
+        dispatchEvent(roundAcknowledged(event.detail.game));
+      }, 1000);
+    });
+    window.addEventListener("roundAcknowledged", (event) => {
       redraw(event.detail.game);
     });
     window.addEventListener("cardDropped", (event) => {

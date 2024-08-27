@@ -27,11 +27,14 @@ export function renderApp(game: Game) {
 
     window.addEventListener("cardPlaced", (event) => {
       if (event.detail.game.currentRound.isDone) {
-        event.detail.game.continue();
         dispatchEvent(roundDone(game));
       } else if (event.detail.game.currentRound.currentStep.isDone) {
         event.detail.game.currentRound.continue();
       }
+    });
+
+    window.addEventListener("roundAcknowledged", (event) => {
+      event.detail.game.continue();
     });
   });
 
