@@ -4,13 +4,13 @@ import type { Game, Player, Round, Step, StepCard } from "@/types";
 
 type StepComparerFunc = (cards: Card[]) => Card[];
 
-const defaultStepComparer: StepComparerFunc = (cards) => {
+const trucoStepComparer: StepComparerFunc = (cards) => {
   return cards.slice(0, 1);
 };
 
 export class TrucoGame implements Game {
   isDone = false;
-  stepComparer: StepComparerFunc = defaultStepComparer;
+  stepComparer: StepComparerFunc = trucoStepComparer;
   private _deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
