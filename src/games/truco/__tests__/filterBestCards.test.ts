@@ -51,7 +51,7 @@ it("should consider the previous card number before the turned card as trump car
   expect(bestCards).toEqual([new Card(11, Suit.Hearts)]);
 });
 
-it.only("should consider the last card number as trump card if turned card is the first from list", () => {
+it("should consider the last card number as trump card if turned card is the first from list", () => {
   const cardsFromHighestToLowest = [
     new Card(3, Suit.Clubs),
     new Card(3, Suit.Hearts),

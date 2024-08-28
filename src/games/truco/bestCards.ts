@@ -24,7 +24,6 @@ function getTrumpCardNumber(
   const cardsFromLowestToHighest = [...cardsFromHighestToLowest].reverse();
   let turnedCardNumber = null;
   for (const card of cardsFromLowestToHighest) {
-    console.log({ card: card.toString(), turnedCardNumber });
     if (card.isEqual(turnedCard)) {
       turnedCardNumber = card.cardNumber;
     }
@@ -43,10 +42,6 @@ function getHighestAccountingDrawsAndTrump(
   candidates: Card[],
   trumpCardNumber: number,
 ) {
-  console.log({
-    candidates: candidates.map((x) => x.toString()),
-    trumpCardNumber,
-  });
   const highestCards = [];
   const highestCardNumber = candidates[0].cardNumber;
   for (const card of candidates) {
