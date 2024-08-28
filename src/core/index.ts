@@ -26,25 +26,13 @@ export class Deck {
     this.shuffleFunc(this.shuffledCards);
   }
 
-  getHand(): [Card, Card, Card] {
-    const cards = this.shuffledCards.splice(0, 3);
-    if (!hasEnoughCards(cards)) {
+  getCards(count: number): Card[] {
+    const cards = this.shuffledCards.splice(0, count);
+    if (cards.length !== count) {
       throw new NotEnoughCardsError();
     }
     return cards;
   }
-
-  getTrump(): Card {
-    const card = this.shuffledCards.shift();
-    if (!card) {
-      throw new NotEnoughCardsError();
-    }
-    return card;
-  }
-}
-
-function hasEnoughCards<T>(cards: T[]): cards is [T, T, T] {
-  return cards.length === 3;
 }
 
 export class Card {

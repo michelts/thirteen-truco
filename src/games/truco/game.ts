@@ -8,6 +8,7 @@ export class TrucoGame implements Game {
   isDone = false;
   filterBestCards: BestCardsFilterFunc = filterTrucoBestCards;
   deck: Deck;
+  turnedCard?: Card;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
   private _currentPlayerIndex = 0;
@@ -31,8 +32,9 @@ export class TrucoGame implements Game {
 
   private distributeCards() {
     this.deck.shuffle();
+    this.turnedCard = this.deck.getCards(1)[0];
     for (const player of this._players) {
-      player.receiveCards(this.deck.getHand());
+      player.receiveCards(this.deck.getCards(3));
     }
   }
 
