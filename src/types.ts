@@ -38,4 +38,8 @@ export interface Player {
   receiveCards: (cards: Card[]) => void;
 }
 
-export type BestCardsFilterFunc = (cards: Card[], deck: Deck) => Card[];
+export type BestCardsFilterFunc = (
+  cards: Card[],
+  cardsFromHighestToLowest: Card[],
+  turnedCard: Card,
+) => Card[];

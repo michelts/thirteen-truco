@@ -47,4 +47,8 @@ export class Card {
   isEqual(card: Card) {
     return this.cardNumber === card.cardNumber && this.suit === card.suit;
   }
+
+  toString() {
+    return `${this.cardNumber}s${this.suit}`;
+  }
 }
