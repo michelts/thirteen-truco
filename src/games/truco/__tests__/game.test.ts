@@ -5,23 +5,8 @@ import { TrucoPlayer } from "@/players";
 import { describe, expect, it, vi } from "vitest";
 import { TrucoGame } from "../index";
 
-const cards = [
-  new Card(1, Suit.Hearts),
-  new Card(2, Suit.Hearts),
-  new Card(3, Suit.Hearts),
-  new Card(1, Suit.Clubs),
-  new Card(2, Suit.Clubs),
-  new Card(3, Suit.Clubs),
-  new Card(4, Suit.Hearts),
-  new Card(5, Suit.Hearts),
-  new Card(6, Suit.Hearts),
-  new Card(4, Suit.Clubs),
-  new Card(5, Suit.Clubs),
-  new Card(6, Suit.Clubs),
-];
-
 describe("card shuffling", () => {
-  it.only("should shuffle the deck, give 3 distinct cards to each player and set turned card and on every round", () => {
+  it("should shuffle the deck, give 3 distinct cards to each player and set turned card and on every round", () => {
     const sorter = vi
       .fn<(cards: Card[]) => Card[]>()
       .mockImplementationOnce((cards) => cards)
@@ -80,6 +65,22 @@ describe("card shuffling", () => {
 });
 
 describe("game playing", () => {
+  const cards = [
+    new Card(12, Suit.Spades),
+    new Card(1, Suit.Hearts),
+    new Card(2, Suit.Hearts),
+    new Card(3, Suit.Hearts),
+    new Card(1, Suit.Clubs),
+    new Card(2, Suit.Clubs),
+    new Card(3, Suit.Clubs),
+    new Card(4, Suit.Hearts),
+    new Card(5, Suit.Hearts),
+    new Card(6, Suit.Hearts),
+    new Card(4, Suit.Clubs),
+    new Card(5, Suit.Clubs),
+    new Card(6, Suit.Clubs),
+  ];
+
   const directOrderDeck = new Deck(cards, (cards) => cards);
 
   it("should allow player to drop cards on the table", () => {
