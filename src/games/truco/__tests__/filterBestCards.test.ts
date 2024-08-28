@@ -1,4 +1,4 @@
-import { Card, Deck, Suit } from "@/core";
+import { Card, Suit } from "@/core";
 import { expect, it } from "vitest";
 import { filterTrucoBestCards } from "../bestCards";
 

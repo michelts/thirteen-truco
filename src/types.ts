@@ -1,4 +1,4 @@
-import type { Card, Deck } from "@/core";
+import type { Card } from "@/core";
 
 export interface Game {
   players: Player[];
