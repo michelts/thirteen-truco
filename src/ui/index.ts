@@ -11,6 +11,7 @@ import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
 import { cardPicked, roundDone } from "./events";
 import { getElement } from "@/utils/elements";
+import { renderTurnedCard } from "./turnedCard";
 
 export function renderApp(game: Game) {
   const root = getElement("app");
@@ -46,7 +47,7 @@ export function renderApp(game: Game) {
     ) +
     renderKitchenTable(
       renderTableCards(game) +
-        renderCardDeck() +
+        renderCardDeck(renderTurnedCard(game)) +
         renderMyself(
           renderMyCards(game, game.players[0]) +
             renderAvatar(game.players[0], "y"),

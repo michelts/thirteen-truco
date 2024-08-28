@@ -6,7 +6,7 @@ const meta = {
   title: "Components/CardDeck",
   tags: ["autodocs"],
   render: () => {
-    return renderCardDeck();
+    return renderCardDeck("");
   },
 } satisfies Meta;
 
