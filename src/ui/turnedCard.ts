@@ -12,7 +12,9 @@ export function renderTurnedCard(game: Game) {
 }
 
 function render(game: Game) {
-  return game.turnedCard ? renderCard(game.turnedCard) : "";
+  return game.currentRound.turnedCard
+    ? renderCard(game.currentRound.turnedCard)
+    : "";
 }
 
 function redraw(game: Game) {

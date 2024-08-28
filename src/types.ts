@@ -4,12 +4,12 @@ export interface Game {
   players: Player[];
   currentPlayer: Player | null;
   currentRound: Round;
-  turnedCard?: Card;
   isDone: boolean;
   continue: () => void;
 }
 
 export interface Round {
+  turnedCard?: Card;
   steps: Step[];
   currentStep: Step;
   isDone: boolean;

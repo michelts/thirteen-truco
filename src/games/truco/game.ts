@@ -8,7 +8,6 @@ export class TrucoGame implements Game {
   isDone = false;
   filterBestCards: BestCardsFilterFunc = filterTrucoBestCards;
   deck: Deck;
-  turnedCard?: Card;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
   private _currentPlayerIndex = 0;
@@ -32,7 +31,7 @@ export class TrucoGame implements Game {
 
   private distributeCards() {
     this.deck.shuffle();
-    this.turnedCard = this.deck.getCards(1)[0];
+    this.currentRound.turnedCard = this.deck.getCards(1)[0];
     for (const player of this._players) {
       player.receiveCards(this.deck.getCards(3));
     }
@@ -71,6 +70,7 @@ export class TrucoGame implements Game {
 
 class TrucoRound implements Round {
   game: TrucoGame;
+  turnedCard?: Card;
   private _steps: TrucoRoundStep[] = [];
   private _roundSteps = 3;
 
@@ -126,7 +126,7 @@ class TrucoRoundStep implements Step, TrucoStep {
   }
 
   get bestCards() {
-    if (!this.isDone || !this._round.game.turnedCard) {
+    if (!this.isDone || !this._round.turnedCard) {
       return [];
     }
     return this._round.game.filterBestCards(
@@ -134,7 +134,7 @@ class TrucoRoundStep implements Step, TrucoStep {
         .filter((stepCard) => !stepCard.isHidden)
         .map((stepCard) => stepCard.card),
       this._round.game.deck.cards,
-      this._round.game.turnedCard,
+      this._round.turnedCard,
     );
   }
 }

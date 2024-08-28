@@ -28,7 +28,7 @@ describe("card shuffling", () => {
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
     ];
-    expect(game.turnedCard).toEqual(new Card(4, Suit.Spades));
+    expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
     const [player1, player2] = game.players;
     expect(player1.cards).toEqual([
       new Card(3, Suit.Clubs),
@@ -50,7 +50,7 @@ describe("card shuffling", () => {
       }
     }
     // New round should shuffle again
-    expect(game.turnedCard).toEqual(new Card(1, Suit.Hearts));
+    expect(game.currentRound.turnedCard).toEqual(new Card(1, Suit.Hearts));
     expect(player1.cards).toEqual([
       new Card(2, Suit.Hearts),
       new Card(3, Suit.Hearts),
