@@ -13,6 +13,7 @@ export interface Round {
   steps: Step[];
   currentStep: Step;
   isDone: boolean;
+  score?: [number, number];
   continue: () => void;
 }
 
@@ -31,6 +32,7 @@ export interface StepCard {
 export interface Player {
   id: number;
   name: string;
+  teamIndex: 0 | 1;
   cards: Card[];
   isEqual: (otherPlayer: Player) => boolean;
   autoPickCard?: () => Card;

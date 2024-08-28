@@ -26,6 +26,9 @@ export class TrucoGame implements Game {
 
   set players(players) {
     this._players = players;
+    this._players.forEach((player, index) => {
+      player.teamIndex = (index % 2) as Player["teamIndex"];
+    });
     this.distributeCards();
   }
 
@@ -98,13 +101,25 @@ class TrucoRound implements Round {
   get isDone() {
     return this._steps.length === 3 && this.currentStep.isDone;
   }
+
+  get score() {
+    if (this._steps.length < 3) {
+      return undefined;
+    }
+    const matches = [0, 0];
+    for (const step of this._steps) {
+      if (step.winner) {
+        matches[step.winner.teamIndex] += 1;
+      }
+    }
+    if (matches[0] > matches[1]) {
+      return [1, 0] as [number, number];
+    }
+    return [0, 1] as [number, number];
+  }
 }
 
-interface TrucoStep {
-  bestCards: Card[];
-}
-
-class TrucoRoundStep implements Step, TrucoStep {
+class TrucoRoundStep implements Step {
   private _round: TrucoRound;
   private _cards: TrucoStepCard[] = [];
 
@@ -136,6 +151,16 @@ class TrucoRoundStep implements Step, TrucoStep {
       this._round.game.deck.cards,
       this._round.turnedCard,
     );
+  }
+
+  get winner() {
+    const winners = this.bestCards.map((bestCard) => {
+      return this.cards.find((item) => item.card.isEqual(bestCard));
+    });
+    if (winners.length > 1) {
+      return undefined;
+    }
+    return winners[0]?.player ?? undefined;
   }
 }
 

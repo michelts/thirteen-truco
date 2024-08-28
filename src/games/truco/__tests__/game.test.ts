@@ -279,6 +279,52 @@ describe("game playing", () => {
   });
 });
 
+describe("score calculation", () => {
+  it("should mark score for the player that won 2 rounds", () => {
+    const customDeck = new Deck(
+      [
+        new Card(4, Suit.Spades),
+        new Card(1, Suit.Clubs),
+        new Card(2, Suit.Clubs),
+        new Card(3, Suit.Clubs),
+        new Card(1, Suit.Hearts),
+        new Card(2, Suit.Hearts),
+        new Card(3, Suit.Hearts),
+      ],
+      (cards) => cards,
+    );
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    const [player1, player2] = game.players;
+    expect(player1.cards).toEqual([
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Clubs),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(1, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(3, Suit.Hearts),
+    ]);
+    expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toBeUndefined();
+    player1.dropCard(new Card(3, Suit.Clubs)); // best
+    player2.dropCard(new Card(2, Suit.Hearts));
+    game.currentRound.continue();
+    player1.dropCard(new Card(2, Suit.Clubs));
+    player2.dropCard(new Card(1, Suit.Hearts)); // best (trump)
+    game.currentRound.continue();
+    player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
+    player2.dropCard(new Card(3, Suit.Hearts));
+    expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toEqual([1, 0]);
+  });
+});
+
 function assertStepHasCards(
   step: Step,
   expectedCards: SetRequired<Partial<StepCard>, "card">[],

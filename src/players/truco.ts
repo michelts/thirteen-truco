@@ -2,6 +2,7 @@ import {
   NotEnoughCardsError,
   CardNotFoundError,
   NotYourTurnError,
+  PlayerNotInitializedError,
 } from "@/utils/errors";
 import type { Card } from "@/core";
 import type { Game, Player } from "@/types";
@@ -11,6 +12,7 @@ export class TrucoPlayer implements Player {
   private _game: Game;
   private _id: ReturnType<typeof getId>;
   private _name = "";
+  private _teamIndex?: Player["teamIndex"];
   private _cards: [] | [Card, Card, Card] = [];
 
   constructor(game: Game, name: string) {
@@ -29,6 +31,17 @@ export class TrucoPlayer implements Player {
 
   get name() {
     return this._name;
+  }
+
+  get teamIndex() {
+    if (this._teamIndex === undefined) {
+      throw new PlayerNotInitializedError();
+    }
+    return this._teamIndex;
+  }
+
+  set teamIndex(index: Player["teamIndex"]) {
+    this._teamIndex = index;
   }
 
   receiveCards(cards: Card[]) {
