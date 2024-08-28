@@ -234,7 +234,8 @@ describe("game playing", () => {
         new Card(4, Suit.Hearts),
         new Card(6, Suit.Clubs),
       ],
-      directOrderDeck,
+      directOrderDeck.cards,
+      new Card(12, Suit.Spades),
     );
   });
 
