@@ -29,7 +29,6 @@ it.each`
     scoreA: number;
     scoreB: number;
   }) => {
-    console.log(composition);
     const scoresMapper: Record<string, [number, number]> = {
       Win: [1, 0],
       Lose: [0, 1],
@@ -65,7 +64,6 @@ it.each`
       Lose: [0, 1],
       Draw: [0, 0],
     };
-    console.log(composition);
     const scores = composition.split(" ").map((key) => scoresMapper[key]);
     const roundPointsPerTeam: [number, number] = [1, 1];
     expect(getRoundScore(scores, roundPointsPerTeam)).toEqual([scoreA, scoreB]);
@@ -91,7 +89,6 @@ it.each`
     scoreB: number;
     pointsPerTeam: [number, number];
   }) => {
-    console.log(composition);
     const scoresMapper: Record<string, [number, number]> = {
       Win: [1, 0],
       Lose: [0, 1],

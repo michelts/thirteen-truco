@@ -27,14 +27,8 @@ describe("card shuffling", () => {
     ];
     const sorter = vi
       .fn<(cards: Card[]) => Card[]>()
-      .mockImplementationOnce(() => {
-        console.log("direct");
-        return [...shuffledCards];
-      })
-      .mockImplementation(() => {
-        console.log("inverse");
-        return [...shuffledCards].reverse();
-      });
+      .mockImplementationOnce(() => [...shuffledCards])
+      .mockImplementation(() => [...shuffledCards].reverse());
     const customDeck = new Deck(cardsFromLowestToHighest, sorter);
     const game = new TrucoGame(customDeck);
     game.players = [
