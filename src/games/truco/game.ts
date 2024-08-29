@@ -3,6 +3,7 @@ import type { Card, Deck } from "@/core";
 import type { Game, Player, Round, Step, StepCard } from "@/types";
 import { filterTrucoBestCards } from "./bestCards";
 import type { BestCardsFilterFunc } from "@/types";
+import { getRoundScore } from "./getRoundScore";
 
 export class TrucoGame implements Game {
   isDone = false;
@@ -103,19 +104,16 @@ class TrucoRound implements Round {
   }
 
   get score() {
-    if (this._steps.length < 3) {
-      return undefined;
-    }
-    const matches = [0, 0];
-    for (const step of this._steps) {
+    const matches = this._steps.map((step) => {
+      const match = [0, 0] satisfies [number, number];
       if (step.winner) {
-        matches[step.winner.teamIndex] += 1;
+        match[step.winner.teamIndex] += 1;
       }
-    }
-    if (matches[0] > matches[1]) {
-      return [1, 0] as [number, number];
-    }
-    return [0, 1] as [number, number];
+      return match;
+    });
+    getRoundScore(matches, [1, 1]);
+    console.log({ matches });
+    return matches;
   }
 }
 

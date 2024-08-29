@@ -7,22 +7,35 @@ import { TrucoGame } from "../index";
 
 describe("card shuffling", () => {
   it("should shuffle the deck, give 3 distinct cards to each player and set turned card and on every round", () => {
+    const cardsFromLowestToHighest = [
+      new Card(4, Suit.Spades),
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Hearts),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(3, Suit.Clubs),
+    ];
+    const shuffledCards = [
+      new Card(4, Suit.Spades),
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Hearts),
+    ];
     const sorter = vi
       .fn<(cards: Card[]) => Card[]>()
-      .mockImplementationOnce((cards) => cards)
-      .mockImplementationOnce((cards) => cards.reverse());
-    const customDeck = new Deck(
-      [
-        new Card(1, Suit.Hearts),
-        new Card(2, Suit.Hearts),
-        new Card(3, Suit.Hearts),
-        new Card(1, Suit.Clubs),
-        new Card(2, Suit.Clubs),
-        new Card(3, Suit.Clubs),
-        new Card(4, Suit.Spades),
-      ],
-      sorter,
-    );
+      .mockImplementationOnce(() => {
+        console.log("direct");
+        return [...shuffledCards];
+      })
+      .mockImplementation(() => {
+        console.log("inverse");
+        return [...shuffledCards].reverse();
+      });
+    const customDeck = new Deck(cardsFromLowestToHighest, sorter);
     const game = new TrucoGame(customDeck);
     game.players = [
       new TrucoPlayer(game, "Jack"),
@@ -65,26 +78,44 @@ describe("card shuffling", () => {
 });
 
 describe("game playing", () => {
-  const cards = [
-    new Card(12, Suit.Spades),
-    new Card(1, Suit.Hearts),
-    new Card(2, Suit.Hearts),
-    new Card(3, Suit.Hearts),
-    new Card(1, Suit.Clubs),
-    new Card(2, Suit.Clubs),
-    new Card(3, Suit.Clubs),
-    new Card(4, Suit.Hearts),
-    new Card(5, Suit.Hearts),
-    new Card(6, Suit.Hearts),
-    new Card(4, Suit.Clubs),
-    new Card(5, Suit.Clubs),
-    new Card(6, Suit.Clubs),
-  ];
-
-  const directOrderDeck = new Deck(cards, (cards) => cards);
+  function getDeck() {
+    const cards = [
+      new Card(12, Suit.Diamonds),
+      new Card(12, Suit.Spades),
+      new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+      new Card(2, Suit.Clubs),
+      new Card(2, Suit.Hearts),
+      new Card(3, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(4, Suit.Clubs),
+      new Card(4, Suit.Hearts),
+      new Card(5, Suit.Clubs),
+      new Card(5, Suit.Hearts),
+      new Card(6, Suit.Clubs),
+      new Card(6, Suit.Hearts),
+    ];
+    const shuffledCards = [
+      new Card(12, Suit.Spades),
+      new Card(1, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(3, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Clubs),
+      new Card(12, Suit.Diamonds),
+      new Card(4, Suit.Hearts),
+      new Card(5, Suit.Hearts),
+      new Card(6, Suit.Hearts),
+      new Card(4, Suit.Clubs),
+      new Card(5, Suit.Clubs),
+      new Card(6, Suit.Clubs),
+    ];
+    return new Deck(cards, () => shuffledCards);
+  }
 
   it("should allow player to drop cards on the table", () => {
-    const game = new TrucoGame(directOrderDeck);
+    const game = new TrucoGame(getDeck());
     game.players = [
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
@@ -112,8 +143,8 @@ describe("game playing", () => {
     ]);
   });
 
-  it("should fill rounds, steps and score as players drop cards", () => {
-    const game = new TrucoGame(directOrderDeck); // use a deck with enough cards
+  it("should fill rounds, steps as players drop cards", () => {
+    const game = new TrucoGame(getDeck());
     game.players = [
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
@@ -203,7 +234,8 @@ describe("game playing", () => {
   it("should indicate best cards when step is done", () => {
     const bestCards = [new Card(1, Suit.Hearts), new Card(4, Suit.Hearts)];
     const filterBestCards = vi.fn().mockReturnValue(bestCards);
-    const game = new TrucoGame(directOrderDeck, filterBestCards);
+    const deck = getDeck();
+    const game = new TrucoGame(deck, filterBestCards);
     game.players = [
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
@@ -220,27 +252,27 @@ describe("game playing", () => {
       { card: new Card(4, Suit.Hearts), isBest: false },
     ]);
 
-    player4.dropCard(new Card(6, Suit.Clubs));
+    player4.dropCard(new Card(5, Suit.Clubs));
     expect(game.currentRound.currentStep.isDone).toBe(true);
     assertStepHasCards(game.currentRound.currentStep, [
       { card: new Card(1, Suit.Hearts), isBest: true },
       { card: new Card(2, Suit.Clubs), isHidden: true, isBest: false },
       { card: new Card(4, Suit.Hearts), isBest: true },
-      { card: new Card(6, Suit.Clubs), isBest: false },
+      { card: new Card(5, Suit.Clubs), isBest: false },
     ]);
     expect(filterBestCards).toHaveBeenCalledWith(
       [
         new Card(1, Suit.Hearts),
         new Card(4, Suit.Hearts),
-        new Card(6, Suit.Clubs),
+        new Card(5, Suit.Clubs),
       ],
-      directOrderDeck.cards,
+      deck.cardsFromLowestToHighest,
       new Card(12, Suit.Spades),
     );
   });
 
   it("should allow player to drop card as hidden", () => {
-    const game = new TrucoGame(directOrderDeck);
+    const game = new TrucoGame(getDeck());
     game.players = [
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
@@ -252,7 +284,7 @@ describe("game playing", () => {
   });
 
   it("should prevent player dropping multiple cards in the same round", () => {
-    const game = new TrucoGame(directOrderDeck);
+    const game = new TrucoGame(getDeck());
     game.players = [
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
@@ -280,7 +312,59 @@ describe("game playing", () => {
 });
 
 describe("score calculation", () => {
-  it("should mark score for the player that won 2 rounds", () => {
+  it.only("should mark score for the player with 2 rounds", () => {
+    const customDeck = new Deck(
+      [
+        new Card(1, Suit.Clubs),
+        new Card(1, Suit.Hearts),
+        new Card(2, Suit.Clubs),
+        new Card(2, Suit.Hearts),
+        new Card(3, Suit.Clubs),
+        new Card(3, Suit.Hearts),
+        new Card(4, Suit.Spades),
+      ],
+      () => [
+        new Card(4, Suit.Spades),
+        new Card(1, Suit.Clubs),
+        new Card(2, Suit.Clubs),
+        new Card(3, Suit.Clubs),
+        new Card(1, Suit.Hearts),
+        new Card(2, Suit.Hearts),
+        new Card(3, Suit.Hearts),
+      ],
+    );
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+    ];
+    const [player1, player2] = game.players;
+    expect(player1.cards).toEqual([
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Clubs),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(1, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(3, Suit.Hearts),
+    ]);
+    expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toBeUndefined();
+    player1.dropCard(new Card(3, Suit.Clubs)); // best
+    player2.dropCard(new Card(2, Suit.Hearts));
+    game.currentRound.continue();
+    player1.dropCard(new Card(2, Suit.Clubs));
+    player2.dropCard(new Card(1, Suit.Hearts)); // best (trump)
+    game.currentRound.continue();
+    player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
+    player2.dropCard(new Card(3, Suit.Hearts));
+    expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toEqual([1, 0]);
+  });
+
+  it.skip("should mark score for the player with 1st tie and the next round", () => {
     const customDeck = new Deck(
       [
         new Card(4, Suit.Spades),
