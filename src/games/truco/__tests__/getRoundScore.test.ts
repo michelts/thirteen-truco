@@ -36,7 +36,7 @@ it.each`
       Draw: [0, 0],
     };
     const scores = composition.split(" ").map((key) => scoresMapper[key]);
-    const roundPointsPerTeam = [1, 1];
+    const roundPointsPerTeam: [number, number] = [1, 1];
     expect(getRoundScore(scores, roundPointsPerTeam)).toEqual([scoreA, scoreB]);
   },
 );
@@ -67,7 +67,7 @@ it.each`
     };
     console.log(composition);
     const scores = composition.split(" ").map((key) => scoresMapper[key]);
-    const roundPointsPerTeam = [1, 1];
+    const roundPointsPerTeam: [number, number] = [1, 1];
     expect(getRoundScore(scores, roundPointsPerTeam)).toEqual([scoreA, scoreB]);
   },
 );
