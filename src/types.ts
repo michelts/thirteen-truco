@@ -3,6 +3,7 @@ import type { Card } from "@/core";
 export interface Game {
   players: Player[];
   currentPlayer: Player | null;
+  rounds: Round[];
   currentRound: Round;
   isDone: boolean;
   continue: () => void;

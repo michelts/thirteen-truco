@@ -41,7 +41,7 @@ export function renderApp(game: Game) {
 
   root.innerHTML =
     renderHeader(
-      renderScore(),
+      renderScore(game),
       renderToggle("MUSIC", false, () => true) +
         renderToggle("SFX", false, () => true),
     ) +
