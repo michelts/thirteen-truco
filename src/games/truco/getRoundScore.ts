@@ -3,7 +3,7 @@ const pointsPerStep = [7, 5, 3];
 export function getRoundScore(
   stepsScores: [number, number][],
   roundPointsPerTeam: [number, number],
-) {
+): [number, number] {
   if (stepsScores.length === 1) {
     return [0, 0];
   }

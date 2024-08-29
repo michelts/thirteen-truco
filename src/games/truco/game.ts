@@ -100,7 +100,7 @@ class TrucoRound implements Round {
   }
 
   get isDone() {
-    return this._steps.length === 3 && this.currentStep.isDone;
+    return this.currentStep.isDone && this.score !== undefined;
   }
 
   get score() {
@@ -111,9 +111,11 @@ class TrucoRound implements Round {
       }
       return match;
     });
-    getRoundScore(matches, [1, 1]);
-    console.log({ matches });
-    return matches;
+    const score = getRoundScore(matches, [1, 1]);
+    if (score[0] === score[1]) {
+      return undefined;
+    }
+    return score;
   }
 }
 

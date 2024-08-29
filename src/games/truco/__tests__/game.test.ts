@@ -165,7 +165,7 @@ describe("game playing", () => {
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player2.dropCard(new Card(1, Suit.Clubs));
+    player2.dropCard(new Card(2, Suit.Clubs));
     expect(game.currentPlayer).toBeNull(); // because step is done
     expect(game.rounds).toHaveLength(1);
     expect(game.currentRound.isDone).toBe(false);
@@ -188,7 +188,7 @@ describe("game playing", () => {
     expect(game.currentRound.currentStep.cards).toHaveLength(1);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player2.dropCard(new Card(2, Suit.Clubs));
+    player2.dropCard(new Card(1, Suit.Clubs));
     expect(game.currentPlayer).toBeNull();
     expect(game.rounds).toHaveLength(1);
     expect(game.currentRound.isDone).toBe(false);
@@ -312,7 +312,7 @@ describe("game playing", () => {
 });
 
 describe("score calculation", () => {
-  it.only("should mark score for the player with 2 rounds", () => {
+  it("should mark score for the player with 2 rounds", () => {
     const customDeck = new Deck(
       [
         new Card(1, Suit.Clubs),
@@ -351,22 +351,32 @@ describe("score calculation", () => {
     ]);
     expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
     expect(game.currentRound.isDone).toBe(false);
-    expect(game.currentRound.score).toBeUndefined();
     player1.dropCard(new Card(3, Suit.Clubs)); // best
     player2.dropCard(new Card(2, Suit.Hearts));
+    expect(game.currentRound.score).toBeUndefined();
     game.currentRound.continue();
     player1.dropCard(new Card(2, Suit.Clubs));
     player2.dropCard(new Card(1, Suit.Hearts)); // best (trump)
+    expect(game.currentRound.score).toBeUndefined();
     game.currentRound.continue();
     player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
     player2.dropCard(new Card(3, Suit.Hearts));
-    expect(game.currentRound.isDone).toBe(true);
     expect(game.currentRound.score).toEqual([1, 0]);
+    expect(game.currentRound.isDone).toBe(true);
   });
 
-  it.skip("should mark score for the player with 1st tie and the next round", () => {
+  it("should mark score for the player with 1st round + a tie", () => {
     const customDeck = new Deck(
       [
+        new Card(1, Suit.Hearts),
+        new Card(1, Suit.Clubs),
+        new Card(2, Suit.Hearts),
+        new Card(2, Suit.Clubs),
+        new Card(3, Suit.Hearts),
+        new Card(3, Suit.Clubs),
+        new Card(4, Suit.Spades),
+      ],
+      () => [
         new Card(4, Suit.Spades),
         new Card(1, Suit.Clubs),
         new Card(2, Suit.Clubs),
@@ -375,12 +385,11 @@ describe("score calculation", () => {
         new Card(2, Suit.Hearts),
         new Card(3, Suit.Hearts),
       ],
-      (cards) => cards,
     );
     const game = new TrucoGame(customDeck);
     game.players = [
-      new TrucoPlayer(game, "Jack"),
-      new TrucoPlayer(game, "Curtis"),
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
     ];
     const [player1, player2] = game.players;
     expect(player1.cards).toEqual([
@@ -395,17 +404,14 @@ describe("score calculation", () => {
     ]);
     expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
     expect(game.currentRound.isDone).toBe(false);
-    expect(game.currentRound.score).toBeUndefined();
-    player1.dropCard(new Card(3, Suit.Clubs)); // best
-    player2.dropCard(new Card(2, Suit.Hearts));
-    game.currentRound.continue();
-    player1.dropCard(new Card(2, Suit.Clubs));
-    player2.dropCard(new Card(1, Suit.Hearts)); // best (trump)
-    game.currentRound.continue();
-    player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
+    player1.dropCard(new Card(3, Suit.Clubs)); // tie
     player2.dropCard(new Card(3, Suit.Hearts));
-    expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toBeUndefined();
+    game.currentRound.continue();
+    player1.dropCard(new Card(1, Suit.Clubs)); // best (highest trump)
+    player2.dropCard(new Card(1, Suit.Hearts));
     expect(game.currentRound.score).toEqual([1, 0]);
+    expect(game.currentRound.isDone).toBe(true);
   });
 });
 
