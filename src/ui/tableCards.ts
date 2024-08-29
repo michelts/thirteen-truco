@@ -1,5 +1,5 @@
 import type { Game, StepCard } from "@/types";
-import { getElement, findElement } from "@/utils/elements";
+import { findElement, getElement } from "@/utils/elements";
 import { renderCard } from "./card";
 import { renderCardBack } from "./cardBack";
 import { cardPlaced, roundAcknowledged } from "./events";

@@ -1,11 +1,11 @@
+import type { Card } from "@/core";
+import type { Game, Player } from "@/types";
 import {
-  NotEnoughCardsError,
   CardNotFoundError,
+  NotEnoughCardsError,
   NotYourTurnError,
   PlayerNotInitializedError,
 } from "@/utils/errors";
-import type { Card } from "@/core";
-import type { Game, Player } from "@/types";
 import { getId } from "@/utils/getId";
 
 export class TrucoPlayer implements Player {

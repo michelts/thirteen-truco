@@ -1,8 +1,8 @@
-import { RoundFullError } from "@/utils/errors";
 import type { Card, Deck } from "@/core";
 import type { Game, Player, Round, Step, StepCard } from "@/types";
-import { filterTrucoBestCards } from "./bestCards";
 import type { BestCardsFilterFunc } from "@/types";
+import { RoundFullError } from "@/utils/errors";
+import { filterTrucoBestCards } from "./bestCards";
 import { getRoundScore } from "./getRoundScore";
 
 export class TrucoGame implements Game {

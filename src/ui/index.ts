@@ -1,6 +1,8 @@
 import type { Game } from "@/types";
+import { getElement } from "@/utils/elements";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
+import { cardPicked, roundDone } from "./events";
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
 import { renderOthers } from "./others";
@@ -9,8 +11,6 @@ import { renderPlayer } from "./player";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
-import { cardPicked, roundDone } from "./events";
-import { getElement } from "@/utils/elements";
 import { renderTurnedCard } from "./turnedCard";
 
 export function renderApp(game: Game) {

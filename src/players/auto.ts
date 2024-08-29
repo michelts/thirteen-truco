@@ -1,5 +1,5 @@
-import { TrucoPlayer } from "./truco";
 import { EmptyHandError } from "@/utils/errors";
+import { TrucoPlayer } from "./truco";
 
 export class AutoPlayer extends TrucoPlayer {
   autoPickCard() {

@@ -1,7 +1,7 @@
-import type { SetRequired } from "type-fest";
-import type { Step, StepCard } from "@/types";
 import { Card, Deck, Suit } from "@/core";
 import { TrucoPlayer } from "@/players";
+import type { Step, StepCard } from "@/types";
+import type { SetRequired } from "type-fest";
 import { describe, expect, it, vi } from "vitest";
 import { TrucoGame } from "../index";
 
