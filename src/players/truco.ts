@@ -25,6 +25,10 @@ export class TrucoPlayer implements Player {
     return this.id === player.id;
   }
 
+  toString() {
+    return this._name;
+  }
+
   get id() {
     return this._id;
   }
