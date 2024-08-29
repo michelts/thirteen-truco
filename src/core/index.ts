@@ -14,15 +14,18 @@ export class Deck {
   shuffleFunc: (cards: Card[]) => Card[] = shuffle;
 
   constructor(cards: Card[], shuffleFunc?: (cards: Card[]) => Card[]) {
+    console.log(
+      "XXX1",
+      cards.map((c) => String(c)),
+    );
     this.cards = cards;
     if (shuffleFunc) {
       this.shuffleFunc = shuffleFunc;
     }
-    this.shuffle();
   }
 
   shuffle() {
-    this.shuffledCards = this.shuffleFunc(this.cards);
+    this.shuffledCards = this.shuffleFunc(this.cardsFromLowestToHighest);
   }
 
   getCards(count: number): Card[] {

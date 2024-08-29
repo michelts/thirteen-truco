@@ -1,4 +1,4 @@
-import { defaultDeck } from "@/config";
+import { getDefaultDeck } from "@/config";
 import { TrucoGame } from "@/games/truco";
 import { AutoPlayer } from "@/players/auto";
 import { HumanPlayer } from "@/players/human";
@@ -11,7 +11,7 @@ function runApp() {
 }
 
 function createGame() {
-  const game = new TrucoGame(defaultDeck);
+  const game = new TrucoGame(getDefaultDeck());
   game.players = [
     new HumanPlayer(game, "You"),
     new AutoPlayer(game, "Molly"),
