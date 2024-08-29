@@ -9,16 +9,15 @@ export enum Suit {
 }
 
 export class Deck {
-  cards: [] | Card[] = [];
+  cardsFromLowestToHighest: [] | Card[] = [];
   shuffledCards: [] | Card[] = [];
   shuffleFunc: (cards: Card[]) => Card[] = shuffle;
 
-  constructor(cards: Card[], shuffleFunc?: (cards: Card[]) => Card[]) {
-    console.log(
-      "XXX1",
-      cards.map((c) => String(c)),
-    );
-    this.cards = cards;
+  constructor(
+    cardsFromLowestToHighest: Card[],
+    shuffleFunc?: (cards: Card[]) => Card[],
+  ) {
+    this.cardsFromLowestToHighest = cardsFromLowestToHighest;
     if (shuffleFunc) {
       this.shuffleFunc = shuffleFunc;
     }

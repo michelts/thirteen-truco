@@ -4,24 +4,25 @@ import { CardNotFoundError } from "@/utils/errors";
 
 export const filterTrucoBestCards: BestCardsFilterFunc = (
   testedCards,
-  cardsFromHighestToLowest,
+  cardsFromLowestToHighest,
   turnedCard,
 ) => {
-  const candidates = cardsFromHighestToLowest.filter((card) =>
-    testedCards.some((testedCard) => testedCard.isEqual(card)),
-  );
+  const candidates = cardsFromLowestToHighest
+    .filter((card) =>
+      testedCards.some((testedCard) => testedCard.isEqual(card)),
+    )
+    .reverse();
   const trumpCardNumber = getTrumpCardNumber(
-    cardsFromHighestToLowest,
+    cardsFromLowestToHighest,
     turnedCard,
   );
   return getHighestAccountingDrawsAndTrump(candidates, trumpCardNumber);
 };
 
 function getTrumpCardNumber(
-  cardsFromHighestToLowest: Card[],
+  cardsFromLowestToHighest: Card[],
   turnedCard: Card,
 ) {
-  const cardsFromLowestToHighest = [...cardsFromHighestToLowest].reverse();
   let turnedCardNumber = null;
   for (const card of cardsFromLowestToHighest) {
     if (card.isEqual(turnedCard)) {

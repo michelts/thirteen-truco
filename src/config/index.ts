@@ -5,8 +5,8 @@ export function getDefaultDeck() {
 }
 
 function* generateDefaultCards() {
-  for (const cardNumber of [3, 2, 1, 12, 11, 10, 7, 6, 5, 4]) {
-    for (const suit of [Suit.Clubs, Suit.Hearts, Suit.Spades, Suit.Diamonds]) {
+  for (const cardNumber of [4, 5, 6, 7, 10, 11, 12, 1, 2, 3]) {
+    for (const suit of [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs]) {
       yield new Card(cardNumber, suit);
     }
   }
