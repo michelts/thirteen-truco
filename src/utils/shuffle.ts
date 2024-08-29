@@ -1,4 +1,5 @@
-export function shuffle<T>(items: T[]): void {
+export function shuffle<T>(items: T[]) {
+  const shuffleItems = [...items];
   let currentIndex = items.length;
   while (currentIndex !== 0) {
     const randomIndex = Math.floor(Math.random() * currentIndex);
@@ -9,4 +10,5 @@ export function shuffle<T>(items: T[]): void {
       items[currentIndex],
     ];
   }
+  return shuffleItems;
 }

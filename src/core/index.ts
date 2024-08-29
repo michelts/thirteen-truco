@@ -11,9 +11,9 @@ export enum Suit {
 export class Deck {
   cards: [] | Card[] = [];
   shuffledCards: [] | Card[] = [];
-  shuffleFunc: (cards: Card[]) => void = shuffle;
+  shuffleFunc: (cards: Card[]) => Card[] = shuffle;
 
-  constructor(cards: Card[], shuffleFunc?: (cards: Card[]) => void) {
+  constructor(cards: Card[], shuffleFunc?: (cards: Card[]) => Card[]) {
     this.cards = cards;
     if (shuffleFunc) {
       this.shuffleFunc = shuffleFunc;
@@ -22,8 +22,7 @@ export class Deck {
   }
 
   shuffle() {
-    this.shuffledCards = [...this.cards];
-    this.shuffleFunc(this.shuffledCards);
+    this.shuffledCards = this.shuffleFunc(this.cards);
   }
 
   getCards(count: number): Card[] {
