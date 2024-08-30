@@ -70,6 +70,16 @@ export class TrucoGame implements Game {
   get currentRound() {
     return this._rounds[this._rounds.length - 1];
   }
+
+  get score() {
+    let us = 0;
+    let them = 0;
+    for (const { score } of this._rounds) {
+      us += score?.[0] ?? 0;
+      them += score?.[1] ?? 0;
+    }
+    return [us, them] satisfies [number, number];
+  }
 }
 
 class TrucoRound implements Round {

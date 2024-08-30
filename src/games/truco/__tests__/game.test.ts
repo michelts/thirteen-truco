@@ -348,14 +348,17 @@ describe("score calculation", () => {
     player1.dropCard(new Card(3, Suit.Clubs)); // best
     player2.dropCard(new Card(2, Suit.Hearts));
     expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
     player1.dropCard(new Card(2, Suit.Clubs));
     player2.dropCard(new Card(1, Suit.Hearts)); // best (trump)
     expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
     player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
     player2.dropCard(new Card(3, Suit.Hearts));
     expect(game.currentRound.score).toEqual([1, 0]);
+    expect(game.score).toEqual([1, 0]);
     expect(game.currentRound.isDone).toBe(true);
   });
 
@@ -401,10 +404,12 @@ describe("score calculation", () => {
     player1.dropCard(new Card(3, Suit.Clubs)); // tie
     player2.dropCard(new Card(3, Suit.Hearts));
     expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
     player1.dropCard(new Card(1, Suit.Clubs)); // best (highest trump)
     player2.dropCard(new Card(1, Suit.Hearts));
     expect(game.currentRound.score).toEqual([1, 0]);
+    expect(game.score).toEqual([1, 0]);
     expect(game.currentRound.isDone).toBe(true);
   });
 });

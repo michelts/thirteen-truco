@@ -7,6 +7,7 @@ export interface Game {
   currentRound: Round;
   isDone: boolean;
   continue: () => void;
+  score: [number, number];
 }
 
 export interface Round {
@@ -14,8 +15,8 @@ export interface Round {
   steps: Step[];
   currentStep: Step;
   isDone: boolean;
-  score?: [number, number];
   continue: () => void;
+  score?: [number, number];
 }
 
 export interface Step {

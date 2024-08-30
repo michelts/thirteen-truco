@@ -9,12 +9,7 @@ export function renderScore(game: Game) {
 }
 
 function render(game: Game) {
-  let us = 0;
-  let them = 0;
-  for (const { score } of game.rounds) {
-    us += score?.[0] ?? 0;
-    them += score?.[1] ?? 0;
-  }
+  const [us, them] = game.score;
   return `<span>SCORE</span><div><div>${us}</div><div>x</div><div>${them}</div></div>`;
 }
 
