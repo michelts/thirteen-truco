@@ -224,6 +224,12 @@ describe("game playing", () => {
       { card: new Card(4, Suit.Hearts), isBest: true },
       { card: new Card(5, Suit.Clubs), isBest: false },
     ]);
+    expect(game.currentRound.turnedCard).toEqual(new Card(12, Suit.Spades));
+    expect(game.currentRound.trumpCards).toEqual([
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+    ]);
+    const trumpCardNumber = 1;
     expect(filterBestCards).toHaveBeenCalledWith(
       [
         new Card(1, Suit.Hearts),
@@ -231,7 +237,7 @@ describe("game playing", () => {
         new Card(5, Suit.Clubs),
       ],
       deck.cardsFromLowestToHighest,
-      new Card(12, Suit.Spades),
+      trumpCardNumber,
     );
   });
 

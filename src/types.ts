@@ -12,6 +12,7 @@ export interface Game {
 
 export interface Round {
   turnedCard?: Card;
+  trumpCards: Card[];
   steps: Step[];
   currentStep: Step;
   isDone: boolean;
@@ -58,5 +59,5 @@ export interface Player {
 export type BestCardsFilterFunc = (
   cards: Card[],
   cardsFromHighestToLowest: Card[],
-  turnedCard: Card,
+  trumpCardNumber: number,
 ) => Card[];

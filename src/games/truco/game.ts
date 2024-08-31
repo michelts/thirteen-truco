@@ -7,12 +7,13 @@ import {
   PendingStakeRaiseError,
   RoundFullError,
 } from "@/utils/errors";
-import { filterTrucoBestCards } from "./bestCards";
+import { filterBestCards as defaultFilterBestCards } from "./filterBestCards";
 import { getRoundScore } from "./getRoundScore";
+import { getTrumpCards } from "./getTrumpCards";
 
 export class TrucoGame implements Game {
   isDone = false;
-  filterBestCards: BestCardsFilterFunc = filterTrucoBestCards;
+  filterBestCards: BestCardsFilterFunc = defaultFilterBestCards;
   deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
@@ -121,6 +122,16 @@ class TrucoRound implements Round {
       (this.currentStep.isDone && this.score !== undefined) ||
       this.stake.isAccepted === false
     );
+  }
+
+  get trumpCards() {
+    if (this.turnedCard) {
+      return getTrumpCards(
+        this.game.deck.cardsFromLowestToHighest,
+        this.turnedCard,
+      );
+    }
+    return [];
   }
 
   get score() {
@@ -240,7 +251,8 @@ class TrucoRoundStep implements Step {
   }
 
   get bestCards() {
-    if (!this.isDone || !this._round.turnedCard) {
+    const trumpCardNumber = this._round.trumpCards[0]?.cardNumber;
+    if (!this.isDone || !trumpCardNumber) {
       return [];
     }
     return this._round.game.filterBestCards(
@@ -248,7 +260,7 @@ class TrucoRoundStep implements Step {
         .filter((stepCard) => !stepCard.isHidden)
         .map((stepCard) => stepCard.card),
       this._round.game.deck.cardsFromLowestToHighest,
-      this._round.turnedCard,
+      trumpCardNumber,
     );
   }
 
