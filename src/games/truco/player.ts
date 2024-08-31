@@ -1,5 +1,5 @@
 import type { Card } from "@/core";
-import type { AutoPickCardFunc, Game, Player } from "@/types";
+import type { Game, Player } from "@/types";
 import {
   CardNotFoundError,
   NotEnoughCardsError,
@@ -8,20 +8,21 @@ import {
   PlayerNotInitializedError,
 } from "@/utils/errors";
 import { getId } from "@/utils/getId";
+import { autoPickCard } from "./autoPickCard";
 
 export class TrucoPlayer implements Player {
-  public autoPickCard?: AutoPickCardFunc;
+  public canAutoPickCard: boolean;
   private _game: Game;
   private _id: ReturnType<typeof getId>;
   private _name = "";
   private _teamIndex?: Player["teamIndex"];
   private _cards: [] | [Card, Card, Card] = [];
 
-  constructor(game: Game, name: string, autoPickupCard?: AutoPickCardFunc) {
+  constructor(game: Game, name: string, canAutoPickCard?: boolean) {
     this._id = getId();
     this._name = name;
     this._game = game;
-    this.autoPickCard = autoPickupCard;
+    this.canAutoPickCard = canAutoPickCard ?? false;
   }
 
   isEqual(player: Player) {
@@ -80,5 +81,12 @@ export class TrucoPlayer implements Player {
       throw new CardNotFoundError();
     }
     return this._cards.splice(cardIndex, 1);
+  }
+
+  autoPickCard() {
+    return autoPickCard({
+      hand: this.cards,
+      trumpCards: this._game.currentRound.trumpCards,
+    });
   }
 }

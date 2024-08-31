@@ -1,7 +1,10 @@
-import type { AutoPickCardFunc } from "@/types";
+import type { Card } from "@/core";
 import { EmptyHandError } from "@/utils/errors";
 
-export const autoPickCard: AutoPickCardFunc = (params) => {
+export const autoPickCard = (params: {
+  hand: Card[];
+  trumpCards: Card[];
+}) => {
   const card = params.hand[0];
   if (!card) {
     throw new EmptyHandError();

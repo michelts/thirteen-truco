@@ -3,7 +3,7 @@ import type { Game, Player } from "@/types";
 
 declare global {
   interface GlobalEventHandlersEventMap {
-    cardPicked: CustomEvent<{ player: Player; card: Card }>;
+    cardPicked: CustomEvent<{ player: Player; card: Card; isHidden: boolean }>;
     cardDropped: CustomEvent<{
       game: Game;
       player: Player;
@@ -23,10 +23,10 @@ declare global {
   }
 }
 
-export const cardPicked = (player: Player, card: Card) =>
+export const cardPicked = (player: Player, card: Card, isHidden: boolean) =>
   new CustomEvent("cardPicked", {
     bubbles: true,
-    detail: { player, card },
+    detail: { player, card, isHidden },
   });
 
 export const cardDropped = (

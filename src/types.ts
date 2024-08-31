@@ -6,18 +6,11 @@ export interface Player {
   teamIndex: 0 | 1;
   cards: Card[];
   isEqual: (otherPlayer: Player) => boolean;
-  autoPickCard?: AutoPickCardFunc;
+  canAutoPickCard: boolean;
+  autoPickCard: () => { card: Card; isHidden: boolean };
   dropCard: (card: Card, isHidden?: boolean) => void;
   receiveCards: (cards: Card[]) => void;
 }
-
-export type AutoPickCardFunc = (params: {
-  hand: Card[];
-  trumpCards: Card[];
-}) => {
-  card: Card;
-  isHidden: boolean;
-};
 
 export interface Game {
   players: Player[];

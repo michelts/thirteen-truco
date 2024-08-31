@@ -28,9 +28,9 @@ export function renderApp(game: Game) {
     window.addEventListener("cardDropped", (event) => {
       event.detail.player.dropCard(event.detail.card, event.detail.isHidden);
 
-      if (game.currentPlayer?.autoPickCard) {
-        const card = game.currentPlayer.autoPickCard();
-        dispatchEvent(cardPicked(game.currentPlayer, card));
+      if (game.currentPlayer?.canAutoPickCard) {
+        const { card, isHidden } = game.currentPlayer.autoPickCard();
+        dispatchEvent(cardPicked(game.currentPlayer, card, isHidden));
       }
     });
 
