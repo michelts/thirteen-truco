@@ -4,7 +4,12 @@ import { renderActions } from "./actions";
 import { renderRaiseStake } from "./raiseStake";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
-import { cardPicked, notificationCreated, roundDone } from "./events";
+import {
+  cardPicked,
+  notificationCreated,
+  roundAcknowledged,
+  roundDone,
+} from "./events";
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
 import { renderOthers } from "./others";
@@ -40,6 +45,14 @@ export function renderApp(game: Game) {
           ),
         );
       }
+    });
+
+    window.addEventListener("roundDone", () => {
+      dispatchEvent(
+        notificationCreated("Round done!", 5000, () => {
+          dispatchEvent(roundAcknowledged(game));
+        }),
+      );
     });
 
     const continueRoundIfDone = () => {

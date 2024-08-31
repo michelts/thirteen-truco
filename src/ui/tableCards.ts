@@ -2,11 +2,12 @@ import type { Game, StepCard } from "@/types";
 import { findElement, getElement } from "@/utils/elements";
 import { renderCard } from "./card";
 import { renderCardBack } from "./cardBack";
-import { cardPlaced, roundAcknowledged } from "./events";
+import { cardPlaced } from "./events";
 
 export function renderTableCards(game: Game) {
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
+      // Highlight latest card
       redraw(event.detail.game);
       findElement(".ltc").addEventListener("animationend", () => {
         dispatchEvent(
@@ -15,19 +16,9 @@ export function renderTableCards(game: Game) {
       });
     });
     window.addEventListener("roundDone", (event) => {
-      redraw(event.detail.game, true);
-      let hasBeenDispatched = false;
-      const cardElement = findElement(".btc");
-      if (!cardElement) {
-        dispatchEvent(roundAcknowledged(event.detail.game));
-        return;
-      }
-      cardElement.addEventListener("animationend", () => {
-        if (!hasBeenDispatched) {
-          dispatchEvent(roundAcknowledged(event.detail.game));
-          hasBeenDispatched = true;
-        }
-      });
+      // Highlight best cards
+      const highlightBestCards = true;
+      redraw(event.detail.game, highlightBestCards);
     });
     window.addEventListener("roundAcknowledged", (event) => {
       redraw(event.detail.game);
@@ -36,16 +27,16 @@ export function renderTableCards(game: Game) {
   return `<div class="t"><div id="t">${render(game)}</div></div>`;
 }
 
-function render(game: Game, showBestCards?: boolean) {
+function render(game: Game, highlightBestCards?: boolean) {
   return game.currentRound.steps
     .map((step, stepIndex) => {
       return `<div>${step.cards
         .map((stepCard, cardIndex) => {
           const isLatestCard =
-            !showBestCards &&
+            !highlightBestCards &&
             stepIndex + 1 === game.currentRound.steps.length &&
             cardIndex + 1 === game.currentRound.currentStep.cards.length;
-          const isBestCard = showBestCards && stepCard.isBest;
+          const isBestCard = highlightBestCards && stepCard.isBest;
           return renderTableCard(stepCard, [
             isLatestCard ? "ltc" : "",
             isBestCard ? "btc" : "",
@@ -56,8 +47,8 @@ function render(game: Game, showBestCards?: boolean) {
     .join("");
 }
 
-function redraw(game: Game, showBestCards?: boolean) {
-  getElement("t").innerHTML = render(game, showBestCards);
+function redraw(game: Game, highlightBestCards?: boolean) {
+  getElement("t").innerHTML = render(game, highlightBestCards);
 }
 
 function renderTableCard(stepCard: StepCard, classNames: string[]) {
