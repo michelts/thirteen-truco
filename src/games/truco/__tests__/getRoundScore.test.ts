@@ -35,8 +35,12 @@ it.each`
       Draw: [0, 0],
     };
     const scores = composition.split(" ").map((key) => scoresMapper[key]);
-    const roundPointsPerTeam: [number, number] = [1, 1];
-    expect(getRoundScore(scores, roundPointsPerTeam)).toEqual([scoreA, scoreB]);
+    const points = 1;
+    const teamIndexThatRaisedStakes = undefined;
+    expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual([
+      scoreA,
+      scoreB,
+    ]);
   },
 );
 
@@ -65,29 +69,35 @@ it.each`
       Draw: [0, 0],
     };
     const scores = composition.split(" ").map((key) => scoresMapper[key]);
-    const roundPointsPerTeam: [number, number] = [1, 1];
-    expect(getRoundScore(scores, roundPointsPerTeam)).toEqual([scoreA, scoreB]);
+    const points = 1;
+    const teamIndexThatRaisedStakes = undefined;
+    expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual([
+      scoreA,
+      scoreB,
+    ]);
   },
 );
 
 it.each`
-  composition         | pointsPerTeam | scoreA | scoreB
-  ${"Draw Draw"}      | ${[3, 1]}     | ${0}   | ${1}
-  ${"Draw Draw"}      | ${[3, 6]}     | ${1}   | ${0}
-  ${"Draw Draw Draw"} | ${[3, 1]}     | ${0}   | ${1}
-  ${"Draw Draw Draw"} | ${[3, 6]}     | ${1}   | ${0}
+  composition         | points | teamIndexThatRaisedStakes | scoreA | scoreB
+  ${"Draw Draw"}      | ${3}   | ${0}                      | ${0}   | ${3}
+  ${"Draw Draw"}      | ${3}   | ${1}                      | ${3}   | ${0}
+  ${"Draw Draw Draw"} | ${6}   | ${0}                      | ${0}   | ${6}
+  ${"Draw Draw Draw"} | ${6}   | ${1}                      | ${6}   | ${0}
 `(
   "should make the team raising the most points to lose the last draw $composition ($pointsPerTeam)",
   ({
     composition,
+    points,
+    teamIndexThatRaisedStakes,
     scoreA,
     scoreB,
-    pointsPerTeam,
   }: {
     composition: string;
+    points: number;
+    teamIndexThatRaisedStakes: 0 | 1;
     scoreA: number;
     scoreB: number;
-    pointsPerTeam: [number, number];
   }) => {
     const scoresMapper: Record<string, [number, number]> = {
       Win: [1, 0],
@@ -95,6 +105,9 @@ it.each`
       Draw: [0, 0],
     };
     const scores = composition.split(" ").map((key) => scoresMapper[key]);
-    expect(getRoundScore(scores, pointsPerTeam)).toEqual([scoreA, scoreB]);
+    expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual([
+      scoreA,
+      scoreB,
+    ]);
   },
 );

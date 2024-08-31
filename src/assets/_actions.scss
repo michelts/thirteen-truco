@@ -1,0 +1,31 @@
+$button-color-1: #444;
+$button-color-2: #222;
+$button-color-3: #333;
+
+.act {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  button {
+    color: #fff;
+    background: #666;
+    border-radius: 5px;
+    padding: 5px;
+    background: linear-gradient(0deg, $button-color-1 0%, $button-color-2 100%);
+    border: 3px solid $button-color-2;
+    cursor: pointer;
+    box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.5);
+
+    &:disabled {
+      opacity: 0.5;
+    }
+    &:hover:not(:disabled) {
+      color: #ff0;
+    }
+    &:active:not(:disabled) {
+      background: $button-color-3;
+    }
+  }
+}

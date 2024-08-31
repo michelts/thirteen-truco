@@ -9,9 +9,5 @@ export function getElement<T = HTMLElement>(id: string): T {
 }
 
 export function findElement<T = HTMLElement>(query: string): T {
-  const element = document.querySelector(query) as T;
-  if (!element) {
-    throw new ElementNotFoundError();
-  }
-  return element;
+  return document.querySelector(query) as T;
 }

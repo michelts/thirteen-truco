@@ -3,7 +3,7 @@ import type { Game, Player } from "@/types";
 import { getElement } from "@/utils/elements";
 import { renderCard } from "./card";
 import { renderCardBack } from "./cardBack";
-import { cardDropped } from "./events";
+import { cardDropped, stakeRaiseAnswered } from "./events";
 
 export function renderOthersCards(game: Game, player: Player) {
   setTimeout(() => {
@@ -23,6 +23,20 @@ export function renderOthersCards(game: Game, player: Player) {
       if (event.detail.player === player) {
         redraw(player);
       }
+    });
+    let timeoutId: ReturnType<typeof setTimeout>;
+    getElement(`p${player.id}`).addEventListener("click", (event) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        if (event.detail === 1) {
+          game.currentRound.stake.accept(player);
+        } else {
+          game.currentRound.stake.reject(player);
+        }
+        dispatchEvent(stakeRaiseAnswered(game, player));
+      }, 200);
     });
   });
   return `<div class="otc" id="p${player.id}">${render(player)}</div>`;

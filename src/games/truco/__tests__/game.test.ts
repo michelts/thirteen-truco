@@ -1,6 +1,12 @@
 import { Card, Deck, Suit } from "@/core";
 import { TrucoPlayer } from "@/players";
 import type { Step, StepCard } from "@/types";
+import {
+  CantRaiseStakesOnCompletedRoundStepError,
+  NotYourTurnError,
+  PendingStakeRaiseError,
+  RoundFullError,
+} from "@/utils/errors";
 import type { SetRequired } from "type-fest";
 import { describe, expect, it, vi } from "vitest";
 import { TrucoGame } from "../index";
@@ -72,42 +78,6 @@ describe("card shuffling", () => {
 });
 
 describe("game playing", () => {
-  function getDeck() {
-    const cards = [
-      new Card(12, Suit.Diamonds),
-      new Card(12, Suit.Spades),
-      new Card(1, Suit.Clubs),
-      new Card(1, Suit.Hearts),
-      new Card(2, Suit.Clubs),
-      new Card(2, Suit.Hearts),
-      new Card(3, Suit.Clubs),
-      new Card(3, Suit.Hearts),
-      new Card(4, Suit.Clubs),
-      new Card(4, Suit.Hearts),
-      new Card(5, Suit.Clubs),
-      new Card(5, Suit.Hearts),
-      new Card(6, Suit.Clubs),
-      new Card(6, Suit.Hearts),
-    ];
-    const shuffledCards = [
-      new Card(12, Suit.Spades),
-      new Card(1, Suit.Hearts),
-      new Card(2, Suit.Hearts),
-      new Card(3, Suit.Hearts),
-      new Card(1, Suit.Clubs),
-      new Card(2, Suit.Clubs),
-      new Card(3, Suit.Clubs),
-      new Card(12, Suit.Diamonds),
-      new Card(4, Suit.Hearts),
-      new Card(5, Suit.Hearts),
-      new Card(6, Suit.Hearts),
-      new Card(4, Suit.Clubs),
-      new Card(5, Suit.Clubs),
-      new Card(6, Suit.Clubs),
-    ];
-    return new Deck(cards, () => shuffledCards);
-  }
-
   it("should allow player to drop cards on the table", () => {
     const game = new TrucoGame(getDeck());
     game.players = [
@@ -213,7 +183,7 @@ describe("game playing", () => {
     expect(game.currentRound.currentStep.cards).toHaveLength(2);
     expect(game.currentRound.currentStep.isDone).toBe(true);
 
-    expect(() => game.currentRound.continue()).toThrowError();
+    expect(() => game.currentRound.continue()).toThrowError(RoundFullError);
     game.continue();
     expect(game.players[0].cards).toHaveLength(3);
     expect(game.players[1].cards).toHaveLength(3);
@@ -285,7 +255,9 @@ describe("game playing", () => {
     ];
     const [player1, player2] = game.players;
     player1.dropCard(new Card(1, Suit.Hearts));
-    expect(() => player1.dropCard(new Card(2, Suit.Hearts))).toThrowError();
+    expect(() => player1.dropCard(new Card(2, Suit.Hearts))).toThrowError(
+      NotYourTurnError,
+    );
     assertStepHasCards(game.currentRound.currentStep, [
       { card: new Card(1, Suit.Hearts) },
     ]);
@@ -302,6 +274,135 @@ describe("game playing", () => {
     assertStepHasCards(game.currentRound.currentStep, [
       { card: new Card(2, Suit.Hearts) },
     ]);
+  });
+});
+
+describe("raising stakes (truco)", () => {
+  it("should allow raising stake and accept it before dropping the first card", () => {
+    const game = new TrucoGame(getDeck());
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+      new TrucoPlayer(game, "Player 3"),
+      new TrucoPlayer(game, "Player 4"),
+    ];
+    const [player1, player2, _player3, player4] = game.players;
+    expect(game.currentRound.stake).toEqual({ isAccepted: true });
+    game.currentRound.raiseStake(player1);
+    expect(game.currentRound.stake).toMatchObject({
+      points: 3,
+      raisedBy: player1,
+      acceptedBy: [],
+      rejectedBy: [],
+      isAccepted: undefined,
+    });
+    for (const player of game.players) {
+      // Can't drop cards or raise stake again until stake raise is accepted
+      expect(() => player.dropCard(player.cards[0])).toThrowError(
+        PendingStakeRaiseError,
+      );
+      expect(() => game.currentRound.raiseStake(player)).toThrowError(
+        PendingStakeRaiseError,
+      );
+    }
+    game.currentRound.stake.accept(player2);
+    expect(game.currentRound.stake).toMatchObject({
+      points: 3,
+      raisedBy: player1,
+      acceptedBy: [player2],
+      rejectedBy: [],
+      isAccepted: undefined,
+    });
+    for (const player of game.players) {
+      // Still waiting one approval!
+      expect(() => player.dropCard(player.cards[0])).toThrowError(
+        PendingStakeRaiseError,
+      );
+      expect(() => game.currentRound.raiseStake(player)).toThrowError(
+        PendingStakeRaiseError,
+      );
+    }
+    game.currentRound.stake.accept(player4);
+    for (const player of game.players) {
+      player.dropCard(player.cards[0]);
+    }
+    expect(game.currentRound.stake).toMatchObject({
+      points: 3,
+      raisedBy: player1,
+      acceptedBy: [player2, player4],
+      rejectedBy: [],
+      isAccepted: true,
+    });
+  });
+
+  it("should allow rejecting the raised stake and require only one team member to reject it", () => {
+    const game = new TrucoGame(getDeck());
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+      new TrucoPlayer(game, "Player 3"),
+      new TrucoPlayer(game, "Player 4"),
+    ];
+    const [player1, player2] = game.players;
+    expect(game.currentRound.stake).toEqual({ isAccepted: true });
+    game.currentRound.raiseStake(player1);
+    expect(game.currentRound.stake).toMatchObject({
+      points: 3,
+      raisedBy: player1,
+      acceptedBy: [],
+      rejectedBy: [],
+      isAccepted: undefined,
+    });
+    game.currentRound.stake.reject(player2);
+    expect(game.currentRound.stake).toMatchObject({
+      points: 3,
+      raisedBy: player1,
+      acceptedBy: [],
+      rejectedBy: [player2],
+      isAccepted: false,
+    });
+    expect(game.currentRound.isDone).toBe(true);
+  });
+
+  it("should allow raising stake and accepting it after dropping the first card", () => {
+    const game = new TrucoGame(getDeck());
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+    ];
+    const [player1, player2] = game.players;
+    expect(game.currentRound.stake).toEqual({ isAccepted: true });
+    for (const player of game.players) {
+      player.dropCard(player.cards[0]);
+    }
+    expect(() => game.currentRound.raiseStake(player1)).toThrowError(
+      CantRaiseStakesOnCompletedRoundStepError,
+    );
+    game.currentRound.continue();
+    player1.dropCard(player1.cards[0]);
+    game.currentRound.raiseStake(player1);
+    expect(() => player2.dropCard(player2.cards[0])).toThrowError(
+      PendingStakeRaiseError,
+    );
+    game.currentRound.stake.accept(player2);
+    player2.dropCard(player2.cards[0]);
+  });
+
+  it("should refuse players of the same team to accept or reject the raised stake", () => {
+    const game = new TrucoGame(getDeck());
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+      new TrucoPlayer(game, "Player 3"),
+      new TrucoPlayer(game, "Player 4"),
+    ];
+    game.currentRound.raiseStake(game.players[0]);
+    expect(() => game.currentRound.stake.accept(game.players[2])).toThrowError(
+      NotYourTurnError,
+    );
+    expect(() => game.currentRound.stake.reject(game.players[2])).toThrowError(
+      NotYourTurnError,
+    );
   });
 });
 
@@ -412,6 +513,89 @@ describe("score calculation", () => {
     expect(game.score).toEqual([1, 0]);
     expect(game.currentRound.isDone).toBe(true);
   });
+
+  it("should count raised stakes for the winner", () => {
+    const customDeck = new Deck(
+      [
+        new Card(4, Suit.Clubs),
+        new Card(5, Suit.Clubs),
+        new Card(6, Suit.Clubs),
+        new Card(7, Suit.Clubs),
+        new Card(8, Suit.Clubs),
+        new Card(9, Suit.Clubs),
+        new Card(10, Suit.Clubs),
+        new Card(11, Suit.Clubs),
+      ],
+      () => [
+        new Card(10, Suit.Clubs), // cause 11 to be the trump card
+        new Card(4, Suit.Clubs),
+        new Card(5, Suit.Clubs),
+        new Card(6, Suit.Clubs),
+        new Card(7, Suit.Clubs),
+        new Card(8, Suit.Clubs),
+        new Card(9, Suit.Clubs),
+        new Card(11, Suit.Clubs),
+      ],
+    );
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+    ];
+    const [player1, player2] = game.players;
+    game.currentRound.raiseStake(player1);
+    game.currentRound.stake.accept(player2);
+    game.currentRound.raiseStake(player2);
+    game.currentRound.stake.accept(player1);
+    player1.dropCard(new Card(4, Suit.Clubs));
+    player2.dropCard(new Card(7, Suit.Clubs)); // best
+    expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
+    game.currentRound.continue();
+    player1.dropCard(new Card(5, Suit.Clubs));
+    player2.dropCard(new Card(8, Suit.Clubs)); // best
+    expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toEqual([0, 6]);
+    expect(game.score).toEqual([0, 6]);
+  });
+
+  it("should count regular score if a team rejects the raised stakes", () => {
+    const customDeck = new Deck(
+      [
+        new Card(4, Suit.Clubs),
+        new Card(5, Suit.Clubs),
+        new Card(6, Suit.Clubs),
+        new Card(7, Suit.Clubs),
+        new Card(8, Suit.Clubs),
+        new Card(9, Suit.Clubs),
+        new Card(10, Suit.Clubs),
+        new Card(11, Suit.Clubs),
+      ],
+      () => [
+        new Card(10, Suit.Clubs), // cause 11 to be the trump card
+        new Card(4, Suit.Clubs),
+        new Card(5, Suit.Clubs),
+        new Card(6, Suit.Clubs),
+        new Card(7, Suit.Clubs),
+        new Card(8, Suit.Clubs),
+        new Card(9, Suit.Clubs),
+        new Card(11, Suit.Clubs),
+      ],
+    );
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+    ];
+    const [player1, player2] = game.players;
+    game.currentRound.raiseStake(player1);
+    game.currentRound.stake.accept(player2);
+    game.currentRound.raiseStake(player2);
+    game.currentRound.stake.reject(player1);
+    expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toEqual([0, 3]);
+    expect(game.score).toEqual([0, 3]);
+  });
 });
 
 function assertStepHasCards(
@@ -426,4 +610,40 @@ function assertStepHasCards(
       ...expectedCards[index],
     });
   });
+}
+
+function getDeck() {
+  const cards = [
+    new Card(12, Suit.Diamonds),
+    new Card(12, Suit.Spades),
+    new Card(1, Suit.Clubs),
+    new Card(1, Suit.Hearts),
+    new Card(2, Suit.Clubs),
+    new Card(2, Suit.Hearts),
+    new Card(3, Suit.Clubs),
+    new Card(3, Suit.Hearts),
+    new Card(4, Suit.Clubs),
+    new Card(4, Suit.Hearts),
+    new Card(5, Suit.Clubs),
+    new Card(5, Suit.Hearts),
+    new Card(6, Suit.Clubs),
+    new Card(6, Suit.Hearts),
+  ];
+  const shuffledCards = [
+    new Card(12, Suit.Spades),
+    new Card(1, Suit.Hearts),
+    new Card(2, Suit.Hearts),
+    new Card(3, Suit.Hearts),
+    new Card(1, Suit.Clubs),
+    new Card(2, Suit.Clubs),
+    new Card(3, Suit.Clubs),
+    new Card(12, Suit.Diamonds),
+    new Card(4, Suit.Hearts),
+    new Card(5, Suit.Hearts),
+    new Card(6, Suit.Hearts),
+    new Card(4, Suit.Clubs),
+    new Card(5, Suit.Clubs),
+    new Card(6, Suit.Clubs),
+  ];
+  return new Deck(cards, () => shuffledCards);
 }

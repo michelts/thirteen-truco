@@ -1,5 +1,7 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
+import { renderActions } from "./actions";
+import { renderRaiseStake } from "./raiseStake";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
 import { cardPicked, roundDone } from "./events";
@@ -34,6 +36,14 @@ export function renderApp(game: Game) {
       }
     });
 
+    window.addEventListener("stakeRaiseAnswered", (event) => {
+      if (event.detail.game.currentRound.isDone) {
+        dispatchEvent(roundDone(game));
+      } else if (event.detail.game.currentRound.currentStep.isDone) {
+        event.detail.game.currentRound.continue();
+      }
+    });
+
     window.addEventListener("roundAcknowledged", (event) => {
       event.detail.game.continue();
     });
@@ -50,7 +60,8 @@ export function renderApp(game: Game) {
         renderCardDeck(renderTurnedCard(game)) +
         renderMyself(
           renderMyCards(game, game.players[0]) +
-            renderAvatar(game.players[0], "y"),
+            renderAvatar(game.players[0], "y") +
+            renderActions(renderRaiseStake(game)),
         ) +
         renderOthers(
           game.players

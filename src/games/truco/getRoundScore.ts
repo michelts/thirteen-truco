@@ -1,8 +1,10 @@
+// Combination of values per round-step that matches the game rules
 const pointsPerStep = [7, 5, 3];
 
 export function getRoundScore(
   stepsScores: [number, number][],
-  roundPointsPerTeam: [number, number],
+  points: number,
+  teamIndexThatRaisedStakes?: 0 | 1,
 ): [number, number] {
   if (stepsScores.length === 1) {
     return [0, 0];
@@ -15,18 +17,18 @@ export function getRoundScore(
     return [0, 0];
   }
 
-  const [roundPointsA, roundPointsB] = roundPointsPerTeam;
   if ((totalA || totalB) && totalA >= totalB) {
-    return [1, 0];
+    return [points, 0];
   }
   if (totalA || totalB) {
-    return [0, 1];
+    return [0, points];
   }
-  if (roundPointsA > roundPointsB) {
-    return [0, 1];
+  // the team that raised stakes must untie a draw!
+  if (teamIndexThatRaisedStakes === 0) {
+    return [0, points];
   }
-  if (roundPointsB > roundPointsA) {
-    return [1, 0];
+  if (teamIndexThatRaisedStakes === 1) {
+    return [points, 0];
   }
   return [0, 0];
 }

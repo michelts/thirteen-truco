@@ -17,6 +17,19 @@ export interface Round {
   isDone: boolean;
   continue: () => void;
   score?: [number, number];
+  stake: Stake;
+  raiseStake: (player: Player) => void;
+  nextStakePoints: number;
+}
+
+export interface Stake {
+  points: number;
+  raisedBy: Player;
+  acceptedBy: Player[];
+  rejectedBy: Player[];
+  accept: (player: Player) => void;
+  reject: (player: Player) => void;
+  isAccepted: boolean | undefined;
 }
 
 export interface Step {

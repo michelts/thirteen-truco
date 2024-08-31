@@ -2,14 +2,21 @@
   position: absolute;
   z-index: 10;
   left: 100px;
-  bottom: 10px;
+  bottom: 8px;
   width: 400px;
 
   & > div {
     max-width: 90vw;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    grid-template-columns: min-content 1fr;
     gap: 30px;
+  }
+}
+
+@media (min-width: 600px) {
+  #me {
+    bottom: -8px;
   }
 }

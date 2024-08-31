@@ -4,6 +4,7 @@ import {
   CardNotFoundError,
   NotEnoughCardsError,
   NotYourTurnError,
+  PendingStakeRaiseError,
   PlayerNotInitializedError,
 } from "@/utils/errors";
 import { getId } from "@/utils/getId";
@@ -60,6 +61,9 @@ export class TrucoPlayer implements Player {
   }
 
   dropCard(card: Card, isHidden?: boolean) {
+    if (this._game.currentRound.stake.isAccepted === undefined) {
+      throw new PendingStakeRaiseError();
+    }
     if (this._game.currentPlayer === this) {
       this.takeCard(card);
       this._game.currentRound.currentStep.addPlayerCard(this, card, isHidden);

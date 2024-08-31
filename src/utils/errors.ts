@@ -11,3 +11,7 @@ export class RoundFullError extends Error {}
 export class ElementNotFoundError extends Error {}
 
 export class PlayerNotInitializedError extends Error {}
+
+export class PendingStakeRaiseError extends Error {}
+
+export class CantRaiseStakesOnCompletedRoundStepError extends Error {}

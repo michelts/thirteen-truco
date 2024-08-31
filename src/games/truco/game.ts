@@ -1,7 +1,12 @@
 import type { Card, Deck } from "@/core";
-import type { Game, Player, Round, Step, StepCard } from "@/types";
+import type { Game, Player, Round, Stake, Step, StepCard } from "@/types";
 import type { BestCardsFilterFunc } from "@/types";
-import { RoundFullError } from "@/utils/errors";
+import {
+  CantRaiseStakesOnCompletedRoundStepError,
+  NotYourTurnError,
+  PendingStakeRaiseError,
+  RoundFullError,
+} from "@/utils/errors";
 import { filterTrucoBestCards } from "./bestCards";
 import { getRoundScore } from "./getRoundScore";
 
@@ -83,10 +88,12 @@ export class TrucoGame implements Game {
 }
 
 class TrucoRound implements Round {
-  game: TrucoGame;
   turnedCard?: Card;
+  game: TrucoGame;
+  private _stakes: TrucoStake[] = [];
   private _steps: TrucoRoundStep[] = [];
   private _roundSteps = 3;
+  private _defaultStake = { isAccepted: true };
 
   constructor(game: TrucoGame) {
     this.game = game;
@@ -110,22 +117,104 @@ class TrucoRound implements Round {
   }
 
   get isDone() {
-    return this.currentStep.isDone && this.score !== undefined;
+    return (
+      (this.currentStep.isDone && this.score !== undefined) ||
+      this.stake.isAccepted === false
+    );
   }
 
   get score() {
+    if (this.stake.isAccepted === false) {
+      const points = this._prevStake.points ?? 1;
+      const score: [number, number] = [
+        this.stake.raisedBy.teamIndex === 0 ? points : 0,
+        this.stake.raisedBy.teamIndex === 1 ? points : 0,
+      ];
+      return score;
+    }
     const matches = this._steps.map((step) => {
-      const match = [0, 0] satisfies [number, number];
+      const match: [number, number] = [0, 0];
       if (step.winner) {
         match[step.winner.teamIndex] += 1;
       }
       return match;
     });
-    const score = getRoundScore(matches, [1, 1]);
+    const score = getRoundScore(
+      matches,
+      this.stake.points ?? 1,
+      this.stake?.raisedBy?.teamIndex,
+    );
     if (score[0] === score[1]) {
       return undefined;
     }
     return score;
+  }
+
+  get stake() {
+    return this._stakes.slice(-1)[0] ?? this._defaultStake;
+  }
+
+  private get _prevStake() {
+    return this._stakes.slice(0, -1).slice(-1)[0] ?? this._defaultStake;
+  }
+
+  raiseStake(player: Player) {
+    if (this.stake.isAccepted === undefined) {
+      throw new PendingStakeRaiseError();
+    }
+    if (this.currentStep.isDone) {
+      throw new CantRaiseStakesOnCompletedRoundStepError();
+    }
+    this._stakes.push(new TrucoStake(this, this.nextStakePoints, player));
+  }
+
+  get nextStakePoints() {
+    return (this.stake?.points ?? 0) + 3;
+  }
+}
+
+class TrucoStake implements Stake {
+  _round: TrucoRound;
+  points: number;
+  raisedBy: Player;
+  acceptedBy: Player[] = [];
+  rejectedBy: Player[] = [];
+
+  constructor(round: TrucoRound, points: number, raisedBy: Player) {
+    this._round = round;
+    this.points = points;
+    this.raisedBy = raisedBy;
+  }
+
+  get isAccepted() {
+    const expectedApprovals = this._round.game.players.filter(
+      (player) => player.teamIndex !== this.raisedBy.teamIndex,
+    );
+    const acceptedIds = this.acceptedBy.map((player) => player.id);
+    const rejectedIds = this.rejectedBy.map((player) => player.id);
+    for (const player of expectedApprovals) {
+      if (rejectedIds.includes(player.id)) {
+        return false;
+      }
+      if (!acceptedIds.includes(player.id)) {
+        return undefined;
+      }
+    }
+    return true;
+  }
+
+  accept(player: Player) {
+    if (player.teamIndex === this.raisedBy.teamIndex) {
+      throw new NotYourTurnError();
+    }
+    this.acceptedBy.push(player);
+  }
+
+  reject(player: Player) {
+    if (player.teamIndex === this.raisedBy.teamIndex) {
+      throw new NotYourTurnError();
+    }
+    this.rejectedBy.push(player);
   }
 }
 
