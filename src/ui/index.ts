@@ -14,6 +14,7 @@ import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
 import { renderTurnedCard } from "./turnedCard";
+import { renderNotifications } from "./notifications";
 
 export function renderApp(game: Game) {
   const root = getElement("app");
@@ -28,25 +29,16 @@ export function renderApp(game: Game) {
       }
     });
 
-    window.addEventListener("cardPlaced", (event) => {
-      if (event.detail.game.currentRound.isDone) {
+    const continueRound = () => {
+      if (game.currentRound.isDone) {
         dispatchEvent(roundDone(game));
-      } else if (event.detail.game.currentRound.currentStep.isDone) {
-        event.detail.game.currentRound.continue();
+      } else if (game.currentRound.currentStep.isDone) {
+        game.currentRound.continue();
       }
-    });
-
-    window.addEventListener("stakeRaiseAnswered", (event) => {
-      if (event.detail.game.currentRound.isDone) {
-        dispatchEvent(roundDone(game));
-      } else if (event.detail.game.currentRound.currentStep.isDone) {
-        event.detail.game.currentRound.continue();
-      }
-    });
-
-    window.addEventListener("roundAcknowledged", (event) => {
-      event.detail.game.continue();
-    });
+    };
+    window.addEventListener("cardPlaced", continueRound);
+    window.addEventListener("stakeRaiseAnswered", continueRound);
+    window.addEventListener("roundAcknowledged", () => game.continue());
   });
 
   root.innerHTML =
@@ -61,7 +53,8 @@ export function renderApp(game: Game) {
         renderMyself(
           renderMyCards(game, game.players[0]) +
             renderAvatar(game.players[0], "y") +
-            renderActions(renderRaiseStake(game)),
+            renderActions(renderRaiseStake(game)) +
+            renderNotifications(),
         ) +
         renderOthers(
           game.players

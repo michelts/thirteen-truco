@@ -1,0 +1,36 @@
+#nf > div {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  height: 120px;
+  margin-left: -150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > div {
+    font-family: sans-serif;
+    font-size: 1.1rem;
+    background: rgba(0, 0, 0, .9);
+    color: #fff;
+    font-weight: bold;
+    padding: .5rem;
+    border-radius: 5px;
+    box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    /*
+    transform: scale(0);
+    transform-origin: center center;
+    animation: ease-in-out 1800ms 1 grow;
+    animation-direction: alternate;
+    */
+  }
+}
+
+@keyframes grow {
+  0% { transform: scale(0) }
+  20% { transform: scale(1) }
+  80% { transform: scale(1) }
+  100% { transform: scale(0) }
+}

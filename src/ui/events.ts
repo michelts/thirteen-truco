@@ -15,6 +15,7 @@ declare global {
     stakeRaiseAnswered: CustomEvent<{ game: Game; player: Player }>;
     roundDone: CustomEvent<{ game: Game }>;
     roundAcknowledged: CustomEvent<{ game: Game }>;
+    notificationCreated: CustomEvent<{ message: string }>;
   }
 }
 
@@ -63,4 +64,10 @@ export const roundAcknowledged = (game: Game) =>
   new CustomEvent("roundAcknowledged", {
     bubbles: true,
     detail: { game },
+  });
+
+export const notificationCreated = (message: string) =>
+  new CustomEvent("notificationCreated", {
+    bubbles: true,
+    detail: { message },
   });
