@@ -1,5 +1,4 @@
 import { Card, Deck, Suit } from "@/core";
-import { TrucoPlayer } from "@/players";
 import type { Step, StepCard } from "@/types";
 import {
   CantRaiseStakesOnCompletedRoundStepError,
@@ -9,7 +8,7 @@ import {
 } from "@/utils/errors";
 import type { SetRequired } from "type-fest";
 import { describe, expect, it, vi } from "vitest";
-import { TrucoGame } from "../index";
+import { TrucoGame, TrucoPlayer } from "../index";
 
 describe("card shuffling", () => {
   it("should shuffle the deck, give 3 distinct cards to each player and set turned card and on every round", () => {

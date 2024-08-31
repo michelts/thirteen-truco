@@ -1,5 +1,24 @@
 import type { Card } from "@/core";
 
+export interface Player {
+  id: number;
+  name: string;
+  teamIndex: 0 | 1;
+  cards: Card[];
+  isEqual: (otherPlayer: Player) => boolean;
+  autoPickCard?: AutoPickCardFunc;
+  dropCard: (card: Card, isHidden?: boolean) => void;
+  receiveCards: (cards: Card[]) => void;
+}
+
+export type AutoPickCardFunc = (params: {
+  hand: Card[];
+  trumpCards: Card[];
+}) => {
+  card: Card;
+  isHidden: boolean;
+};
+
 export interface Game {
   players: Player[];
   currentPlayer: Player | null;
@@ -43,17 +62,6 @@ export interface StepCard {
   card: Card;
   isHidden: boolean;
   isBest: boolean;
-}
-
-export interface Player {
-  id: number;
-  name: string;
-  teamIndex: 0 | 1;
-  cards: Card[];
-  isEqual: (otherPlayer: Player) => boolean;
-  autoPickCard?: () => Card;
-  dropCard: (card: Card, isHidden?: boolean) => void;
-  receiveCards: (cards: Card[]) => void;
 }
 
 export type BestCardsFilterFunc = (

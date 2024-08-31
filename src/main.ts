@@ -1,7 +1,5 @@
 import { getDefaultDeck } from "@/config";
-import { TrucoGame } from "@/games/truco";
-import { AutoPlayer } from "@/players/auto";
-import { HumanPlayer } from "@/players/human";
+import { autoPickCard, TrucoGame, TrucoPlayer } from "@/games/truco";
 import { renderApp } from "@/ui";
 import "@/assets/main.scss";
 
@@ -13,10 +11,10 @@ function runApp() {
 function createGame() {
   const game = new TrucoGame(getDefaultDeck());
   game.players = [
-    new HumanPlayer(game, "You"),
-    new AutoPlayer(game, "Molly"),
-    new AutoPlayer(game, "Curtis"),
-    new AutoPlayer(game, "Bret"),
+    new TrucoPlayer(game, "You"),
+    new TrucoPlayer(game, "Molly", autoPickCard),
+    new TrucoPlayer(game, "Curtis", autoPickCard),
+    new TrucoPlayer(game, "Bret", autoPickCard),
   ];
   return game;
 }
