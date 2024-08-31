@@ -15,7 +15,11 @@ declare global {
     stakeRaiseAnswered: CustomEvent<{ game: Game; player: Player }>;
     roundDone: CustomEvent<{ game: Game }>;
     roundAcknowledged: CustomEvent<{ game: Game }>;
-    notificationCreated: CustomEvent<{ message: string; timeout?: number }>;
+    notificationCreated: CustomEvent<{
+      message: string;
+      timeout?: number;
+      onDismiss?: () => void;
+    }>;
   }
 }
 
@@ -66,8 +70,23 @@ export const roundAcknowledged = (game: Game) =>
     detail: { game },
   });
 
-export const notificationCreated = (message: string, timeout?: number) =>
-  new CustomEvent("notificationCreated", {
+export const notificationCreated = (
+  message: string,
+  timeoutOrCallback?: number | (() => void),
+  possiblyCallback?: () => void,
+) => {
+  let timeout: number | undefined;
+  let onDismiss: (() => void) | undefined;
+  if (typeof timeoutOrCallback === "number") {
+    timeout = timeoutOrCallback;
+  } else if (timeoutOrCallback) {
+    onDismiss = timeoutOrCallback;
+  }
+  if (possiblyCallback) {
+    onDismiss = possiblyCallback;
+  }
+  return new CustomEvent("notificationCreated", {
     bubbles: true,
-    detail: { message, timeout },
+    detail: { message, timeout, onDismiss },
   });
+};

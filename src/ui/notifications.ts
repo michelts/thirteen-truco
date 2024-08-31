@@ -2,19 +2,24 @@ import { getElement } from "@/utils/elements";
 
 export function renderNotifications() {
   window.addEventListener("notificationCreated", (event) => {
-    getElement("nf").innerHTML = render(event.detail.message);
+    getElement("nf").innerHTML = render(
+      event.detail.message,
+      event.detail.onDismiss,
+    );
     if (event.detail.timeout) {
       setTimeout(() => {
-        dismiss();
+        dismiss(event.detail.onDismiss);
       }, event.detail.timeout);
     }
   });
   return '<div id="nf"></div>';
 }
 
-function render(message: string) {
+function render(message: string, onDismiss?: () => void) {
   setTimeout(() => {
-    getElement("nf").firstChild?.addEventListener("click", dismiss);
+    getElement("nf").firstChild?.addEventListener("click", () =>
+      dismiss(onDismiss),
+    );
   });
   if (!message) {
     return "";
@@ -22,7 +27,10 @@ function render(message: string) {
   return `<button><div>${message}</div></button>`;
 }
 
-function dismiss() {
+function dismiss(onDismiss?: () => void) {
+  if (onDismiss) {
+    onDismiss();
+  }
   getElement("nf").innerHTML = render("");
 }
 
