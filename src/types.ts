@@ -19,7 +19,7 @@ export interface Round {
   score?: [number, number];
   stake: Stake;
   raiseStake: (player: Player) => void;
-  nextStakePoints: 3 | 6 | 9 | 12;
+  nextStakePoints: number;
 }
 
 export interface Stake {
