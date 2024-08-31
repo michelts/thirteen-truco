@@ -48,10 +48,17 @@ export function renderApp(game: Game) {
     });
 
     window.addEventListener("roundDone", () => {
+      const humanPlayerIndex = 0;
       dispatchEvent(
-        notificationCreated("Round done!", 5000, () => {
-          dispatchEvent(roundAcknowledged(game));
-        }),
+        notificationCreated(
+          game.currentRound?.score?.[humanPlayerIndex]
+            ? notifications.weWon
+            : notifications.weLost,
+          10000,
+          () => {
+            dispatchEvent(roundAcknowledged(game));
+          },
+        ),
       );
     });
 
