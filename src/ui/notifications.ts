@@ -1,5 +1,7 @@
 import { getElement } from "@/utils/elements";
 
+let dismissTimeout: ReturnType<typeof setTimeout> | null = null;
+
 export function renderNotifications() {
   window.addEventListener("notificationCreated", (event) => {
     getElement("nf").innerHTML = render(
@@ -7,7 +9,7 @@ export function renderNotifications() {
       event.detail.onDismiss,
     );
     if (event.detail.timeout) {
-      setTimeout(() => {
+      dismissTimeout = setTimeout(() => {
         dismiss(event.detail.onDismiss);
       }, event.detail.timeout);
     }
@@ -28,6 +30,9 @@ function render(message: string, onDismiss?: () => void) {
 }
 
 function dismiss(onDismiss?: () => void) {
+  if (dismissTimeout) {
+    clearTimeout(dismissTimeout);
+  }
   if (onDismiss) {
     onDismiss();
   }
@@ -39,6 +44,8 @@ export const notifications = {
     `You called ${getRaiseName(points)}! Waiting response...`,
   theyAccepted: "They accepted! Let's continue...",
   theyRejected: "They rejected! The round is yours!",
+  weWon: "This round is yours. Congrats!",
+  weLost: "You lost this round. No good!",
 };
 
 function getRaiseName(points: number) {
