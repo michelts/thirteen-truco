@@ -8,14 +8,21 @@ export function renderRaiseStake(game: Game) {
 }
 
 function render(game: Game) {
+  const humanPlayer = game.players[0];
   setTimeout(() => {
     getElement("rs").addEventListener("click", () => {
-      const player = game.players[0];
       const points = game.currentRound.nextStakePoints;
-      game.currentRound.raiseStake(player);
-      dispatchEvent(stakeRaised(game, player));
-      dispatchEvent(notificationCreated(notifications.weRaisedStakes(points)));
+      game.currentRound.raiseStake(humanPlayer);
+      dispatchEvent(stakeRaised(game, humanPlayer));
+      dispatchEvent(
+        notificationCreated(
+          notifications.weRaisedStakes(humanPlayer.name, points),
+        ),
+      );
     });
   });
-  return `<button id="rs"${game.currentRound.stake.isAccepted === undefined ? " disabled=" : ""}>RAISE<br/>TO ${game.currentRound.nextStakePoints}</button>`;
+  const canRaiseStakes =
+    game.currentRound.stake.isAccepted === true &&
+    game.currentRound.stake.raisedBy?.teamIndex !== humanPlayer.teamIndex;
+  return `<button id="rs"${!canRaiseStakes ? " disabled=" : ""}>RAISE<br/>TO ${game.currentRound.nextStakePoints}</button>`;
 }

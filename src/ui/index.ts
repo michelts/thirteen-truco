@@ -28,7 +28,10 @@ export function renderApp(game: Game) {
 
   function autoPickCard(player: Player) {
     const autoCard = player.autoPickCard();
-    if (!autoCard.shouldRaise) {
+    const shouldRaise =
+      autoCard.shouldRaise &&
+      game.currentRound.stake.raisedBy?.teamIndex !== player.teamIndex;
+    if (!shouldRaise) {
       dispatchEvent(cardPicked(player, autoCard.card, autoCard.isHidden));
     } else {
       const points = game.currentRound.nextStakePoints;
@@ -36,10 +39,12 @@ export function renderApp(game: Game) {
       autoRaiseSideEffect = () =>
         dispatchEvent(cardPicked(player, autoCard.card, autoCard.isHidden));
       dispatchEvent(stakeAutoRaised(game, player));
+      const raisedStakesNotification =
+        player.teamIndex === 1
+          ? notifications.theyRaisedStakes
+          : notifications.weRaisedStakes;
       dispatchEvent(
-        notificationCreated(
-          notifications.theyRaisedStakes(player.name, points),
-        ),
+        notificationCreated(raisedStakesNotification(player.name, points)),
       );
     }
   }
