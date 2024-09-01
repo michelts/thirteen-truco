@@ -58,6 +58,8 @@ export const notifications = {
   weLost: "You lost this round. No good!",
   weWonGame: "You won the game! Brilliant!",
   weLostGame: "You lose the game! Try again!",
+  weAccepted: "You accepted! Let's continue...",
+  weRejected: "You rejected! The round is theirs!",
 };
 
 function getRaiseName(points: number) {

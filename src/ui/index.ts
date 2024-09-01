@@ -1,4 +1,4 @@
-import type { Game } from "@/types";
+import type { Game, Player } from "@/types";
 import { getElement } from "@/utils/elements";
 import { renderActions } from "./actions";
 import { renderAvatar } from "./avatar";
@@ -23,82 +23,97 @@ import { notifications, renderNotifications } from "./notifications";
 
 export function renderApp(game: Game) {
   const root = getElement("app");
+  let autoRaiseSideEffect: (() => void) | null = null;
+
+  function autoPickCard(player: Player) {
+    const autoCard = player.autoPickCard();
+    if (!autoCard.shouldRaise) {
+      dispatchEvent(cardPicked(player, autoCard.card, autoCard.isHidden));
+    } else {
+      const points = game.currentRound.nextStakePoints;
+      game.currentRound.raiseStake(player);
+      autoRaiseSideEffect = () =>
+        dispatchEvent(cardPicked(player, autoCard.card, autoCard.isHidden));
+      dispatchEvent(stakeAutoRaised(game, player));
+      dispatchEvent(
+        notificationCreated(
+          notifications.theyRaisedStakes(player.name, points),
+        ),
+      );
+    }
+  }
+
+  const notifyRoundDone = () => {
+    const humanPlayerIndex = 0;
+    dispatchEvent(
+      notificationCreated(
+        game.currentRound?.score?.[humanPlayerIndex]
+          ? notifications.weWon
+          : notifications.weLost,
+        () => {
+          dispatchEvent(roundAcknowledged(game));
+        },
+      ),
+    );
+  };
+
+  const continueRoundOrCloseIt = () => {
+    if (game.currentRound.isDone) {
+      dispatchEvent(roundDone(game));
+    } else if (game.currentRound.currentStep.isDone) {
+      game.currentRound.continue();
+    }
+  };
+
+  const notifyStakeAccepted = (player: Player) => {
+    if (game.currentRound.stake.isAccepted === undefined) {
+      return;
+    }
+    if (game.currentRound.stake.isAccepted && autoRaiseSideEffect) {
+      autoRaiseSideEffect();
+    }
+    const messages =
+      player.teamIndex === game.players[0].teamIndex
+        ? [notifications.weAccepted, notifications.weRejected]
+        : [notifications.theyAccepted, notifications.theyRejected];
+    dispatchEvent(
+      notificationCreated(
+        game.currentRound.stake.isAccepted ? messages[0] : messages[1],
+        1000,
+      ),
+    );
+    autoRaiseSideEffect = null;
+  };
+
+  const continueGameIfDone = () => {
+    if (!game.isDone) {
+      game.continue();
+    } else {
+      const score = game.score;
+      dispatchEvent(
+        notificationCreated(
+          score[0] > score[1]
+            ? notifications.weWonGame
+            : notifications.weLostGame,
+        ),
+      );
+    }
+  };
 
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
       event.detail.player.dropCard(event.detail.card, event.detail.isHidden);
-
       if (game.currentPlayer?.canAutoPickCard) {
-        const { card, isHidden } = game.currentPlayer.autoPickCard();
-        const shouldRaise = true;
-        if (!shouldRaise) {
-          dispatchEvent(cardPicked(game.currentPlayer, card, isHidden));
-        } else {
-          console.log("XXX stake auto raised");
-          const points = game.currentRound.nextStakePoints;
-          game.currentRound.raiseStake(game.currentPlayer);
-          dispatchEvent(
-            stakeAutoRaised(game, game.currentPlayer, card, isHidden),
-          );
-          dispatchEvent(
-            notificationCreated(
-              notifications.theyRaisedStakes(game.currentPlayer.name, points),
-            ),
-          );
-        }
+        autoPickCard(game.currentPlayer);
       }
     });
-
-    window.addEventListener("roundDone", () => {
-      const humanPlayerIndex = 0;
-      dispatchEvent(
-        notificationCreated(
-          game.currentRound?.score?.[humanPlayerIndex]
-            ? notifications.weWon
-            : notifications.weLost,
-          () => {
-            dispatchEvent(roundAcknowledged(game));
-          },
-        ),
-      );
+    window.addEventListener("roundDone", notifyRoundDone);
+    window.addEventListener("cardPlaced", continueRoundOrCloseIt);
+    window.addEventListener("stakeRaiseAnswered", (event) => {
+      notifyStakeAccepted(event.detail.player);
+      continueRoundOrCloseIt();
     });
-
-    const continueRoundIfDone = () => {
-      if (game.currentRound.isDone) {
-        dispatchEvent(roundDone(game));
-      } else if (game.currentRound.currentStep.isDone) {
-        game.currentRound.continue();
-      }
-    };
-    window.addEventListener("cardPlaced", continueRoundIfDone);
-    window.addEventListener("stakeRaiseAnswered", continueRoundIfDone);
-    window.addEventListener("roundAcknowledged", () => {
-      if (!game.isDone) {
-        game.continue();
-      } else {
-        const score = game.score;
-        dispatchEvent(
-          notificationCreated(
-            score[0] > score[1]
-              ? notifications.weWonGame
-              : notifications.weLostGame,
-          ),
-        );
-      }
-    });
-
-    window.addEventListener("stakeRaiseAnswered", () => {
-      if (game.currentRound.stake.isAccepted !== undefined) {
-        dispatchEvent(
-          notificationCreated(
-            game.currentRound.stake.isAccepted
-              ? notifications.theyAccepted
-              : notifications.theyRejected,
-            1000,
-          ),
-        );
-      }
-    });
+    window.addEventListener("roundAcknowledged", continueGameIfDone);
   });
 
   root.innerHTML =

@@ -64,15 +64,10 @@ export const stakeRaiseAnswered = (game: Game, player: Player) =>
     detail: { game, player },
   });
 
-export const stakeAutoRaised = (
-  game: Game,
-  player: Player,
-  card: Card,
-  isHidden: boolean,
-) =>
+export const stakeAutoRaised = (game: Game, player: Player) =>
   new CustomEvent("stakeRaised", {
     bubbles: true,
-    detail: { game, player, card, isHidden },
+    detail: { game, player },
   });
 
 export const roundDone = (game: Game) =>
