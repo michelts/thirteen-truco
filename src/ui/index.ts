@@ -66,7 +66,6 @@ export function renderApp(game: Game) {
   };
 
   const continueRoundOrCloseIt = () => {
-    console.log("dispatch", game.currentRound);
     if (game.currentRound.isDone) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
