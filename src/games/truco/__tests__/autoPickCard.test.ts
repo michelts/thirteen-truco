@@ -207,7 +207,7 @@ describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
             [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
             [],
           ],
-          winners: [undefined], // difference from our score to their
+          wins: [undefined], // difference from our score to their
         }),
       ).toEqual({
         card: new Card(6, trumpSuit),
@@ -230,7 +230,7 @@ describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
             [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
             [],
           ],
-          winners: [0], // difference from our score to their
+          wins: [false],
         }),
       ).toEqual({
         card: new Card(6, trumpSuit),
@@ -253,7 +253,7 @@ describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
             [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
             [],
           ],
-          winners: [1], // difference from our score to their
+          wins: [true], // difference from our score to their
         }),
       ).toEqual({
         card: new Card(6, trumpSuit),
@@ -315,13 +315,13 @@ function call({
   trumpCardNumber,
   previousFromOurs,
   previousFromTheirs,
-  winners = [],
+  wins = [],
 }: {
   hand: Card[];
   trumpCardNumber: number;
   previousFromOurs: Card[][];
   previousFromTheirs: Card[][];
-  winners?: (0 | 1 | undefined)[];
+  wins?: (boolean | undefined)[];
 }) {
   // Wraps the autoPickCard call to allow using objects and give more
   // flexibility for tests. The function autoPickCard uses positional
@@ -330,7 +330,7 @@ function call({
     hand,
     previousFromOurs,
     previousFromTheirs,
-    winners,
+    wins,
     makeTrumpCards(trumpCardNumber),
     deck.cardsFromLowestToHighest,
   );

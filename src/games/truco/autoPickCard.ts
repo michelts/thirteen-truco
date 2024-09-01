@@ -13,7 +13,7 @@ const _autoPickCard = (
   hand: Card[],
   previousFromOurs: Card[][],
   previousFromTheirs: Card[][],
-  winners: (0 | 1 | undefined)[],
+  wins: (boolean | undefined)[],
   trumpCardsFromLowestToHighest: Card[],
   cardsFromLowestToHighest: Card[],
 ): ReturnType<Player["autoPickCard"]> => {
@@ -129,7 +129,7 @@ const _autoPickCard = (
     return {
       card: myTrumps[0],
       isHidden: false,
-      shouldRaise: winners[0] !== 1,
+      shouldRaise: !!wins[0],
     };
   }
 

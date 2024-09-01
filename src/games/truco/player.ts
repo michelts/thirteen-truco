@@ -98,7 +98,9 @@ export class TrucoPlayer implements Player {
       this.cards,
       previousFromOurs,
       previousFromTheirs,
-      this._game.currentRound.steps.map((step) => step.winner?.teamIndex),
+      this._game.currentRound.steps.map((step) =>
+        step.winner ? step.winner.teamIndex === this.teamIndex : undefined,
+      ),
       this._game.currentRound.trumpCards,
       this._game.deck.cardsFromLowestToHighest,
     );
