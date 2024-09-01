@@ -151,7 +151,8 @@ export function renderApp(game: Game) {
 
   root.innerHTML =
     renderHeader(
-      renderResetGame(game) + renderScore(game),
+      renderResetGame(game),
+      renderScore(game),
       renderToggle("MUSIC", false, () => true) +
         renderToggle("SFX", false, () => true),
     ) +
@@ -177,8 +178,8 @@ export function renderApp(game: Game) {
     );
 }
 
-function renderHeader(left: string, right: string) {
-  return `<div class="hd"><div>${left}</div><div>${right}</div></div>`;
+function renderHeader(left: string, center: string, right: string) {
+  return `<div class="hd"><div>${left}</div><div>${center}</div><div>${right}</div></div>`;
 }
 
 function renderKitchenTable(content: string) {
