@@ -1,8 +1,8 @@
+import { getDefaultDeck } from "@/config";
 import type { Deck } from "@/core";
 import { Card, Suit } from "@/core";
 import { beforeAll, describe, expect, it } from "vitest";
 import { autoPickCard } from "../index";
-import { getDefaultDeck } from "@/config";
 
 let deck: Deck;
 

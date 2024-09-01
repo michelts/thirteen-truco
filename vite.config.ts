@@ -1,7 +1,7 @@
 import {
   advzipPlugin,
-  ectPlugin,
   defaultViteBuildOptions,
+  ectPlugin,
   roadrollerPlugin,
 } from "js13k-vite-plugins";
 import { defineConfig } from "vite";

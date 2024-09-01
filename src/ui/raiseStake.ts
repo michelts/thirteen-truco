@@ -1,6 +1,6 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
-import { stakeRaised, notificationCreated } from "./events";
+import { notificationCreated, stakeRaised } from "./events";
 import { notifications } from "./notifications";
 
 export function renderRaiseStake(game: Game) {

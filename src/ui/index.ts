@@ -12,6 +12,7 @@ import {
 } from "./events";
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
+import { notifications, renderNotifications } from "./notifications";
 import { renderOthers } from "./others";
 import { renderOthersCards } from "./othersCards";
 import { renderPlayer } from "./player";
@@ -19,7 +20,6 @@ import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
 import { renderTurnedCard } from "./turnedCard";
-import { notifications, renderNotifications } from "./notifications";
 
 export function renderApp(game: Game) {
   const root = getElement("app");

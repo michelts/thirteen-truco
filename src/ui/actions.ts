@@ -1,8 +1,8 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
-import { renderRaiseStake } from "./raiseStake";
-import { renderGiveUpRound } from "./giveUpRound";
 import { renderAcceptStakeRaise } from "./acceptStakeRaise";
+import { renderGiveUpRound } from "./giveUpRound";
+import { renderRaiseStake } from "./raiseStake";
 import { renderRejectStakeRaise } from "./rejectStakeRaise";
 
 export function renderActions(game: Game) {

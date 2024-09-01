@@ -1,7 +1,7 @@
 import type { Card } from "@/core";
-import { shuffle } from "@/utils/shuffle";
-import { EmptyHandError } from "@/utils/errors";
 import type { Player } from "@/types";
+import { EmptyHandError } from "@/utils/errors";
+import { shuffle } from "@/utils/shuffle";
 
 export const autoPickCard = (...args: Parameters<typeof _autoPickCard>) => {
   const output = _autoPickCard(...args);
