@@ -54,7 +54,6 @@ export function renderApp(game: Game) {
           game.currentRound?.score?.[humanPlayerIndex]
             ? notifications.weWon
             : notifications.weLost,
-          10000,
           () => {
             dispatchEvent(roundAcknowledged(game));
           },

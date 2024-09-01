@@ -1,9 +1,5 @@
 @import "./_settings.scss";
 
-$glow-color: rgba(94, 146, 167, 1);
-$glow-blur: 25px;
-$glow-size: -5px;
-
 .t {
   position: absolute;
   z-index: 2;
@@ -37,6 +33,9 @@ $glow-size: -5px;
       z-index: 3;
     }
 
+    &.done .tc:not(.btc) {
+      filter: blur(2px);
+    }
   }
 
   .tc {
@@ -64,12 +63,22 @@ $glow-size: -5px;
 
 // best card
 .btc {
-  border-radius: $card-border-radius;
-  animation:
-    ease-in-out $table-card-glowing-animation-timeout 1 glow,
-    ease-in-out $table-card-glowing-animation-timeout 1 scale;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
+  .cd {
+    --glow-color: #{$color-us};
+    border-radius: $card-border-radius;
+    animation:
+      ease-in-out $table-card-glowing-animation-timeout 1 glow,
+      ease-in-out $table-card-glowing-animation-timeout 1 scale;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
+  }
+}
+
+// team index 1
+.ti-1 {
+  .cd {
+    --glow-color: #{$color-them};
+  }
 }
 
 @media (min-width: 600px) {
@@ -83,9 +92,13 @@ $glow-size: -5px;
   100% { opacity: 1 }
 }
 
+
+$glow-blur: 10px;
+$glow-size: 2px;
+
 @keyframes glow {
   0% { box-shadow: 0 0 $glow-blur $glow-size transparent }
-  100% { box-shadow: 0 0 $glow-blur $glow-size $glow-color }
+  100% { box-shadow: 0 0 $glow-blur $glow-size var(--glow-color) }
 }
 
 @keyframes scale {

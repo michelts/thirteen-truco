@@ -30,7 +30,7 @@ export function renderTableCards(game: Game) {
 function render(game: Game, highlightBestCards?: boolean) {
   return game.currentRound.steps
     .map((step, stepIndex) => {
-      return `<div>${step.cards
+      return `<div class="${game.currentRound.isDone ? "done" : ""}">${step.cards
         .map((stepCard, cardIndex) => {
           const isLatestCard =
             !highlightBestCards &&
@@ -40,6 +40,7 @@ function render(game: Game, highlightBestCards?: boolean) {
           return renderTableCard(stepCard, [
             isLatestCard ? "ltc" : "",
             isBestCard ? "btc" : "",
+            `ti-${stepCard.player.teamIndex}`,
           ]);
         })
         .join(" ")}</div>`;
