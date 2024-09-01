@@ -1,18 +1,15 @@
-import type { UserConfig } from "vite";
-import { viteSingleFile } from "vite-plugin-singlefile";
+import {
+  advzipPlugin,
+  ectPlugin,
+  defaultViteBuildOptions,
+  roadrollerPlugin,
+} from "js13k-vite-plugins";
+import { defineConfig } from "vite";
 
-export default {
+export default defineConfig({
   base: "./",
-  build: {
-    minify: "terser",
-    cssMinify: "lightningcss",
-    terserOptions: {
-      compress: {
-        drop_console: true,
-      },
-    },
-  },
-  plugins: [viteSingleFile()],
+  build: defaultViteBuildOptions,
+  plugins: [roadrollerPlugin(), ectPlugin(), advzipPlugin()],
   server: {
     host: true,
     fs: {
@@ -24,4 +21,4 @@ export default {
       "@/": new URL("./src/", import.meta.url).pathname,
     },
   },
-} satisfies UserConfig;
+});
