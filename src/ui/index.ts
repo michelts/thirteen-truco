@@ -9,6 +9,7 @@ import {
   roundAcknowledged,
   roundDone,
   stakeAutoRaised,
+  stakeRaiseAnswered,
 } from "./events";
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
@@ -65,7 +66,24 @@ export function renderApp(game: Game) {
     }
   };
 
-  const notifyStakeAccepted = (player: Player) => {
+  const autoAnswerStakeRaise = (raisedBy: Player) => {
+    if (raisedBy.teamIndex === 0) {
+      const shouldAccept = Math.random() - 0.5 > 0;
+      const opponents = game.players.filter((player) => player.teamIndex === 1);
+      setTimeout(() => {
+        for (const player of opponents) {
+          if (shouldAccept) {
+            game.currentRound.stake.accept(player);
+          } else {
+            game.currentRound.stake.reject(player);
+          }
+        }
+        dispatchEvent(stakeRaiseAnswered(game, opponents[0]));
+      }, 2500);
+    }
+  };
+
+  const notifyStakeAccepted = (player: Player, callback: () => void) => {
     if (game.currentRound.stake.isAccepted === undefined) {
       return;
     }
@@ -80,6 +98,7 @@ export function renderApp(game: Game) {
       notificationCreated(
         game.currentRound.stake.isAccepted ? messages[0] : messages[1],
         1000,
+        callback,
       ),
     );
     autoRaiseSideEffect = null;
@@ -109,9 +128,11 @@ export function renderApp(game: Game) {
     });
     window.addEventListener("roundDone", notifyRoundDone);
     window.addEventListener("cardPlaced", continueRoundOrCloseIt);
+    window.addEventListener("stakeRaised", (event) =>
+      autoAnswerStakeRaise(event.detail.player),
+    );
     window.addEventListener("stakeRaiseAnswered", (event) => {
-      notifyStakeAccepted(event.detail.player);
-      continueRoundOrCloseIt();
+      notifyStakeAccepted(event.detail.player, continueRoundOrCloseIt);
     });
     window.addEventListener("roundAcknowledged", continueGameIfDone);
   });
