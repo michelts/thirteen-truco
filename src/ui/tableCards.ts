@@ -19,16 +19,24 @@ export function renderTableCards(game: Game) {
       // Highlight best cards
       const highlightBestCards = true;
       redraw(event.detail.game, highlightBestCards);
+      const bestCard = findElement(".btc");
+      if (!bestCard) {
+        getElement("t").classList.add("done");
+      } else {
+        bestCard.addEventListener("animationend", () => {
+          getElement("t").classList.add("done");
+        });
+      }
     });
     window.addEventListener("roundAcknowledged", (event) => {
       redraw(event.detail.game);
     });
   });
-  return `<div class="t"><div id="t">${render(game)}</div></div>`;
+  return `<div class="t">${render(game)}</div>`;
 }
 
 function render(game: Game, highlightBestCards?: boolean) {
-  return game.currentRound.steps
+  return `<div id="t">${game.currentRound.steps
     .map((step, stepIndex) => {
       return `<div class="${game.currentRound.isDone ? "done" : ""}">${step.cards
         .map((stepCard, cardIndex) => {
@@ -45,11 +53,11 @@ function render(game: Game, highlightBestCards?: boolean) {
         })
         .join(" ")}</div>`;
     })
-    .join("");
+    .join("")}</div>`;
 }
 
 function redraw(game: Game, highlightBestCards?: boolean) {
-  getElement("t").innerHTML = render(game, highlightBestCards);
+  getElement("t").outerHTML = render(game, highlightBestCards);
 }
 
 function renderTableCard(stepCard: StepCard, classNames: string[]) {

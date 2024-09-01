@@ -33,9 +33,6 @@
       z-index: 3;
     }
 
-    &.done .tc:not(.btc) {
-      filter: blur(2px);
-    }
   }
 
   .tc {
@@ -67,11 +64,16 @@
     --glow-color: #{$color-us};
     border-radius: $card-border-radius;
     animation:
-      ease-in-out $table-card-glowing-animation-timeout 1 glow,
-      ease-in-out $table-card-glowing-animation-timeout 1 scale;
+      ease-in $table-card-glowing-animation-timeout 1 glow,
+      ease-in $table-card-glowing-animation-timeout 1 scale;
     animation-fill-mode: forwards;
     animation-direction: alternate;
   }
+}
+
+#t.done > div.done .tc:not(.btc) {
+  filter: blur(2px);
+  transition: filter $table-card-blurring-animation-timeout ease-in;
 }
 
 // team index 1
