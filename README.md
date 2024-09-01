@@ -1,4 +1,4 @@
-# 13 Truco
+# Thirteen Truco
 
 This game is a variation of the popular card game **Truco**. The main
 differences is the presence of a card with number 13.
