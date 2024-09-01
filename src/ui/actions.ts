@@ -4,6 +4,7 @@ import { renderAcceptStakeRaise } from "./acceptStakeRaise";
 import { renderGiveUpRound } from "./giveUpRound";
 import { renderRaiseStake } from "./raiseStake";
 import { renderRejectStakeRaise } from "./rejectStakeRaise";
+import { renderResetGameAction } from "./resetGameAction";
 
 export function renderActions(game: Game) {
   const redraw = () => {
@@ -21,6 +22,9 @@ export function renderActions(game: Game) {
 
 function render(game: Game) {
   const stake = game.currentRound.stake;
+  if (game.isDone) {
+    return `<div id="act">${renderResetGameAction(game)}</div>`;
+  }
   if (stake.raisedBy?.teamIndex === 1 && stake.isAccepted === undefined) {
     return `<div id="act">${renderAcceptStakeRaise(game) + renderRejectStakeRaise(game)}</div>`;
   }
