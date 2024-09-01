@@ -19,7 +19,8 @@ export function renderActions(game: Game) {
 }
 
 function render(game: Game) {
-  if (game.currentRound.stake.isAccepted === undefined) {
+  const stake = game.currentRound.stake;
+  if (stake.raisedBy?.teamIndex === 1 && stake.isAccepted === undefined) {
     return `<div id="act">${renderAcceptStakeRaise(game) + renderRejectStakeRaise(game)}</div>`;
   }
   return `<div id="act">${renderRaiseStake(game) + renderGiveUpRound(game)}</div>`;
