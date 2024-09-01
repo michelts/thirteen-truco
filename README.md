@@ -1,12 +1,13 @@
-# Triskaidekaphobia, the card game
+# 13 Truco
 
-This game is a variation of the popular "Truco". The main differences are:
+This game is a variation of the popular card game **Truco**. The main
+differences is the presence of a card with number 13.
 
-* Cards from A to 9, Q, J, K and 13
-* The 13 card serves as a reverse Joker and will lose from any other card
+This card serves as a reverse Joker and will lose from any other card but
+it will show itself as any other card and will become a 13 only when you drop
+it. 
 
-Background patterns:
+This means you might think you have a good hand when in fact, you would be luck
+if you didn't raise stakes with such a low card.
 
-https://projects.verou.me/css3patterns/#carbon
-https://projects.verou.me/css3patterns/#argyle
-https://projects.verou.me/css3patterns/#tartan
+I hope you don't get triskaidekaphobia while playing the game.
