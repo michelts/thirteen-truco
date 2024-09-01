@@ -190,6 +190,80 @@ describe("first card", () => {
   );
 });
 
+describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
+  "second card is trump (%s)",
+  (trumpSuit) => {
+    it("should use highest trump and raise stakes if draw first step", () => {
+      const hand = [new Card(6, trumpSuit), new Card(3, Suit.Clubs)];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 6,
+          previousFromOurs: [
+            [new Card(4, Suit.Clubs), new Card(2, Suit.Clubs)],
+            [],
+          ],
+          previousFromTheirs: [
+            [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
+            [],
+          ],
+          winners: [undefined], // difference from our score to their
+        }),
+      ).toEqual({
+        card: new Card(6, trumpSuit),
+        isHidden: false,
+        shouldRaise: true,
+      });
+    });
+
+    it("should use highest trump and raise stakes if win first step", () => {
+      const hand = [new Card(6, trumpSuit), new Card(3, Suit.Clubs)];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 6,
+          previousFromOurs: [
+            [new Card(4, Suit.Clubs), new Card(3, Suit.Hearts)],
+            [],
+          ],
+          previousFromTheirs: [
+            [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
+            [],
+          ],
+          winners: [0], // difference from our score to their
+        }),
+      ).toEqual({
+        card: new Card(6, trumpSuit),
+        isHidden: false,
+        shouldRaise: true,
+      });
+    });
+
+    it("should use highest trump but don't raise stakes if lost first step", () => {
+      const hand = [new Card(6, trumpSuit), new Card(3, Suit.Clubs)];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 6,
+          previousFromOurs: [
+            [new Card(4, Suit.Clubs), new Card(1, Suit.Hearts)],
+            [],
+          ],
+          previousFromTheirs: [
+            [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
+            [],
+          ],
+          winners: [1], // difference from our score to their
+        }),
+      ).toEqual({
+        card: new Card(6, trumpSuit),
+        isHidden: false,
+        shouldRaise: false,
+      });
+    });
+  },
+);
+
 describe("last card", () => {
   it("should pick the last card if single one left", () => {
     const hand = [new Card(6, Suit.Clubs)];
@@ -241,11 +315,13 @@ function call({
   trumpCardNumber,
   previousFromOurs,
   previousFromTheirs,
+  winners = [],
 }: {
   hand: Card[];
   trumpCardNumber: number;
   previousFromOurs: Card[][];
   previousFromTheirs: Card[][];
+  winners?: (0 | 1 | undefined)[];
 }) {
   // Wraps the autoPickCard call to allow using objects and give more
   // flexibility for tests. The function autoPickCard uses positional
@@ -254,6 +330,7 @@ function call({
     hand,
     previousFromOurs,
     previousFromTheirs,
+    winners,
     makeTrumpCards(trumpCardNumber),
     deck.cardsFromLowestToHighest,
   );

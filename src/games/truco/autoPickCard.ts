@@ -13,6 +13,7 @@ const _autoPickCard = (
   hand: Card[],
   previousFromOurs: Card[][],
   previousFromTheirs: Card[][],
+  winners: (0 | 1 | undefined)[],
   trumpCardsFromLowestToHighest: Card[],
   cardsFromLowestToHighest: Card[],
 ): ReturnType<Player["autoPickCard"]> => {
@@ -47,7 +48,7 @@ const _autoPickCard = (
       ) &&
       !myTopCards.some((topCard) => topCard.isEqual(card)),
   );
-  const step = hand.length - 2;
+  const step = 4 - hand.length;
   const partnerCard = previousFromOurs.slice(-1)[0][0];
   const isPartnerCardTop =
     partnerCard &&
@@ -66,8 +67,12 @@ const _autoPickCard = (
     trumps: myTrumps.map((card) => card.toString()),
     myTopCards: myTopCards.map((card) => card.toString()),
     myLowerCards: myLowerCards.map((card) => card.toString()),
-    previousFromOurs: previousFromOurs.map((card) => card.toString()),
-    previousFromTheirs: previousFromTheirs.map((card) => card.toString()),
+    previousFromOurs: previousFromOurs.map((cards) =>
+      cards.map((card) => card.toString()),
+    ),
+    previousFromTheirs: previousFromTheirs.map((cards) =>
+      cards.map((card) => card.toString()),
+    ),
     step,
     isHead,
     enemyCards: enemyCards.map((card) => card.toString()),
@@ -119,6 +124,15 @@ const _autoPickCard = (
     }
   }
 
+  if (step === 2 && myTrumps) {
+    console.log("Clubs trump on second step");
+    return {
+      card: myTrumps[0],
+      isHidden: false,
+      shouldRaise: winners[0] !== 1,
+    };
+  }
+
   if (diamondsTrump || spadesTrump || heartsTrump) {
     console.log("One of the lower best trumps on any step");
     return {
@@ -138,8 +152,8 @@ const _autoPickCard = (
       };
     }
 
-    console.log("Highest card because I'm tail");
     if (!isHead && myTopCards[0]) {
+      console.log("Highest card because I'm tail");
       return {
         card: myTopCards[0],
         isHidden: false,

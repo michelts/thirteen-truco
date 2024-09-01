@@ -53,6 +53,7 @@ export interface Stake {
 export interface Step {
   cards: StepCard[];
   isDone: boolean;
+  winner?: Player;
   addPlayerCard: (player: Player, card: Card, isHidden?: boolean) => void;
 }
 
