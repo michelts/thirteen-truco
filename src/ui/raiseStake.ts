@@ -4,14 +4,6 @@ import { stakeRaised, notificationCreated } from "./events";
 import { notifications } from "./notifications";
 
 export function renderRaiseStake(game: Game) {
-  const redraw = () => {
-    getElement("rs").outerHTML = render(game);
-  };
-  setTimeout(() => {
-    window.addEventListener("stakeRaised", redraw);
-    window.addEventListener("stakeRaiseAnswered", redraw);
-    window.addEventListener("roundAcknowledged", redraw);
-  });
   return render(game);
 }
 

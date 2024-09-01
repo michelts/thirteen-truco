@@ -1,7 +1,6 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
 import { renderActions } from "./actions";
-import { renderRaiseStake } from "./raiseStake";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
 import {
@@ -9,6 +8,7 @@ import {
   notificationCreated,
   roundAcknowledged,
   roundDone,
+  stakeAutoRaised,
 } from "./events";
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
@@ -30,20 +30,22 @@ export function renderApp(game: Game) {
 
       if (game.currentPlayer?.canAutoPickCard) {
         const { card, isHidden } = game.currentPlayer.autoPickCard();
-        dispatchEvent(cardPicked(game.currentPlayer, card, isHidden));
-      }
-    });
-
-    window.addEventListener("stakeRaiseAnswered", () => {
-      if (game.currentRound.stake.isAccepted !== undefined) {
-        dispatchEvent(
-          notificationCreated(
-            game.currentRound.stake.isAccepted
-              ? notifications.theyAccepted
-              : notifications.theyRejected,
-            1000,
-          ),
-        );
+        const shouldRaise = true;
+        if (!shouldRaise) {
+          dispatchEvent(cardPicked(game.currentPlayer, card, isHidden));
+        } else {
+          console.log("XXX stake auto raised");
+          const points = game.currentRound.nextStakePoints;
+          game.currentRound.raiseStake(game.currentPlayer);
+          dispatchEvent(
+            stakeAutoRaised(game, game.currentPlayer, card, isHidden),
+          );
+          dispatchEvent(
+            notificationCreated(
+              notifications.theyRaisedStakes(game.currentPlayer.name, points),
+            ),
+          );
+        }
       }
     });
 
@@ -84,6 +86,19 @@ export function renderApp(game: Game) {
         );
       }
     });
+
+    window.addEventListener("stakeRaiseAnswered", () => {
+      if (game.currentRound.stake.isAccepted !== undefined) {
+        dispatchEvent(
+          notificationCreated(
+            game.currentRound.stake.isAccepted
+              ? notifications.theyAccepted
+              : notifications.theyRejected,
+            1000,
+          ),
+        );
+      }
+    });
   });
 
   root.innerHTML =
@@ -98,7 +113,7 @@ export function renderApp(game: Game) {
         renderMyself(
           renderMyCards(game, game.players[0]) +
             renderAvatar(game.players[0], "y") +
-            renderActions(renderRaiseStake(game)) +
+            renderActions(game) +
             renderNotifications(),
         ) +
         renderOthers(

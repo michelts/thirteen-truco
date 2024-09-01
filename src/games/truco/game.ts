@@ -93,7 +93,7 @@ export class TrucoGame implements Game {
     ];
   }
 
-  capMaxScore(value) {
+  capMaxScore(value: number) {
     return value <= 12 ? value : 12;
   }
 
@@ -153,7 +153,7 @@ class TrucoRound implements Round {
 
   get score() {
     if (this.stake.isAccepted === false) {
-      const points = this._prevStake.points ?? 1;
+      const points = this.previousStakePoints;
       const score: [number, number] = [
         this.stake.raisedBy.teamIndex === 0 ? points : 0,
         this.stake.raisedBy.teamIndex === 1 ? points : 0,
@@ -182,8 +182,14 @@ class TrucoRound implements Round {
     return this._stakes.slice(-1)[0] ?? this._defaultStake;
   }
 
-  private get _prevStake() {
-    return this._stakes.slice(0, -1).slice(-1)[0] ?? this._defaultStake;
+  get previousStakePoints() {
+    const stake = this._stakes.slice(0, -1).slice(-1)[0] ?? this._defaultStake;
+    return stake.points ?? 1;
+  }
+
+  get currentStakePoints() {
+    const stake = this._stakes.slice(-1)[0] ?? this._defaultStake;
+    return stake.points ?? 1;
   }
 
   raiseStake(player: Player) {

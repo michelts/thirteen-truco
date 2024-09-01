@@ -13,6 +13,12 @@ declare global {
     cardPlaced: CustomEvent<{ game: Game; player: Player; card: Card }>;
     stakeRaised: CustomEvent<{ game: Game; player: Player }>;
     stakeRaiseAnswered: CustomEvent<{ game: Game; player: Player }>;
+    stakeAutoRaised: CustomEvent<{
+      game: Game;
+      player: Player;
+      card: Card;
+      isHiden: boolean;
+    }>;
     roundDone: CustomEvent<{ game: Game }>;
     roundAcknowledged: CustomEvent<{ game: Game }>;
     notificationCreated: CustomEvent<{
@@ -56,6 +62,17 @@ export const stakeRaiseAnswered = (game: Game, player: Player) =>
   new CustomEvent("stakeRaiseAnswered", {
     bubbles: true,
     detail: { game, player },
+  });
+
+export const stakeAutoRaised = (
+  game: Game,
+  player: Player,
+  card: Card,
+  isHidden: boolean,
+) =>
+  new CustomEvent("stakeRaised", {
+    bubbles: true,
+    detail: { game, player, card, isHidden },
   });
 
 export const roundDone = (game: Game) =>

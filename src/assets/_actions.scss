@@ -2,7 +2,7 @@ $button-color-1: #444;
 $button-color-2: #222;
 $button-color-3: #333;
 
-.act {
+#act {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -15,6 +15,7 @@ $button-color-3: #333;
     padding: 5px;
     background: linear-gradient(0deg, $button-color-1 0%, $button-color-2 100%);
     border: 3px solid $button-color-2;
+    height: 3.5em;
     cursor: pointer;
     box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.5);
 

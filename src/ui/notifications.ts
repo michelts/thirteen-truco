@@ -52,6 +52,8 @@ export const notifications = {
     `You called ${getRaiseName(points)}! Waiting response...`,
   theyAccepted: "They accepted! Let's continue...",
   theyRejected: "They rejected! The round is yours!",
+  theyRaisedStakes: (name: string, points: number) =>
+    `${name} called ${getRaiseName(points)}! What do you said?`,
   weWon: "This round is yours. Congrats!",
   weLost: "You lost this round. No good!",
   weWonGame: "You won the game! Brilliant!",
