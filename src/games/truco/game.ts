@@ -68,7 +68,8 @@ export class TrucoGame implements Game {
 
   reset() {
     this._currentPlayerIndex = 0;
-    this._rounds = [new TrucoRound(this)];
+    this._rounds = [];
+    this._rounds.push(new TrucoRound(this));
     this.distributeCards();
   }
 
