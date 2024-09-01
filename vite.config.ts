@@ -8,7 +8,15 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   base: "./",
-  build: defaultViteBuildOptions,
+  build: {
+    ...defaultViteBuildOptions,
+    terserOptions: {
+      ...defaultViteBuildOptions.terserOptions,
+      compress: {
+        drop_console: true,
+      },
+    },
+  },
   plugins: [roadrollerPlugin(), ectPlugin(), advzipPlugin()],
   server: {
     host: true,
