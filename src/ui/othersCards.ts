@@ -49,8 +49,12 @@ function render(player: Player, pickedCard?: Card) {
 }
 
 function renderPlayerCard(player: Player, card: Card, pickedCard?: Card) {
-  if (pickedCard && card.isEqual(pickedCard)) {
+  const hasBeenPicked = pickedCard && card.isEqual(pickedCard);
+  if (hasBeenPicked) {
     return `<div id="ani-${player.id}" class="otcv">${renderCard(card)}</div>`;
+  }
+  if (import.meta.env.VITE_DEBUG_OPPONENT_CARDS) {
+    return `<div>${renderCard(card)}</div>`;
   }
   return renderCardBack();
 }
