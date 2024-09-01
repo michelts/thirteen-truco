@@ -71,7 +71,20 @@ export function renderApp(game: Game) {
     };
     window.addEventListener("cardPlaced", continueRoundIfDone);
     window.addEventListener("stakeRaiseAnswered", continueRoundIfDone);
-    window.addEventListener("roundAcknowledged", () => game.continue());
+    window.addEventListener("roundAcknowledged", () => {
+      if (!game.isDone) {
+        game.continue();
+      } else {
+        const score = game.score;
+        dispatchEvent(
+          notificationCreated(
+            score[0] > score[1]
+              ? notifications.weWonGame
+              : notifications.weLostGame,
+          ),
+        );
+      }
+    });
   });
 
   root.innerHTML =

@@ -15,3 +15,5 @@ export class PlayerNotInitializedError extends Error {}
 export class PendingStakeRaiseError extends Error {}
 
 export class CantRaiseStakesOnCompletedRoundStepError extends Error {}
+
+export class GameFinishedError extends Error {}

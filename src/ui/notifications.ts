@@ -2,6 +2,8 @@ import { getElement } from "@/utils/elements";
 
 let dismissTimeout: ReturnType<typeof setTimeout> | null = null;
 
+let currentMessage = "";
+
 export function renderNotifications() {
   window.addEventListener("notificationCreated", (event) => {
     getElement("nf").innerHTML = render(
@@ -10,7 +12,7 @@ export function renderNotifications() {
     );
     if (event.detail.timeout) {
       dismissTimeout = setTimeout(() => {
-        dismiss(event.detail.onDismiss);
+        dismiss(event.detail.onDismiss, event.detail.message);
       }, event.detail.timeout);
     }
   });
@@ -18,9 +20,10 @@ export function renderNotifications() {
 }
 
 function render(message: string, onDismiss?: () => void) {
+  currentMessage = message;
   setTimeout(() => {
     getElement("nf").firstChild?.addEventListener("click", () =>
-      dismiss(onDismiss),
+      dismiss(onDismiss, message),
     );
   });
   if (!message) {
@@ -29,14 +32,19 @@ function render(message: string, onDismiss?: () => void) {
   return `<button><div>${message}</div></button>`;
 }
 
-function dismiss(onDismiss?: () => void) {
+function dismiss(onDismiss?: () => void, originalMessage?: string) {
   if (dismissTimeout) {
     clearTimeout(dismissTimeout);
   }
   if (onDismiss) {
     onDismiss();
   }
-  getElement("nf").innerHTML = render("");
+  setTimeout(() => {
+    if (originalMessage === currentMessage) {
+      getElement("nf").innerHTML = render("");
+      currentMessage = "";
+    }
+  });
 }
 
 export const notifications = {
@@ -46,6 +54,8 @@ export const notifications = {
   theyRejected: "They rejected! The round is yours!",
   weWon: "This round is yours. Congrats!",
   weLost: "You lost this round. No good!",
+  weWonGame: "You won the game! Brilliant!",
+  weLostGame: "You lose the game! Try again!",
 };
 
 function getRaiseName(points: number) {

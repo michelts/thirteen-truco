@@ -3,6 +3,7 @@ import type { Game, Player, Round, Stake, Step, StepCard } from "@/types";
 import type { BestCardsFilterFunc } from "@/types";
 import {
   CantRaiseStakesOnCompletedRoundStepError,
+  GameFinishedError,
   NotYourTurnError,
   PendingStakeRaiseError,
   RoundFullError,
@@ -12,7 +13,6 @@ import { getRoundScore } from "./getRoundScore";
 import { getTrumpCards } from "./getTrumpCards";
 
 export class TrucoGame implements Game {
-  isDone = false;
   filterBestCards: BestCardsFilterFunc = defaultFilterBestCards;
   deck: Deck;
   private _players: Player[] = [];
@@ -54,6 +54,9 @@ export class TrucoGame implements Game {
   }
 
   continue() {
+    if (this.isDone) {
+      throw new GameFinishedError();
+    }
     if (!this.currentRound.isDone) {
       this.currentRound.continue();
     } else {
@@ -84,7 +87,18 @@ export class TrucoGame implements Game {
       us += score?.[0] ?? 0;
       them += score?.[1] ?? 0;
     }
-    return [us, them] satisfies [number, number];
+    return [this.capMaxScore(us), this.capMaxScore(them)] satisfies [
+      number,
+      number,
+    ];
+  }
+
+  capMaxScore(value) {
+    return value <= 12 ? value : 12;
+  }
+
+  get isDone() {
+    return this.score.some((value) => value === 12);
   }
 }
 
@@ -102,6 +116,9 @@ class TrucoRound implements Round {
   }
 
   continue() {
+    if (this.game.isDone) {
+      throw new GameFinishedError();
+    }
     if (this._steps.length < this._roundSteps) {
       this._steps.push(new TrucoRoundStep(this));
     } else {

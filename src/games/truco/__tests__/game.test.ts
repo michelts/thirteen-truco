@@ -2,10 +2,12 @@ import { Card, Deck, Suit } from "@/core";
 import type { Step, StepCard } from "@/types";
 import {
   CantRaiseStakesOnCompletedRoundStepError,
+  GameFinishedError,
   NotYourTurnError,
   PendingStakeRaiseError,
   RoundFullError,
 } from "@/utils/errors";
+import { range } from "@/utils/range";
 import type { SetRequired } from "type-fest";
 import { describe, expect, it, vi } from "vitest";
 import { TrucoGame, TrucoPlayer } from "../index";
@@ -600,6 +602,104 @@ describe("score calculation", () => {
     expect(game.currentRound.isDone).toBe(true);
     expect(game.currentRound.score).toEqual([0, 3]);
     expect(game.score).toEqual([0, 3]);
+  });
+});
+
+describe("end game", () => {
+  const cardsFromLowestToHighest = [
+    new Card(4, Suit.Spades),
+    new Card(1, Suit.Hearts),
+    new Card(1, Suit.Clubs),
+    new Card(2, Suit.Hearts),
+    new Card(2, Suit.Clubs),
+    new Card(3, Suit.Hearts),
+    new Card(3, Suit.Clubs),
+  ];
+  const shuffledCards = [
+    new Card(4, Suit.Spades),
+    new Card(3, Suit.Clubs),
+    new Card(2, Suit.Clubs),
+    new Card(1, Suit.Clubs),
+    new Card(3, Suit.Hearts),
+    new Card(2, Suit.Hearts),
+    new Card(1, Suit.Hearts),
+  ];
+
+  it("should end game if one of the teams reach 12 points", () => {
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCards,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    const [player1, player2] = game.players;
+
+    for (const index of range(13, 1)) {
+      player1.dropCard(new Card(3, Suit.Clubs)); // draw
+      player2.dropCard(new Card(3, Suit.Hearts));
+      game.currentRound.continue();
+      player1.dropCard(new Card(1, Suit.Clubs)); // highest trump
+      player2.dropCard(new Card(1, Suit.Hearts));
+      expect(game.score).toEqual([index, 0]);
+      if (index < 12) {
+        game.continue();
+      }
+    }
+
+    expect(game.isDone).toBe(true);
+    expect(game.currentRound.isDone).toBe(true);
+    expect(() => game.continue()).toThrowError(GameFinishedError);
+    expect(() => game.currentRound.continue()).toThrowError(GameFinishedError);
+    expect(() => player1.dropCard(new Card(2, Suit.Clubs))).toThrowError(
+      NotYourTurnError,
+    );
+    expect(() => player2.dropCard(new Card(3, Suit.Hearts))).toThrowError(
+      NotYourTurnError,
+    );
+  });
+
+  it("should not count more than 12 points", () => {
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCards,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    const [player1, player2] = game.players;
+
+    for (const index of range(5)) {
+      game.currentRound.raiseStake(player1);
+      if (index === 0) {
+        game.currentRound.stake.reject(player2);
+      } else {
+        game.currentRound.stake.accept(player2);
+      }
+      player1.dropCard(new Card(3, Suit.Clubs)); // draw
+      player2.dropCard(new Card(3, Suit.Hearts));
+      game.currentRound.continue();
+      player1.dropCard(new Card(1, Suit.Clubs)); // highest trump
+      player2.dropCard(new Card(1, Suit.Hearts));
+      if (index < 4) {
+        expect(game.score).toEqual([1 + index * 3, 0]);
+        game.continue();
+      }
+    }
+
+    expect(game.score).toEqual([12, 0]);
+    expect(game.isDone).toBe(true);
+    expect(game.currentRound.isDone).toBe(true);
+    expect(() => game.continue()).toThrowError(GameFinishedError);
+    expect(() => game.currentRound.continue()).toThrowError(GameFinishedError);
+    expect(() => player1.dropCard(new Card(2, Suit.Clubs))).toThrowError(
+      NotYourTurnError,
+    );
+    expect(() => player2.dropCard(new Card(3, Suit.Hearts))).toThrowError(
+      NotYourTurnError,
+    );
   });
 });
 
