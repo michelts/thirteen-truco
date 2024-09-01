@@ -84,9 +84,22 @@ export class TrucoPlayer implements Player {
   }
 
   autoPickCard() {
-    return autoPickCard({
-      hand: this.cards,
-      trumpCards: this._game.currentRound.trumpCards,
-    });
+    const previousFromOurs = this._game.currentRound.steps.map((step) =>
+      step.cards
+        .filter((stepCard) => stepCard.player.teamIndex === 0)
+        .map((stepCard) => stepCard.card),
+    );
+    const previousFromTheirs = this._game.currentRound.steps.map((step) =>
+      step.cards
+        .filter((stepCard) => stepCard.player.teamIndex === 1)
+        .map((stepCard) => stepCard.card),
+    );
+    return autoPickCard(
+      this.cards,
+      previousFromOurs,
+      previousFromTheirs,
+      this._game.currentRound.trumpCards,
+      this._game.deck.cardsFromLowestToHighest,
+    );
   }
 }
