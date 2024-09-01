@@ -60,6 +60,7 @@ export class TrucoGame implements Game {
     if (!this.currentRound.isDone) {
       this.currentRound.continue();
     } else {
+      this._currentPlayerIndex = 0;
       this._rounds.push(new TrucoRound(this));
       this.distributeCards();
     }

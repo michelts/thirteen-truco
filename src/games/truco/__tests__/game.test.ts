@@ -352,23 +352,34 @@ describe("raising stakes (truco)", () => {
     ];
     const [player1, player2] = game.players;
     expect(game.currentRound.stake).toEqual({ isAccepted: true });
-    game.currentRound.raiseStake(player1);
+    player1.dropCard(player1.cards[0]);
+    game.currentRound.raiseStake(player2);
     expect(game.currentRound.stake).toMatchObject({
       points: 3,
-      raisedBy: player1,
+      raisedBy: player2,
       acceptedBy: [],
       rejectedBy: [],
       isAccepted: undefined,
     });
-    game.currentRound.stake.reject(player2);
+    game.currentRound.stake.reject(player1);
     expect(game.currentRound.stake).toMatchObject({
       points: 3,
-      raisedBy: player1,
+      raisedBy: player2,
       acceptedBy: [],
-      rejectedBy: [player2],
+      rejectedBy: [player1],
       isAccepted: false,
     });
     expect(game.currentRound.isDone).toBe(true);
+    game.continue();
+    for (const player of game.players) {
+      expect(player.cards).toHaveLength(3);
+    }
+    expect(game.currentPlayer).toEqual(player1);
+    expect(game.rounds).toHaveLength(2);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.steps).toHaveLength(1);
+    expect(game.currentRound.currentStep.cards).toHaveLength(0);
+    expect(game.currentRound.currentStep.isDone).toBe(false);
   });
 
   it("should allow raising stake and accepting it after dropping the first card", () => {
@@ -750,5 +761,5 @@ function getDeck() {
     new Card(5, Suit.Clubs),
     new Card(6, Suit.Clubs),
   ];
-  return new Deck(cards, () => shuffledCards);
+  return new Deck(cards, () => [...shuffledCards]);
 }
