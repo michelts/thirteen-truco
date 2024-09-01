@@ -14,6 +14,7 @@ export function renderActions(game: Game) {
     window.addEventListener("stakeAutoRaised", redraw);
     window.addEventListener("stakeRaiseAnswered", redraw);
     window.addEventListener("roundAcknowledged", redraw);
+    window.addEventListener("gameReset", redraw);
   });
   return render(game);
 }

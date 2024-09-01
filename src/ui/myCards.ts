@@ -6,6 +6,9 @@ import { cardDropped } from "./events";
 
 export function renderMyCards(game: Game, player: Player) {
   setTimeout(() => {
+    window.addEventListener("gameReset", () => {
+      redraw(game, player);
+    });
     window.addEventListener("roundAcknowledged", () => {
       redraw(game, player);
     });
@@ -26,7 +29,9 @@ function render(game: Game, player: Player) {
 
 function renderPlayerCard(game: Game, player: Player, card: Card) {
   const id = `mc-${card.cardNumber}-${card.suit}`;
-  setTimeout(() => listenToCardEvents(game, player, card, id));
+  setTimeout(() => {
+    listenToCardEvents(game, player, card, id);
+  });
   return `<button id="${id}">${renderCard(card)}</button>`;
 }
 

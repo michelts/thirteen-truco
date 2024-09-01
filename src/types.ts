@@ -24,6 +24,7 @@ export interface Game {
   currentRound: Round;
   isDone: boolean;
   continue: () => void;
+  reset: () => void;
   score: [number, number];
 }
 

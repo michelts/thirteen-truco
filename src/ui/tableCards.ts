@@ -31,6 +31,9 @@ export function renderTableCards(game: Game) {
     window.addEventListener("roundAcknowledged", (event) => {
       redraw(event.detail.game);
     });
+    window.addEventListener("gameReset", (event) => {
+      redraw(event.detail.game);
+    });
   });
   return `<div class="t">${render(game)}</div>`;
 }

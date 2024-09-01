@@ -26,6 +26,7 @@ declare global {
       timeout?: number;
       onDismiss?: () => void;
     }>;
+    gameReset: CustomEvent<{ game: Game }>;
   }
 }
 
@@ -102,3 +103,6 @@ export const notificationCreated = (
     detail: { message, timeout, onDismiss },
   });
 };
+
+export const gameReset = (game: Game) =>
+  new CustomEvent("gameReset", { bubbles: true, detail: { game } });

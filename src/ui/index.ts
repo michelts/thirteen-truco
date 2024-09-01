@@ -14,6 +14,7 @@ import {
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
 import { notifications, renderNotifications } from "./notifications";
+import { renderResetGame } from "./resetGame";
 import { renderOthers } from "./others";
 import { renderOthersCards } from "./othersCards";
 import { renderPlayer } from "./player";
@@ -25,6 +26,7 @@ import { renderTurnedCard } from "./turnedCard";
 export function renderApp(game: Game) {
   const root = getElement("app");
   let autoRaiseSideEffect: (() => void) | null = null;
+  let autoAnswerTimeout: ReturnType<typeof setTimeout> | null = null;
 
   function autoPickCard(player: Player) {
     const autoCard = player.autoPickCard();
@@ -64,6 +66,7 @@ export function renderApp(game: Game) {
   };
 
   const continueRoundOrCloseIt = () => {
+    console.log("dispatch", game.currentRound);
     if (game.currentRound.isDone) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
@@ -75,7 +78,7 @@ export function renderApp(game: Game) {
     if (raisedBy.teamIndex === 0) {
       const shouldAccept = Math.random() - 0.5 > 0;
       const opponents = game.players.filter((player) => player.teamIndex === 1);
-      setTimeout(() => {
+      autoAnswerTimeout = setTimeout(() => {
         for (const player of opponents) {
           if (shouldAccept) {
             game.currentRound.stake.accept(player);
@@ -140,11 +143,16 @@ export function renderApp(game: Game) {
       notifyStakeAccepted(event.detail.player, continueRoundOrCloseIt);
     });
     window.addEventListener("roundAcknowledged", continueGameIfDone);
+    window.addEventListener("gameReset", () => {
+      if (autoAnswerTimeout) {
+        clearTimeout(autoAnswerTimeout);
+      }
+    });
   });
 
   root.innerHTML =
     renderHeader(
-      renderScore(game),
+      renderResetGame(game) + renderScore(game),
       renderToggle("MUSIC", false, () => true) +
         renderToggle("SFX", false, () => true),
     ) +

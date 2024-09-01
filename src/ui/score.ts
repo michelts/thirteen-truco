@@ -2,6 +2,9 @@ import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
 
 export function renderScore(game: Game) {
+  window.addEventListener("gameReset", (event) => {
+    redraw(event.detail.game);
+  });
   window.addEventListener("roundAcknowledged", (event) => {
     redraw(event.detail.game);
   });

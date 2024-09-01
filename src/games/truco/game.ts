@@ -66,6 +66,12 @@ export class TrucoGame implements Game {
     }
   }
 
+  reset() {
+    this._currentPlayerIndex = 0;
+    this._rounds = [new TrucoRound(this)];
+    this.distributeCards();
+  }
+
   passToNextPlayer() {
     this._currentPlayerIndex++;
     if (this._currentPlayerIndex === this._players.length) {

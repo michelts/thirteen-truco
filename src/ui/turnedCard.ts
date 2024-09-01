@@ -4,9 +4,11 @@ import { renderCard } from "./card";
 
 export function renderTurnedCard(game: Game) {
   setTimeout(() => {
-    window.addEventListener("roundAcknowledged", (event) => {
-      redraw(event.detail.game);
-    });
+    const redraw = () => {
+      getElement("tnc").innerHTML = render(game);
+    };
+    window.addEventListener("gameReset", redraw);
+    window.addEventListener("roundAcknowledged", redraw);
   });
   return `<div id="tnc">${render(game)}</div>`;
 }
@@ -15,8 +17,4 @@ function render(game: Game) {
   return game.currentRound.turnedCard
     ? renderCard(game.currentRound.turnedCard)
     : "";
-}
-
-function redraw(game: Game) {
-  getElement("tnc").innerHTML = render(game);
 }

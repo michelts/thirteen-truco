@@ -16,6 +16,10 @@ export function renderNotifications() {
       }, event.detail.timeout);
     }
   });
+  window.addEventListener("gameReset", () => {
+    getElement("nf").innerHTML = render("");
+    currentMessage = "";
+  });
   return '<div id="nf"></div>';
 }
 
