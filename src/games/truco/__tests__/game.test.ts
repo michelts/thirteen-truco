@@ -714,6 +714,112 @@ describe("end game", () => {
   });
 });
 
+describe("reset game", () => {
+  const cardsFromLowestToHighest = [
+    new Card(4, Suit.Spades),
+    new Card(1, Suit.Hearts),
+    new Card(1, Suit.Clubs),
+    new Card(2, Suit.Hearts),
+    new Card(2, Suit.Clubs),
+    new Card(3, Suit.Hearts),
+    new Card(3, Suit.Clubs),
+  ];
+  const shuffledCardsSo1stPlayerWins = [
+    new Card(4, Suit.Spades),
+    new Card(3, Suit.Clubs),
+    new Card(2, Suit.Clubs),
+    new Card(1, Suit.Clubs),
+    new Card(3, Suit.Hearts),
+    new Card(2, Suit.Hearts),
+    new Card(1, Suit.Hearts),
+  ];
+  it("should allow reset game in the 1st round", () => {
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCardsSo1stPlayerWins,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    for (const player of game.players) {
+      player.dropCard(player.cards[0]);
+    }
+    game.reset();
+    expect(game.isDone).toBe(false);
+    expect(game.currentPlayer).toEqual(game.players[0]);
+    expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.steps).toHaveLength(1);
+    expect(game.currentRound.currentStep.cards).toEqual([]);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.currentStep.isDone).toBe(false);
+  });
+
+  it("should allow reset game on intermediate rounds", () => {
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCardsSo1stPlayerWins,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    for (const _index of range(3)) {
+      for (const player of game.players) {
+        player.dropCard(player.cards[0]);
+      }
+      if (!game.currentRound.isDone) {
+        game.currentRound.continue();
+      } else {
+        game.continue();
+      }
+    }
+    expect(game.score).not.toEqual([0, 0]);
+    game.reset();
+    expect(game.isDone).toBe(false);
+    expect(game.score).toEqual([0, 0]);
+    expect(game.currentPlayer).toEqual(game.players[0]);
+    expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.steps).toHaveLength(1);
+    expect(game.currentRound.currentStep.cards).toEqual([]);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.currentStep.isDone).toBe(false);
+  });
+
+  it("should allow reset finished game", () => {
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCardsSo1stPlayerWins,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    for (const _roundIndex of range(12)) {
+      for (const _stepIndex of range(3)) {
+        for (const player of game.players) {
+          player.dropCard(player.cards[0]);
+        }
+        if (!game.currentRound.isDone) {
+          game.currentRound.continue();
+        } else if (!game.isDone) {
+          game.continue();
+        }
+      }
+    }
+    expect(game.score).toEqual([12, 0]);
+    game.reset();
+    expect(game.isDone).toBe(false);
+    expect(game.score).toEqual([0, 0]);
+    expect(game.currentPlayer).toEqual(game.players[0]);
+    expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.steps).toHaveLength(1);
+    expect(game.currentRound.currentStep.cards).toEqual([]);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.currentStep.isDone).toBe(false);
+  });
+});
+
 function assertStepHasCards(
   step: Step,
   expectedCards: SetRequired<Partial<StepCard>, "card">[],
