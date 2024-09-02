@@ -1,7 +1,9 @@
 /// <reference types="vite/client" />
-  interface ImportMetaEnv {
-  
-  }
-  interface ImportMeta {
-    readonly env: ImportMetaEnv
-  }
+
+interface ImportMetaEnv {
+  readonly VITE_DEBUG_OPPONENT_CARDS: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
