@@ -17,14 +17,12 @@ export class TrucoGame implements Game {
   deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
-  private _currentPlayerIndex = 0;
 
   constructor(pack: Deck, filterBestCards?: BestCardsFilterFunc) {
     this.deck = pack;
     if (filterBestCards) {
       this.filterBestCards = filterBestCards;
     }
-    this._rounds.push(new TrucoRound(this));
   }
 
   get players() {
@@ -36,6 +34,7 @@ export class TrucoGame implements Game {
     this._players.forEach((player, index) => {
       player.teamIndex = (index % 2) as Player["teamIndex"];
     });
+    this._rounds.push(new TrucoRound(this, players[0]));
     this.distributeCards();
   }
 
@@ -47,12 +46,6 @@ export class TrucoGame implements Game {
     }
   }
 
-  get currentPlayer() {
-    return !this.currentRound.currentStep.isDone
-      ? this._players[this._currentPlayerIndex]
-      : null;
-  }
-
   continue() {
     if (this.isDone) {
       throw new GameFinishedError();
@@ -60,24 +53,19 @@ export class TrucoGame implements Game {
     if (!this.currentRound.isDone) {
       this.currentRound.continue();
     } else {
-      this._currentPlayerIndex = 0;
-      this._rounds.push(new TrucoRound(this));
+      const nextPlayer = findNextPlayer(
+        this.players,
+        this.currentRound.initialPlayer,
+      );
+      this._rounds.push(new TrucoRound(this, nextPlayer));
       this.distributeCards();
     }
   }
 
   reset() {
-    this._currentPlayerIndex = 0;
     this._rounds = [];
-    this._rounds.push(new TrucoRound(this));
+    this._rounds.push(new TrucoRound(this, this.players[0]));
     this.distributeCards();
-  }
-
-  passToNextPlayer() {
-    this._currentPlayerIndex++;
-    if (this._currentPlayerIndex === this._players.length) {
-      this._currentPlayerIndex = 0;
-    }
   }
 
   get rounds() {
@@ -113,14 +101,28 @@ export class TrucoGame implements Game {
 class TrucoRound implements Round {
   turnedCard?: Card;
   game: TrucoGame;
+  initialPlayer: Player;
   private _stakes: TrucoStake[] = [];
   private _steps: TrucoRoundStep[] = [];
   private _roundSteps = 3;
   private _defaultStake = { isAccepted: true };
 
-  constructor(game: TrucoGame) {
+  constructor(game: TrucoGame, initialPlayer?: Player) {
     this.game = game;
     this.continue();
+    this.initialPlayer = initialPlayer ?? game.players[0];
+    console.log(`Initial player: ${this.initialPlayer}`);
+  }
+
+  get currentPlayer() {
+    if (this.currentStep.isDone) {
+      return null;
+    }
+    if (!this.currentStep.cards.length) {
+      return this._latestStep?.winner ?? this.initialPlayer;
+    }
+    const latestPlayer = this.currentStep.cards.slice(-1)[0].player;
+    return findNextPlayer(this.game.players, latestPlayer);
   }
 
   continue() {
@@ -140,6 +142,10 @@ class TrucoRound implements Round {
 
   get currentStep() {
     return this._steps[this._steps.length - 1];
+  }
+
+  private get _latestStep() {
+    return this._steps[this._steps.length - 2];
   }
 
   get isDone() {
@@ -274,7 +280,6 @@ class TrucoRoundStep implements Step {
 
   addPlayerCard(player: Player, card: Card, isHidden?: boolean) {
     this._cards.push(new TrucoStepCard(this, player, card, isHidden ?? false));
-    this._round.game.passToNextPlayer();
   }
 
   get isDone() {
@@ -327,4 +332,11 @@ class TrucoStepCard implements StepCard {
   get isBest() {
     return this._step.bestCards.some((card) => card.isEqual(this.card));
   }
+}
+
+function findNextPlayer(players: Player[], currentPlayer: Player) {
+  const previousIndex = players.findIndex((player) =>
+    player.isEqual(currentPlayer),
+  );
+  return players[(previousIndex + 1) % players.length];
 }

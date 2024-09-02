@@ -14,10 +14,10 @@ import {
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
 import { notifications, renderNotifications } from "./notifications";
-import { renderResetGame } from "./resetGame";
 import { renderOthers } from "./others";
 import { renderOthersCards } from "./othersCards";
 import { renderPlayer } from "./player";
+import { renderResetGame } from "./resetGame";
 import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
@@ -26,7 +26,9 @@ import { renderTurnedCard } from "./turnedCard";
 export function renderApp(game: Game) {
   const root = getElement("app");
   let autoRaiseSideEffect: (() => void) | null = null;
-  let autoAnswerTimeout: ReturnType<typeof setTimeout> | null = null;
+  let autoAnswerStakeRaiseTimeoutId: ReturnType<typeof setTimeout> | null =
+    null;
+  let autoBeginStepTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   function autoPickCard(player: Player) {
     const autoCard = player.autoPickCard();
@@ -51,6 +53,15 @@ export function renderApp(game: Game) {
     }
   }
 
+  function possiblyAutoBeginStep() {
+    const currentPlayer = game.currentRound.currentPlayer;
+    if (currentPlayer?.canAutoPickCard) {
+      autoBeginStepTimeoutId = setTimeout(() => {
+        autoPickCard(currentPlayer);
+      }, 1000);
+    }
+  }
+
   const notifyRoundDone = () => {
     const humanPlayerIndex = 0;
     dispatchEvent(
@@ -70,6 +81,7 @@ export function renderApp(game: Game) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
       game.currentRound.continue();
+      possiblyAutoBeginStep();
     }
   };
 
@@ -77,7 +89,7 @@ export function renderApp(game: Game) {
     if (raisedBy.teamIndex === 0) {
       const shouldAccept = Math.random() - 0.5 > 0;
       const opponents = game.players.filter((player) => player.teamIndex === 1);
-      autoAnswerTimeout = setTimeout(() => {
+      autoAnswerStakeRaiseTimeoutId = setTimeout(() => {
         for (const player of opponents) {
           if (shouldAccept) {
             game.currentRound.stake.accept(player);
@@ -114,6 +126,7 @@ export function renderApp(game: Game) {
   const continueGameIfDone = () => {
     if (!game.isDone) {
       game.continue();
+      possiblyAutoBeginStep();
     } else {
       const score = game.score;
       dispatchEvent(
@@ -129,8 +142,8 @@ export function renderApp(game: Game) {
   setTimeout(() => {
     window.addEventListener("cardDropped", (event) => {
       event.detail.player.dropCard(event.detail.card, event.detail.isHidden);
-      if (game.currentPlayer?.canAutoPickCard) {
-        autoPickCard(game.currentPlayer);
+      if (game.currentRound.currentPlayer?.canAutoPickCard) {
+        autoPickCard(game.currentRound.currentPlayer);
       }
     });
     window.addEventListener("roundDone", notifyRoundDone);
@@ -143,8 +156,11 @@ export function renderApp(game: Game) {
     });
     window.addEventListener("roundAcknowledged", continueGameIfDone);
     window.addEventListener("gameReset", () => {
-      if (autoAnswerTimeout) {
-        clearTimeout(autoAnswerTimeout);
+      if (autoAnswerStakeRaiseTimeoutId) {
+        clearTimeout(autoAnswerStakeRaiseTimeoutId);
+      }
+      if (autoBeginStepTimeoutId) {
+        clearTimeout(autoBeginStepTimeoutId);
       }
     });
   });

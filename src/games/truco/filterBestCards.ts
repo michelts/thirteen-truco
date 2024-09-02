@@ -18,6 +18,9 @@ function getHighestAccountingDrawsAndTrump(
   candidates: Card[],
   trumpCardNumber: number,
 ) {
+  if (!candidates.length) {
+    return []; // XXX
+  }
   const highestCards = [];
   const highestCardNumber = candidates[0].cardNumber;
   for (const card of candidates) {

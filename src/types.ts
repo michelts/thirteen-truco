@@ -19,7 +19,6 @@ export interface Player {
 export interface Game {
   deck: Deck;
   players: Player[];
-  currentPlayer: Player | null;
   rounds: Round[];
   currentRound: Round;
   isDone: boolean;
@@ -31,16 +30,18 @@ export interface Game {
 export interface Round {
   turnedCard?: Card;
   trumpCards: Card[];
+  initialPlayer: Player;
+  currentPlayer: Player | null;
   steps: Step[];
   currentStep: Step;
   isDone: boolean;
   continue: () => void;
-  score?: [number, number];
   stake: Stake;
   raiseStake: (player: Player) => void;
   previousStakePoints: number;
   currentStakePoints: number;
   nextStakePoints: number;
+  score?: [number, number];
 }
 
 export interface Stake {

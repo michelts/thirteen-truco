@@ -86,14 +86,14 @@ describe("game playing", () => {
       new TrucoPlayer(game, "Curtis"),
     ];
     const [player1, player2] = game.players;
-    player1.dropCard(new Card(1, Suit.Hearts));
+    player1.dropCard(new Card(3, Suit.Hearts));
     assertStepHasCards(game.currentRound.currentStep, [
-      { card: new Card(1, Suit.Hearts) },
+      { card: new Card(3, Suit.Hearts) },
     ]);
-    player2.dropCard(new Card(1, Suit.Clubs));
+    player2.dropCard(new Card(3, Suit.Clubs));
     assertStepHasCards(game.currentRound.currentStep, [
-      { card: new Card(1, Suit.Hearts) },
-      { card: new Card(1, Suit.Clubs) },
+      { card: new Card(3, Suit.Hearts) },
+      { card: new Card(3, Suit.Clubs) },
     ]);
 
     game.currentRound.continue();
@@ -115,70 +115,70 @@ describe("game playing", () => {
       new TrucoPlayer(game, "Curtis"),
     ];
     const [player1, player2] = game.players;
-    expect(game.currentPlayer).toEqual(game.players[0]);
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(game.players[0]);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toEqual([]);
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player1.dropCard(new Card(1, Suit.Hearts));
-    expect(game.currentPlayer).toEqual(player2);
+    player1.dropCard(new Card(3, Suit.Hearts));
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(player2);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toHaveLength(1);
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player2.dropCard(new Card(2, Suit.Clubs));
-    expect(game.currentPlayer).toBeNull(); // because step is done
+    player2.dropCard(new Card(3, Suit.Clubs));
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toBeNull(); // because step is done
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toHaveLength(2);
     expect(game.currentRound.currentStep.isDone).toBe(true);
 
-    game.currentRound.continue(); // Has to explicitly continue game
-    expect(game.currentPlayer).toEqual(player1);
+    game.currentRound.continue(); // Has to explicitly continue round
     expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.currentPlayer).toEqual(player1);
     expect(game.currentRound.steps).toHaveLength(2);
     expect(game.currentRound.currentStep.cards).toHaveLength(0);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
     player1.dropCard(new Card(2, Suit.Hearts));
-    expect(game.currentPlayer).toEqual(player2);
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(player2);
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(2);
     expect(game.currentRound.currentStep.cards).toHaveLength(1);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player2.dropCard(new Card(1, Suit.Clubs));
-    expect(game.currentPlayer).toBeNull();
+    player2.dropCard(new Card(2, Suit.Clubs));
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toBeNull();
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(2);
     expect(game.currentRound.currentStep.cards).toHaveLength(2);
     expect(game.currentRound.currentStep.isDone).toBe(true);
 
     game.currentRound.continue();
-    expect(game.currentPlayer).toEqual(player1);
+    expect(game.currentRound.currentPlayer).toEqual(player1);
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(3);
     expect(game.currentRound.currentStep.cards).toHaveLength(0);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player1.dropCard(new Card(3, Suit.Hearts));
-    expect(game.currentPlayer).toEqual(player2);
+    player1.dropCard(new Card(1, Suit.Hearts));
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(player2);
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(3);
     expect(game.currentRound.currentStep.cards).toHaveLength(1);
     expect(game.currentRound.currentStep.isDone).toBe(false);
 
-    player2.dropCard(new Card(3, Suit.Clubs));
-    expect(game.currentPlayer).toBeNull();
+    player2.dropCard(new Card(1, Suit.Clubs));
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toBeNull();
     expect(game.currentRound.isDone).toBe(true);
     expect(game.currentRound.steps).toHaveLength(3);
     expect(game.currentRound.currentStep.cards).toHaveLength(2);
@@ -188,8 +188,8 @@ describe("game playing", () => {
     game.continue();
     expect(game.players[0].cards).toHaveLength(3);
     expect(game.players[1].cards).toHaveLength(3);
-    expect(game.currentPlayer).toEqual(player1);
     expect(game.rounds).toHaveLength(2);
+    expect(game.currentRound.currentPlayer).toEqual(player2); // next
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toHaveLength(0);
@@ -227,8 +227,8 @@ describe("game playing", () => {
     ]);
     expect(game.currentRound.turnedCard).toEqual(new Card(12, Suit.Spades));
     expect(game.currentRound.trumpCards).toEqual([
-      new Card(1, Suit.Hearts),
       new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
     ]);
     const trumpCardNumber = 1;
     expect(filterBestCards).toHaveBeenCalledWith(
@@ -374,8 +374,8 @@ describe("raising stakes (truco)", () => {
     for (const player of game.players) {
       expect(player.cards).toHaveLength(3);
     }
-    expect(game.currentPlayer).toEqual(player1);
     expect(game.rounds).toHaveLength(2);
+    expect(game.currentRound.currentPlayer).toEqual(player2);
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toHaveLength(0);
@@ -390,9 +390,8 @@ describe("raising stakes (truco)", () => {
     ];
     const [player1, player2] = game.players;
     expect(game.currentRound.stake).toEqual({ isAccepted: true });
-    for (const player of game.players) {
-      player.dropCard(player.cards[0]);
-    }
+    player1.dropCard(new Card(3, Suit.Hearts));
+    player2.dropCard(new Card(2, Suit.Clubs));
     expect(() => game.currentRound.raiseStake(player1)).toThrowError(
       CantRaiseStakesOnCompletedRoundStepError,
     );
@@ -452,17 +451,6 @@ describe("score calculation", () => {
       new TrucoPlayer(game, "Player 2"),
     ];
     const [player1, player2] = game.players;
-    expect(player1.cards).toEqual([
-      new Card(1, Suit.Clubs),
-      new Card(2, Suit.Clubs),
-      new Card(3, Suit.Clubs),
-    ]);
-    expect(player2.cards).toEqual([
-      new Card(1, Suit.Hearts),
-      new Card(2, Suit.Hearts),
-      new Card(3, Suit.Hearts),
-    ]);
-    expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
     expect(game.currentRound.isDone).toBe(false);
     player1.dropCard(new Card(3, Suit.Clubs)); // best
     player2.dropCard(new Card(2, Suit.Hearts));
@@ -474,8 +462,8 @@ describe("score calculation", () => {
     expect(game.currentRound.score).toBeUndefined();
     expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
-    player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
     player2.dropCard(new Card(3, Suit.Hearts));
+    player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
     expect(game.currentRound.score).toEqual([1, 0]);
     expect(game.score).toEqual([1, 0]);
     expect(game.currentRound.isDone).toBe(true);
@@ -545,7 +533,7 @@ describe("score calculation", () => {
         new Card(11, Suit.Clubs),
       ],
       () => [
-        new Card(10, Suit.Clubs), // cause 11 to be the trump card
+        new Card(10, Suit.Clubs), // avoid players cards to be trump
         new Card(4, Suit.Clubs),
         new Card(5, Suit.Clubs),
         new Card(6, Suit.Clubs),
@@ -570,8 +558,8 @@ describe("score calculation", () => {
     expect(game.currentRound.score).toBeUndefined();
     expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
-    player1.dropCard(new Card(5, Suit.Clubs));
     player2.dropCard(new Card(8, Suit.Clubs)); // best
+    player1.dropCard(new Card(5, Suit.Clubs));
     expect(game.currentRound.isDone).toBe(true);
     expect(game.currentRound.score).toEqual([0, 6]);
     expect(game.score).toEqual([0, 6]);
@@ -648,11 +636,25 @@ describe("end game", () => {
     const [player1, player2] = game.players;
 
     for (const index of range(13, 1)) {
-      player1.dropCard(new Card(3, Suit.Clubs)); // draw
-      player2.dropCard(new Card(3, Suit.Hearts));
+      const firstPlay = [
+        [player1, new Card(3, Suit.Clubs)] as const, // draw
+        [player2, new Card(3, Suit.Hearts)] as const,
+      ];
+      const secondPlay = [
+        [player1, new Card(1, Suit.Clubs)] as const, // highest trump
+        [player2, new Card(1, Suit.Hearts)] as const,
+      ];
+      if (index % 2 === 0) {
+        firstPlay.reverse();
+        secondPlay.reverse();
+      }
+      for (const [player, card] of firstPlay) {
+        player.dropCard(card);
+      }
       game.currentRound.continue();
-      player1.dropCard(new Card(1, Suit.Clubs)); // highest trump
-      player2.dropCard(new Card(1, Suit.Hearts));
+      for (const [player, card] of secondPlay) {
+        player.dropCard(card);
+      }
       expect(game.score).toEqual([index, 0]);
       if (index < 12) {
         game.continue();
@@ -689,11 +691,25 @@ describe("end game", () => {
       } else {
         game.currentRound.stake.accept(player2);
       }
-      player1.dropCard(new Card(3, Suit.Clubs)); // draw
-      player2.dropCard(new Card(3, Suit.Hearts));
+      const firstPlay = [
+        [player1, new Card(3, Suit.Clubs)] as const, // draw
+        [player2, new Card(3, Suit.Hearts)] as const,
+      ];
+      const secondPlay = [
+        [player1, new Card(1, Suit.Clubs)] as const, // highest trump,
+        [player2, new Card(1, Suit.Hearts)] as const,
+      ];
+      if (index % 2 === 1) {
+        firstPlay.reverse();
+        secondPlay.reverse();
+      }
+      for (const [player, card] of firstPlay) {
+        player.dropCard(card);
+      }
       game.currentRound.continue();
-      player1.dropCard(new Card(1, Suit.Clubs)); // highest trump
-      player2.dropCard(new Card(1, Suit.Hearts));
+      for (const [player, card] of secondPlay) {
+        player.dropCard(card);
+      }
       if (index < 4) {
         expect(game.score).toEqual([1 + index * 3, 0]);
         game.continue();
@@ -747,8 +763,8 @@ describe("reset game", () => {
     }
     game.reset();
     expect(game.isDone).toBe(false);
-    expect(game.currentPlayer).toEqual(game.players[0]);
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(game.players[0]);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toEqual([]);
     expect(game.currentRound.isDone).toBe(false);
@@ -778,8 +794,8 @@ describe("reset game", () => {
     game.reset();
     expect(game.isDone).toBe(false);
     expect(game.score).toEqual([0, 0]);
-    expect(game.currentPlayer).toEqual(game.players[0]);
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(game.players[0]);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toEqual([]);
     expect(game.currentRound.isDone).toBe(false);
@@ -795,24 +811,27 @@ describe("reset game", () => {
       new TrucoPlayer(game, "Jack"),
       new TrucoPlayer(game, "Curtis"),
     ];
-    for (const _roundIndex of range(12)) {
-      for (const _stepIndex of range(3)) {
-        for (const player of game.players) {
-          player.dropCard(player.cards[0]);
+    while (!game.isDone) {
+      while (!game.currentRound.isDone) {
+        while (!game.currentRound.currentStep.isDone) {
+          game.currentRound.currentPlayer?.dropCard(
+            game.currentRound.currentPlayer.cards[0],
+          );
         }
         if (!game.currentRound.isDone) {
           game.currentRound.continue();
-        } else if (!game.isDone) {
-          game.continue();
         }
+      }
+      if (!game.isDone) {
+        game.continue();
       }
     }
     expect(game.score).toEqual([12, 0]);
     game.reset();
     expect(game.isDone).toBe(false);
     expect(game.score).toEqual([0, 0]);
-    expect(game.currentPlayer).toEqual(game.players[0]);
     expect(game.rounds).toHaveLength(1);
+    expect(game.currentRound.currentPlayer).toEqual(game.players[0]);
     expect(game.currentRound.steps).toHaveLength(1);
     expect(game.currentRound.currentStep.cards).toEqual([]);
     expect(game.currentRound.isDone).toBe(false);
@@ -838,18 +857,18 @@ function getDeck() {
   const cards = [
     new Card(12, Suit.Diamonds),
     new Card(12, Suit.Spades),
-    new Card(1, Suit.Clubs),
     new Card(1, Suit.Hearts),
-    new Card(2, Suit.Clubs),
+    new Card(1, Suit.Clubs),
     new Card(2, Suit.Hearts),
-    new Card(3, Suit.Clubs),
+    new Card(2, Suit.Clubs),
     new Card(3, Suit.Hearts),
-    new Card(4, Suit.Clubs),
+    new Card(3, Suit.Clubs),
     new Card(4, Suit.Hearts),
-    new Card(5, Suit.Clubs),
+    new Card(4, Suit.Clubs),
     new Card(5, Suit.Hearts),
-    new Card(6, Suit.Clubs),
+    new Card(5, Suit.Clubs),
     new Card(6, Suit.Hearts),
+    new Card(6, Suit.Clubs),
   ];
   const shuffledCards = [
     new Card(12, Suit.Spades),

@@ -67,7 +67,8 @@ export class TrucoPlayer implements Player {
     if (this._game.currentRound.stake.isAccepted === undefined) {
       throw new PendingStakeRaiseError();
     }
-    if (this._game.currentPlayer === this) {
+    console.log(`currentPlayer: ${this._game.currentRound.currentPlayer}`);
+    if (this._game.currentRound.currentPlayer?.isEqual(this)) {
       this.takeCard(card);
       this._game.currentRound.currentStep.addPlayerCard(this, card, isHidden);
     } else {
