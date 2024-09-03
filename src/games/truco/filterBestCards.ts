@@ -1,5 +1,4 @@
-import type { Card } from "@/core";
-import type { BestCardsFilterFunc } from "@/types";
+import type { BestCardsFilterFunc, Card } from "@/types";
 
 export const filterBestCards: BestCardsFilterFunc = (
   testedCards,

@@ -1,5 +1,13 @@
-import type { Card, Deck } from "@/core";
-import type { Game, Player, Round, Stake, Step, StepCard } from "@/types";
+import type {
+  Card,
+  Deck,
+  Game,
+  Player,
+  Round,
+  Stake,
+  Step,
+  StepCard,
+} from "@/types";
 import type { BestCardsFilterFunc } from "@/types";
 import {
   CantRaiseStakesOnCompletedRoundStepError,
@@ -11,11 +19,12 @@ import {
 import { filterBestCards as defaultFilterBestCards } from "./filterBestCards";
 import { getRoundScore } from "./getRoundScore";
 import { getTrumpCards } from "./getTrumpCards";
+import { PlayerCard, type TrucoPlayer } from "./player";
 
 export class TrucoGame implements Game {
   filterBestCards: BestCardsFilterFunc = defaultFilterBestCards;
   deck: Deck;
-  private _players: Player[] = [];
+  private _players: TrucoPlayer[] = [];
   private _rounds: Round[] = [];
 
   constructor(pack: Deck, filterBestCards?: BestCardsFilterFunc) {
@@ -40,9 +49,20 @@ export class TrucoGame implements Game {
 
   private distributeCards() {
     this.deck.shuffle();
-    this.currentRound.turnedCard = this.deck.getCards(1)[0];
+    this.currentRound.turnedCard = this.deck.getCard();
     for (const player of this._players) {
-      player.receiveCards(this.deck.getCards(3));
+      const cards = [];
+      while (cards.length < 3) {
+        const card = this.deck.getCard();
+        let realCard: Card | undefined = undefined;
+        if (card.mimicable) {
+          while (realCard?.mimicable !== false) {
+            realCard = this.deck.getCard();
+          }
+        }
+        cards.push(new PlayerCard(card, realCard));
+      }
+      player.receiveCards(cards);
     }
   }
 
@@ -111,7 +131,6 @@ class TrucoRound implements Round {
     this.game = game;
     this.continue();
     this.initialPlayer = initialPlayer ?? game.players[0];
-    console.log(`Initial player: ${this.initialPlayer}`);
   }
 
   get currentPlayer() {

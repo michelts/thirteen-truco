@@ -56,6 +56,14 @@
   opacity: 0;
   animation: ease-out $table-card-placing-animation-timeout 1 fade-in;
   animation-fill-mode: forwards;
+
+  // mimicable card
+  &.mim {
+    opacity: 1;
+    animation:
+      ease-in ($table-card-placing-animation-timeout * 2) 1 crack;
+    animation-fill-mode: forwards;
+  }
 }
 
 // best card
@@ -106,4 +114,10 @@ $glow-size: 2px;
 @keyframes scale {
   0% { transform: scale(1) }
   100% { transform: scale(1.2) }
+}
+
+@keyframes crack {
+  0% { filter: invert(0) }
+  50% { filter: invert(1) }
+  100% { filter: invert(0) }
 }

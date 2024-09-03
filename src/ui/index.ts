@@ -55,7 +55,6 @@ export function renderApp(game: Game) {
   }
 
   function possiblyAutoBeginStep() {
-    console.log("XXX possiblyAutoBeginStep");
     if (yourTurnTimeoutId) {
       clearTimeout(yourTurnTimeoutId);
     }

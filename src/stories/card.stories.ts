@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/html";
 
-import { Card, Suit } from "@/core";
+import { Card } from "@/core";
+import { Suit } from "@/types";
 import { renderCard } from "@/ui/card";
 
 type CardProps = Parameters<typeof renderCard>[0];

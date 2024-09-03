@@ -1,4 +1,5 @@
-import { Card, Suit } from "@/core";
+import { Card } from "@/core";
+import { Suit } from "@/types";
 import { expect, it } from "vitest";
 import { filterBestCards } from "../filterBestCards";
 

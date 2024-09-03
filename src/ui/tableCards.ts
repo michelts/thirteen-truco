@@ -52,6 +52,7 @@ function render(game: Game, highlightBestCards?: boolean) {
             isLatestCard ? "ltc" : "",
             isBestCard ? "btc" : "",
             `ti-${stepCard.player.teamIndex}`,
+            stepCard.card.mimicable ? "mim" : "",
           ]);
         })
         .join(" ")}</div>`;
@@ -64,7 +65,7 @@ function redraw(game: Game, highlightBestCards?: boolean) {
 }
 
 function renderTableCard(stepCard: StepCard, classNames: string[]) {
-  return `<div class="tc ${classNames.join(" ")}">
+  return `<div class="tc ${classNames.join(" ")} ">
       ${stepCard.isHidden ? renderCardBack() : renderCard(stepCard.card)}
     </div>`;
 }

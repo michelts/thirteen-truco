@@ -1,14 +1,28 @@
+import type { Card as CardType, Deck as DeckType, Suit } from "@/types";
 import { NotEnoughCardsError } from "@/utils/errors";
 import { shuffle } from "@/utils/shuffle";
 
-export enum Suit {
-  Diamonds = 1,
-  Spades = 2,
-  Hearts = 3,
-  Clubs = 4,
+export class Card implements CardType {
+  cardNumber: number;
+  suit: Suit;
+  mimicable: boolean;
+
+  constructor(cardNumber: number, suit: Suit, mimicable = false) {
+    this.cardNumber = cardNumber;
+    this.suit = suit;
+    this.mimicable = mimicable;
+  }
+
+  toString() {
+    return `${this.cardNumber}s${this.suit}`;
+  }
+
+  isEqual(card: Card) {
+    return this.cardNumber === card.cardNumber && this.suit === card.suit;
+  }
 }
 
-export class Deck {
+export class Deck implements DeckType {
   cardsFromLowestToHighest: [] | Card[] = [];
   shuffledCards: [] | Card[] = [];
   shuffleFunc: (cards: Card[]) => Card[] = shuffle;
@@ -27,29 +41,11 @@ export class Deck {
     this.shuffledCards = this.shuffleFunc(this.cardsFromLowestToHighest);
   }
 
-  getCards(count: number): Card[] {
-    const cards = this.shuffledCards.splice(0, count);
-    if (cards.length !== count) {
+  getCard(): Card {
+    const card = this.shuffledCards.shift();
+    if (!card) {
       throw new NotEnoughCardsError();
     }
-    return cards;
-  }
-}
-
-export class Card {
-  public cardNumber: number;
-  public suit: Suit;
-
-  constructor(cardNumber: number, suit: Suit) {
-    this.cardNumber = cardNumber;
-    this.suit = suit;
-  }
-
-  isEqual(card: Card) {
-    return this.cardNumber === card.cardNumber && this.suit === card.suit;
-  }
-
-  toString() {
-    return `${this.cardNumber}s${this.suit}`;
+    return card;
   }
 }

@@ -1,6 +1,6 @@
 import { getDefaultDeck } from "@/config";
-import type { Deck } from "@/core";
-import { Card, Suit } from "@/core";
+import { Card } from "@/core";
+import { type Deck, Suit } from "@/types";
 import { beforeAll, describe, expect, it } from "vitest";
 import { autoPickCard } from "../index";
 
@@ -207,7 +207,7 @@ describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
             [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
             [],
           ],
-          wins: [undefined], // difference from our score to their
+          wins: [undefined],
         }),
       ).toEqual({
         card: new Card(6, trumpSuit),
@@ -230,7 +230,7 @@ describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
             [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
             [],
           ],
-          wins: [false],
+          wins: [true],
         }),
       ).toEqual({
         card: new Card(6, trumpSuit),
@@ -253,7 +253,7 @@ describe.each([Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs])(
             [new Card(4, Suit.Hearts), new Card(2, Suit.Hearts)],
             [],
           ],
-          wins: [true], // difference from our score to their
+          wins: [false],
         }),
       ).toEqual({
         card: new Card(6, trumpSuit),

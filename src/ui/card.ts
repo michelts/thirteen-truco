@@ -1,4 +1,4 @@
-import { type Card, Suit } from "@/core";
+import { type Card, Suit } from "@/types";
 
 export function renderCard(card: Card) {
   const number = `<div class="n">${cardRepresentation[card.cardNumber] ?? card.cardNumber}</div>`;

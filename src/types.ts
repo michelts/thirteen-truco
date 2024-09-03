@@ -1,10 +1,31 @@
-import type { Card, Deck } from "@/core";
+export enum Suit {
+  Diamonds = 1,
+  Spades = 2,
+  Hearts = 3,
+  Clubs = 4,
+}
+
+export interface Card {
+  cardNumber: number;
+  suit: Suit;
+  mimicable: boolean;
+  isEqual: (card: Card) => boolean;
+}
+
+export interface Deck {
+  cardsFromLowestToHighest: Card[];
+  shuffledCards: Card[];
+  shuffleFunc: (cards: Card[]) => Card[];
+  shuffle: () => void;
+  getCard: () => Card;
+}
 
 export interface Player {
   id: number;
   name: string;
   teamIndex: 0 | 1;
   cards: Card[];
+  displayCards: Card[];
   isEqual: (otherPlayer: Player) => boolean;
   canAutoPickCard: boolean;
   autoPickCard: () => {
@@ -13,7 +34,6 @@ export interface Player {
     shouldRaise: boolean;
   };
   dropCard: (card: Card, isHidden?: boolean) => void;
-  receiveCards: (cards: Card[]) => void;
 }
 
 export interface Game {

@@ -1,5 +1,4 @@
-import type { Card } from "@/core";
-import type { Player } from "@/types";
+import type { Card, Player } from "@/types";
 import { EmptyHandError } from "@/utils/errors";
 import { shuffle } from "@/utils/shuffle";
 
@@ -63,7 +62,7 @@ const _autoPickCard = (
     ),
   );
 
-  console.log({
+  console.log("autoPickCard", {
     trumps: myTrumps.map((card) => card.toString()),
     myTopCards: myTopCards.map((card) => card.toString()),
     myLowerCards: myLowerCards.map((card) => card.toString()),
@@ -76,15 +75,14 @@ const _autoPickCard = (
     step,
     isHead,
     enemyCards: enemyCards.map((card) => card.toString()),
+    cardsHeights,
     isEnemyCardsTop,
   });
 
   if (step === 1 && myTrumps && isEnemyCardsTop) {
-    console.log("First step with trumps against enemy top cards");
+    console.log("autoPickCard First step with trumps against enemy top cards");
     for (const myCard of myTrumps) {
-      console.log("mycard", { height: cardsHeights[myCard.toString()] });
       const willCardWin = enemyCards.every((enemyCard) => {
-        console.log("enemy", { height: cardsHeights[enemyCard.toString()] });
         return (
           cardsHeights[myCard.toString()] > cardsHeights[enemyCard.toString()]
         );
@@ -101,20 +99,22 @@ const _autoPickCard = (
   }
   if (step === 1 && partnerCard && isPartnerCardTop) {
     console.log(
-      "Lower card as my partner already put a higher card to help my highest card of the game",
+      "autoPickCard Lower card as my partner already put a higher card to help my highest card of the game",
     );
     return { card: myLowerCards[0], isHidden: false, shouldRaise: false };
   }
 
   if (step === 1 && clubsTrump) {
     if (isHead && topCards.length) {
-      console.log("Higher card to help my highest card of the game");
+      console.log(
+        "autoPickCard Higher card to help my highest card of the game",
+      );
       return { card: myTopCards[0], isHidden: false, shouldRaise: false };
     }
 
     if (heartsTrump) {
       console.log(
-        "Lowest card for higher couple, or the hearts trump if no lower card",
+        "autoPickCard Lowest card for higher couple, or the hearts trump if no lower card",
       );
       return {
         card: myLowerCards[0] ?? heartsTrump,
@@ -125,16 +125,16 @@ const _autoPickCard = (
   }
 
   if (step === 2 && myTrumps) {
-    console.log("Clubs trump on second step");
+    console.log("autoPickCard Clubs trump on second step");
     return {
       card: myTrumps[0],
       isHidden: false,
-      shouldRaise: !!wins[0],
+      shouldRaise: wins[0] !== false,
     };
   }
 
   if (diamondsTrump || spadesTrump || heartsTrump) {
-    console.log("One of the lower best trumps on any step");
+    console.log("autoPickCard One of the lower best trumps on any step");
     return {
       card: (diamondsTrump || spadesTrump || heartsTrump) as Card,
       isHidden: false,
@@ -144,7 +144,7 @@ const _autoPickCard = (
 
   if (step === 1) {
     if (isHead && myLowerCards[0]) {
-      console.log("Lowest card because I'm head");
+      console.log("autoPickCard Lowest card because I'm head");
       return {
         card: myLowerCards[0],
         isHidden: false,
@@ -153,7 +153,7 @@ const _autoPickCard = (
     }
 
     if (!isHead && myTopCards[0]) {
-      console.log("Highest card because I'm tail");
+      console.log("autoPickCard Highest card because I'm tail");
       return {
         card: myTopCards[0],
         isHidden: false,
@@ -162,7 +162,7 @@ const _autoPickCard = (
     }
   }
 
-  console.log("Random card as fallback");
+  console.log("autoPickCard Random card as fallback");
   const fallback = shuffle(hand)[0];
   if (!fallback) {
     throw new EmptyHandError();

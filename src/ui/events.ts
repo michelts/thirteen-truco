@@ -1,5 +1,4 @@
-import type { Card } from "@/core";
-import type { Game, Player } from "@/types";
+import type { Card, Game, Player } from "@/types";
 
 declare global {
   interface GlobalEventHandlersEventMap {

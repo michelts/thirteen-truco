@@ -1,5 +1,4 @@
-import type { Card } from "@/core";
-import type { Game, Player } from "@/types";
+import type { Card, Game, Player } from "@/types";
 import {
   CardNotFoundError,
   NotEnoughCardsError,
@@ -10,13 +9,17 @@ import {
 import { getId } from "@/utils/getId";
 import { autoPickCard } from "./autoPickCard";
 
-export class TrucoPlayer implements Player {
+interface TrucoPlayerType {
+  receiveCards: (playerCards: PlayerCard[]) => void;
+}
+
+export class TrucoPlayer implements Player, TrucoPlayerType {
   public canAutoPickCard: boolean;
   private _game: Game;
   private _id: ReturnType<typeof getId>;
   private _name = "";
   private _teamIndex?: Player["teamIndex"];
-  private _cards: [] | [Card, Card, Card] = [];
+  private _cards: PlayerCard[] = [];
 
   constructor(game: Game, name: string, canAutoPickCard?: boolean) {
     this._id = getId();
@@ -52,36 +55,46 @@ export class TrucoPlayer implements Player {
     this._teamIndex = index;
   }
 
-  receiveCards(cards: Card[]) {
+  receiveCards(cards: PlayerCard[]) {
     if (cards.length !== 3) {
       throw new NotEnoughCardsError();
     }
-    this._cards = cards as [Card, Card, Card];
+    this._cards = cards;
   }
 
   get cards() {
-    return this._cards;
+    return this._cards.map((playerCard) => playerCard.card);
+  }
+
+  get displayCards() {
+    return this._cards.map((playerCard) => playerCard.displayCard);
   }
 
   dropCard(card: Card, isHidden?: boolean) {
     if (this._game.currentRound.stake.isAccepted === undefined) {
       throw new PendingStakeRaiseError();
     }
-    console.log(`currentPlayer: ${this._game.currentRound.currentPlayer}`);
     if (this._game.currentRound.currentPlayer?.isEqual(this)) {
-      this.takeCard(card);
-      this._game.currentRound.currentStep.addPlayerCard(this, card, isHidden);
+      const foundCard = this.takeCard(card);
+      this._game.currentRound.currentStep.addPlayerCard(
+        this,
+        foundCard.card,
+        isHidden,
+      );
     } else {
       throw new NotYourTurnError();
     }
   }
 
   takeCard(takenCard: Card) {
-    const cardIndex = this.cards.findIndex((card) => card.isEqual(takenCard));
+    const cardIndex = this.displayCards.findIndex((card) =>
+      card.isEqual(takenCard),
+    );
     if (cardIndex === -1) {
       throw new CardNotFoundError();
     }
-    return this._cards.splice(cardIndex, 1);
+    const [foundCard] = this._cards.splice(cardIndex, 1);
+    return foundCard;
   }
 
   autoPickCard() {
@@ -96,7 +109,7 @@ export class TrucoPlayer implements Player {
         .map((stepCard) => stepCard.card),
     );
     return autoPickCard(
-      this.cards,
+      this.displayCards,
       previousFromOurs,
       previousFromTheirs,
       this._game.currentRound.steps.map((step) =>
@@ -105,5 +118,23 @@ export class TrucoPlayer implements Player {
       this._game.currentRound.trumpCards,
       this._game.deck.cardsFromLowestToHighest,
     );
+  }
+}
+
+export class PlayerCard {
+  public card: Card;
+  private _realCard?: Card;
+
+  constructor(card: Card, realCard?: Card) {
+    this.card = card;
+    this._realCard = realCard;
+  }
+
+  get displayCard() {
+    return this._realCard ?? this.card;
+  }
+
+  get isMimic() {
+    return this._realCard !== undefined;
   }
 }

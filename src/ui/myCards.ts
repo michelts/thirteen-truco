@@ -1,5 +1,4 @@
-import type { Card } from "@/core";
-import type { Game, Player } from "@/types";
+import type { Card, Game, Player } from "@/types";
 import { getElement } from "@/utils/elements";
 import { renderCard } from "./card";
 import { cardDropped } from "./events";
@@ -22,7 +21,7 @@ export function renderMyCards(game: Game, player: Player) {
 }
 
 function render(game: Game, player: Player) {
-  return player.cards
+  return player.displayCards
     .map((card) => renderPlayerCard(game, player, card))
     .join(" ");
 }
