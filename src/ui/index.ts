@@ -29,6 +29,7 @@ export function renderApp(game: Game) {
   let autoAnswerStakeRaiseTimeoutId: ReturnType<typeof setTimeout> | null =
     null;
   let autoBeginStepTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  let yourTurnTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   function autoPickCard(player: Player) {
     const autoCard = player.autoPickCard();
@@ -54,11 +55,19 @@ export function renderApp(game: Game) {
   }
 
   function possiblyAutoBeginStep() {
+    console.log("XXX possiblyAutoBeginStep");
+    if (yourTurnTimeoutId) {
+      clearTimeout(yourTurnTimeoutId);
+    }
     const currentPlayer = game.currentRound.currentPlayer;
     if (currentPlayer?.canAutoPickCard) {
       autoBeginStepTimeoutId = setTimeout(() => {
         autoPickCard(currentPlayer);
       }, 1000);
+    } else {
+      yourTurnTimeoutId = setTimeout(() => {
+        dispatchEvent(notificationCreated("Your turn!", 1000));
+      }, 3000);
     }
   }
 
@@ -77,6 +86,9 @@ export function renderApp(game: Game) {
   };
 
   const continueRoundOrCloseIt = () => {
+    if (yourTurnTimeoutId) {
+      clearTimeout(yourTurnTimeoutId);
+    }
     if (game.currentRound.isDone) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
@@ -156,13 +168,18 @@ export function renderApp(game: Game) {
     });
     window.addEventListener("roundAcknowledged", continueGameIfDone);
     window.addEventListener("gameReset", () => {
-      if (autoAnswerStakeRaiseTimeoutId) {
-        clearTimeout(autoAnswerStakeRaiseTimeoutId);
-      }
-      if (autoBeginStepTimeoutId) {
-        clearTimeout(autoBeginStepTimeoutId);
+      const timeoutIds = [
+        autoAnswerStakeRaiseTimeoutId,
+        autoBeginStepTimeoutId,
+        yourTurnTimeoutId,
+      ];
+      for (const timeoutId of timeoutIds) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
       }
     });
+    possiblyAutoBeginStep();
   });
 
   root.innerHTML =
