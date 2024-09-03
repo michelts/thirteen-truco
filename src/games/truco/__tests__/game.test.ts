@@ -879,6 +879,10 @@ describe("mimic cards", () => {
       new TrucoPlayer(game, "Curtis"),
     ];
     expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Hearts));
+    expect(game.currentRound.trumpCards).toEqual([
+      new Card(5, Suit.Clubs),
+      new Card(5, Suit.Hearts),
+    ]);
     const [player1, player2] = game.players;
     expect(player1.cards).toEqual([
       new Card(50, Suit.Spades, true),
@@ -912,6 +916,86 @@ describe("mimic cards", () => {
     assertStepHasCards(game.currentRound.currentStep, [
       { card: new Card(50, Suit.Spades, true) },
       { card: new Card(1, Suit.Hearts) },
+    ]);
+    expect(game.currentRound.currentStep.winner).toEqual(player2);
+  });
+
+  it("should not consider mimic cards trump cards definition", () => {
+    const cardsFromLowestToHighest = [
+      new Card(50, Suit.Spades, true),
+      new Card(50, Suit.Diamonds, true),
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Hearts),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(3, Suit.Clubs),
+      new Card(4, Suit.Hearts),
+      new Card(4, Suit.Clubs),
+      new Card(5, Suit.Hearts),
+      new Card(5, Suit.Clubs),
+    ];
+    const shuffledCards = [
+      new Card(5, Suit.Clubs),
+      new Card(50, Suit.Spades, true),
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(50, Suit.Spades, true),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Hearts),
+      new Card(5, Suit.Clubs),
+      new Card(4, Suit.Hearts),
+      new Card(4, Suit.Clubs),
+    ];
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCards,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    expect(game.currentRound.turnedCard).toEqual(new Card(5, Suit.Clubs));
+    expect(game.currentRound.trumpCards).toEqual([
+      new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+    ]);
+    const [player1, player2] = game.players;
+    expect(player1.cards).toEqual([
+      new Card(50, Suit.Spades, true),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+    ]);
+    expect(player1.displayCards).toEqual([
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(3, Suit.Hearts),
+      new Card(50, Suit.Spades, true),
+      new Card(1, Suit.Hearts),
+    ]);
+    expect(player2.displayCards).toEqual([
+      new Card(3, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Hearts),
+    ]);
+    // Player should drop display card but step will receive mimic
+    expect(() => player1.dropCard(new Card(50, Suit.Spades))).toThrowError(
+      CardNotFoundError,
+    );
+    player1.dropCard(new Card(3, Suit.Clubs));
+    assertStepHasCards(game.currentRound.currentStep, [
+      { card: new Card(50, Suit.Spades, true) },
+    ]);
+    player2.dropCard(new Card(3, Suit.Hearts));
+    console.log(game.currentRound.currentStep.cards);
+    assertStepHasCards(game.currentRound.currentStep, [
+      { card: new Card(50, Suit.Spades, true) },
+      { card: new Card(3, Suit.Hearts) },
     ]);
     expect(game.currentRound.currentStep.winner).toEqual(player2);
   });

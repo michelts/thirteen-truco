@@ -177,7 +177,9 @@ class TrucoRound implements Round {
   get trumpCards() {
     if (this.turnedCard) {
       return getTrumpCards(
-        this.game.deck.cardsFromLowestToHighest,
+        this.game.deck.cardsFromLowestToHighest.filter(
+          (card) => !card.mimicable,
+        ),
         this.turnedCard,
       );
     }
