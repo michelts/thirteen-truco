@@ -4,4 +4,4 @@ dist.zip
 dist/
 *storybook.log
 .sst/
-.env
+.env*
