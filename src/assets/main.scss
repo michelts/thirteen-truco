@@ -16,6 +16,11 @@
 @import "./_actions.scss";
 @import "./_notifications.scss";
 
+* {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
 html, body, button, svg {
   display: block;
   margin: 0;
