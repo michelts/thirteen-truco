@@ -77,6 +77,107 @@ describe("card shuffling", () => {
       new Card(4, Suit.Spades),
     ]);
   });
+
+  it("should not set mimicable cards as turned cards", () => {
+    const cardsFromLowestToHighest = [
+      new Card(13, Suit.Spades, true),
+      new Card(4, Suit.Spades),
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Hearts),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(3, Suit.Clubs),
+    ];
+    const shuffledCards = [
+      new Card(13, Suit.Spades, true),
+      new Card(4, Suit.Spades),
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Hearts),
+    ];
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCards,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
+    expect(game.currentRound.trumpCards).toEqual([
+      new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+    ]);
+    const [player1, player2] = game.players;
+    expect(player1.cards).toEqual([
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(1, Suit.Clubs),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(3, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Hearts),
+    ]);
+  });
+
+  it("should not set mimicable cards as trump cards", () => {
+    const cardsFromLowestToHighest = [
+      new Card(4, Suit.Spades),
+      new Card(13, Suit.Hearts, true),
+      new Card(13, Suit.Clubs, true),
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Hearts),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(3, Suit.Clubs),
+    ];
+    const shuffledCards = [
+      new Card(4, Suit.Spades),
+      new Card(13, Suit.Clubs, true),
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(13, Suit.Hearts, true),
+      new Card(3, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+    ];
+    const customDeck = new Deck(cardsFromLowestToHighest, () => [
+      ...shuffledCards,
+    ]);
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    expect(game.currentRound.turnedCard).toEqual(new Card(4, Suit.Spades));
+    expect(game.currentRound.trumpCards).toEqual([
+      new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+    ]);
+    const [player1, player2] = game.players;
+    expect(player1.cards).toEqual([
+      new Card(13, Suit.Clubs, true),
+      new Card(2, Suit.Clubs),
+      new Card(13, Suit.Hearts, true),
+    ]);
+    expect(player1.displayCards).toEqual([
+      new Card(3, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+    ]);
+    expect(player2.cards).toEqual([
+      new Card(2, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+    ]);
+  });
 });
 
 describe("game playing", () => {

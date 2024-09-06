@@ -49,7 +49,9 @@ export class TrucoGame implements Game {
 
   private distributeCards() {
     this.deck.shuffle();
-    this.currentRound.turnedCard = this.deck.getCard();
+    while (this.currentRound.turnedCard?.mimicable !== false) {
+      this.currentRound.turnedCard = this.deck.getCard();
+    }
     for (const player of this._players) {
       const cards = [];
       while (cards.length < 3) {
