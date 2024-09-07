@@ -1,5 +1,5 @@
 export function range(count: number, startIndex = 0) {
-  return Array(count - startIndex)
+  return Array(count)
     .fill(null)
     .map((_, index) => startIndex + index);
 }

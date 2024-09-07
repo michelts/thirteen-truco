@@ -1,0 +1,43 @@
+---
+first-round:
+  am-i-first:
+    - have-clubs-and-hearts: return-lowest-card
+    - have-clubs-and-other: return-lowest-trump
+    - have-clubs-and-top-card: return-highest-top-card
+    - have-clubs: return-highest-lower-card-and-hope-for-the-best
+    - have-any-trump: return-highest-trump
+    - have-top-card: return-highest-top-card
+    - else: return-lowest-lower-card-and-hope-for-the-best
+  am-i-not-first:
+    - are-we-winning-with-lower-card: return-am-i-first
+    - are-we-winning-with-top-card-or-trump: return-lowest-card
+    - are-we-losing: return-am-i-first
+
+second-round:
+  are-we-drawing:
+    - have-highest-trump-discounting-table: return-highest-trump-and-raise-3
+    - have-trump: return-highest-trump-and-raise-1
+    - have-top-card: do-not-burn-card(return-highest-card)
+    - else: do-not-burn-card(return-highest-lower-card)
+  are-we-winning:
+    - have-highest-trump-discounting-table: discard-if-certainly-winning
+    - will-lose-round: discard
+    - will-win-round: return-winner-card-and-raise
+    - have-any-trump: return-highest-trump-and-raise-2
+    - have-any-top-card: do-not-burn-card(return-highest-top-card-raise-1)
+    - else: do-not-burn-card(return-lowest-lower-card)
+  are-we-losing:
+    - have-2-highest-trumps-discounting-table: return-lowest-trump
+    - will-lose-round: do-not-burn-card(return-highest-card-and-raise-1)
+    - else: do-not-burn-card(return-highest-card)
+
+third-round:
+  are-we-drawing:
+    - will-win-round: return-highest-card-and-raise-3
+    - have-trump: return-highest-trump-and-raise-1
+    - else: return-highest-card-and-raise-1
+  will-lose-round: return-card-and-raise-1
+  will-draw-or-win: return-card-and-raise-3
+  won-first:
+    - have-any-top-card: return-card-raise-2
+  else: return-card

@@ -737,7 +737,7 @@ describe("end game", () => {
     ];
     const [player1, player2] = game.players;
 
-    for (const index of range(13, 1)) {
+    for (const index of range(12, 1)) {
       const firstPlay = [
         [player1, new Card(3, Suit.Clubs)] as const, // draw
         [player2, new Card(3, Suit.Hearts)] as const,
@@ -1093,7 +1093,6 @@ describe("mimic cards", () => {
       { card: new Card(50, Suit.Spades, true) },
     ]);
     player2.dropCard(new Card(3, Suit.Hearts));
-    console.log(game.currentRound.currentStep.cards);
     assertStepHasCards(game.currentRound.currentStep, [
       { card: new Card(50, Suit.Spades, true) },
       { card: new Card(3, Suit.Hearts) },
