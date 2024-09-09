@@ -58,18 +58,11 @@ export function renderApp(game: Game) {
   }
 
   function possiblyAutoBeginStep() {
-    if (yourTurnTimeoutId) {
-      clearTimeout(yourTurnTimeoutId);
-    }
     const currentPlayer = game.currentRound.currentPlayer;
     if (currentPlayer?.canAutoPickCard) {
       autoBeginStepTimeoutId = setTimeout(() => {
         autoPickCard(currentPlayer);
       }, 1000);
-    } else {
-      yourTurnTimeoutId = setTimeout(() => {
-        dispatchEvent(notificationCreated("Your turn!", 1000));
-      }, 3000);
     }
   }
 
@@ -97,6 +90,14 @@ export function renderApp(game: Game) {
     } else if (game.currentRound.currentStep.isDone) {
       game.currentRound.continue();
       possiblyAutoBeginStep();
+    }
+    if (
+      !game.currentRound.isDone &&
+      !game.currentRound.currentPlayer?.canAutoPickCard
+    ) {
+      yourTurnTimeoutId = setTimeout(() => {
+        dispatchEvent(notificationCreated("Your turn!", 1000));
+      }, 3000);
     }
   };
 
@@ -196,7 +197,7 @@ export function renderApp(game: Game) {
         }
       }
     });
-    possiblyAutoBeginStep();
+    continueRoundOrCloseIt();
   });
 
   root.innerHTML =
