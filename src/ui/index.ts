@@ -35,6 +35,7 @@ export function renderApp(game: Game) {
     const autoCard = player.autoPickCard();
     const shouldRaise =
       autoCard.shouldRaise &&
+      player.teamIndex !== 0 &&
       game.currentRound.stake.raisedBy?.teamIndex !== player.teamIndex;
     if (!shouldRaise) {
       dispatchEvent(cardPicked(player, autoCard.card, autoCard.isHidden));
