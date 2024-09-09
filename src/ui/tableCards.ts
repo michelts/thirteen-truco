@@ -9,7 +9,7 @@ export function renderTableCards(game: Game) {
     window.addEventListener("cardDropped", (event) => {
       // Highlight latest card
       redraw(event.detail.game);
-      findElement(".ltc").addEventListener("animationend", () => {
+      findElement(".ltc")?.addEventListener("animationend", () => {
         dispatchEvent(
           cardPlaced(event.detail.game, event.detail.player, event.detail.card),
         );
@@ -52,7 +52,7 @@ function render(game: Game, highlightBestCards?: boolean) {
             isLatestCard ? "ltc" : "",
             isBestCard ? "btc" : "",
             `ti-${stepCard.player.teamIndex}`,
-            stepCard.card.mimicable ? "mim" : "",
+            !stepCard.isHidden && stepCard.card.mimicable ? "mim" : "",
           ]);
         })
         .join(" ")}</div>`;

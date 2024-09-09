@@ -93,3 +93,6 @@ export type BestCardsFilterFunc = (
   cardsFromHighestToLowest: Card[],
   trumpCardNumber: number,
 ) => Card[];
+
+// biome-ignore lint/suspicious/noExplicitAny: not trying to type soundbox's CPlayer
+export type AudioBoxSound = any;

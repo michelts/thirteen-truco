@@ -1,6 +1,7 @@
 import type { Game, Player } from "@/types";
 import { getElement } from "@/utils/elements";
 import { renderActions } from "./actions";
+import { playSFX, toggleMusic, toggleSFX } from "./audio";
 import { renderAvatar } from "./avatar";
 import { renderCardDeck } from "./cardDeck";
 import {
@@ -22,6 +23,7 @@ import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
 import { renderTurnedCard } from "./turnedCard";
+import { NotYourTurnError } from "@/utils/errors";
 
 export function renderApp(game: Game) {
   const root = getElement("app");
@@ -90,6 +92,7 @@ export function renderApp(game: Game) {
       clearTimeout(yourTurnTimeoutId);
     }
     if (game.currentRound.isDone) {
+      playSFX(game.currentRound.score?.[0] ? "round-win" : "round-lose");
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
       game.currentRound.continue();
@@ -152,8 +155,22 @@ export function renderApp(game: Game) {
   };
 
   setTimeout(() => {
-    window.addEventListener("cardDropped", (event) => {
-      event.detail.player.dropCard(event.detail.card, event.detail.isHidden);
+    window.addEventListener("cardDropped", async (event) => {
+      const droppedCardIndex = event.detail.player.displayCards.findIndex(
+        (card) => card.isEqual(event.detail.card),
+      );
+      const realCard = event.detail.player.cards[droppedCardIndex];
+      try {
+        event.detail.player.dropCard(event.detail.card, event.detail.isHidden);
+      } catch (err) {
+        if (err instanceof NotYourTurnError) {
+          return;
+        }
+        throw err;
+      }
+      await playSFX(
+        !event.detail.isHidden && realCard.mimicable ? "bad-card" : "good-card",
+      );
       if (game.currentRound.currentPlayer?.canAutoPickCard) {
         autoPickCard(game.currentRound.currentPlayer);
       }
@@ -186,8 +203,8 @@ export function renderApp(game: Game) {
     renderHeader(
       renderResetGame(game),
       renderScore(game),
-      renderToggle("MUSIC", false, () => true) +
-        renderToggle("SFX", false, () => true),
+      renderToggle("MUSIC", false, toggleMusic) +
+        renderToggle("SFX", false, toggleSFX),
     ) +
     renderKitchenTable(
       renderTableCards(game) +
