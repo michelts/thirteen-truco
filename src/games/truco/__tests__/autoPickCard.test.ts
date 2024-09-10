@@ -293,6 +293,33 @@ describe("first card", () => {
     },
   );
 
+  it.each`
+    myTrump          | hisTrump
+    ${Suit.Diamonds} | ${Suit.Spades}
+    ${Suit.Spades}   | ${Suit.Hearts}
+  `(
+    "should not burn lowest trump card if my partner already used a higher trump (myTrump: $myTrump, hisTrump: $hisTrump)",
+    ({ myTrump, hisTrump }: { myTrump: Suit; hisTrump: Suit }) => {
+      const hand = [
+        new Card(7, Suit.Spades),
+        new Card(10, Suit.Spades),
+        new Card(5, myTrump),
+      ];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 5,
+          previousFromUs: [[new Card(5, hisTrump)]],
+          previousFromThem: [[new Card(10, Suit.Spades)]],
+        }),
+      ).toEqual({
+        card: new Card(7, Suit.Spades),
+        isHidden: false,
+        shouldRaise: false,
+      });
+    },
+  );
+
   describe("I can win or draw while I have trump and no top card", () => {
     it.each`
       trumpCardNumber | highestLowestCardNumber
