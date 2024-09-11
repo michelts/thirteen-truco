@@ -1,7 +1,6 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
 import { renderAcceptStakeRaise } from "./acceptStakeRaise";
-import { renderGiveUpRound } from "./giveUpRound";
 import { renderRaiseStake } from "./raiseStake";
 import { renderRejectStakeRaise } from "./rejectStakeRaise";
 import { renderResetGameAction } from "./resetGameAction";
@@ -14,6 +13,7 @@ export function renderActions(game: Game) {
     window.addEventListener("stakeRaised", redraw);
     window.addEventListener("stakeAutoRaised", redraw);
     window.addEventListener("stakeRaiseAnswered", redraw);
+    window.addEventListener("roundDone", redraw);
     window.addEventListener("roundAcknowledged", redraw);
     window.addEventListener("gameReset", redraw);
   });
@@ -28,5 +28,5 @@ function render(game: Game) {
   if (stake.raisedBy?.teamIndex === 1 && stake.isAccepted === undefined) {
     return `<div id="act">${renderAcceptStakeRaise(game) + renderRejectStakeRaise(game)}</div>`;
   }
-  return `<div id="act">${renderRaiseStake(game) + renderGiveUpRound(game)}</div>`;
+  return `<div id="act">${renderRaiseStake(game)}</div>`;
 }

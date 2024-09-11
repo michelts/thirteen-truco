@@ -22,6 +22,7 @@ function render(game: Game) {
     });
   });
   const canRaiseStakes =
+    !game.currentRound.isDone &&
     game.currentRound.stake.isAccepted === true &&
     game.currentRound.stake.raisedBy?.teamIndex !== humanPlayer.teamIndex;
   return `<button id="rs"${!canRaiseStakes ? " disabled=" : ""}>RAISE<br/>TO ${game.currentRound.nextStakePoints}</button>`;
