@@ -55,8 +55,8 @@ function dismiss(onDismiss?: () => void, originalMessage?: string) {
 export const notifications = {
   weRaisedStakes: (name: string, points: number) =>
     `${name} called ${getRaiseName(points)}! Waiting response...`,
-  theyAccepted: "They accepted! Let's continue...",
-  theyRejected: "They rejected! The round is yours!",
+  theyAccepted: "It was accepted! Let's continue...",
+  theyRejected: "It was rejected! The round is yours!",
   theyRaisedStakes: (name: string, points: number) =>
     `${name} called ${getRaiseName(points)}! What do you said?`,
   weWon: "This round is yours. Congrats!",
