@@ -9,6 +9,7 @@ export function renderNotifications() {
     getElement("nf").innerHTML = render(
       event.detail.message,
       event.detail.onDismiss,
+      !event.detail.timeout,
     );
     if (event.detail.timeout) {
       dismissTimeout = setTimeout(() => {
@@ -23,7 +24,7 @@ export function renderNotifications() {
   return '<div id="nf"></div>';
 }
 
-function render(message: string, onDismiss?: () => void) {
+function render(message: string, onDismiss?: () => void, dismissable = true) {
   currentMessage = message;
   setTimeout(() => {
     getElement("nf").firstChild?.addEventListener("click", () =>
@@ -33,7 +34,7 @@ function render(message: string, onDismiss?: () => void) {
   if (!message) {
     return "";
   }
-  return `<button><div>${message}</div></button>`;
+  return `<button ${dismissable ? 'class="dms"' : ""}><div>${message}</div></button>`;
 }
 
 function dismiss(onDismiss?: () => void, originalMessage?: string) {

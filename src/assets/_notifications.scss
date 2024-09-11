@@ -11,6 +11,7 @@
   cursor: pointer;
 
   & > div {
+
     font-family: sans-serif;
     font-size: 1.1rem;
     background: #333;
@@ -25,6 +26,24 @@
     transform-origin: center center;
     animation: ease-in-out 150ms 1 grow;
     animation-direction: alternate;
+  }
+
+  // dismissable
+  &.dms > div:after {
+    content: "X";
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    line-height: 20px;
+    background: #333;
+    border: 1px solid #111;
+    position: absolute;
+    top: -13px;
+    right: -13px;
+    color: #fff;
+    border-radius: 1000px;
+    overflow: hidden;
+    box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.5);
   }
 }
 
