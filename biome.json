@@ -1,13 +1,8 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "files": {
-    "include": [
-      "**/*"
-    ],
-    "ignore": [
-      "src/ui/audio/player.js",
-      "src/ui/audio/assets/*"
-    ]
+    "include": ["**/*"],
+    "ignore": ["src/ui/audio/player.js", "src/ui/audio/assets/*"]
   },
   "organizeImports": {
     "enabled": true

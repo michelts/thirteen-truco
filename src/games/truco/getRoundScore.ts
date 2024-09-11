@@ -5,16 +5,16 @@ export function getRoundScore(
   stepsScores: [number, number][],
   points: number,
   teamIndexThatRaisedStakes?: 0 | 1,
-): [number, number] {
-  if (stepsScores.length === 1) {
-    return [0, 0];
+): [number, number] | undefined {
+  if (stepsScores.length <= 1) {
+    return undefined;
   }
 
   const [totalA, totalB] = getTotals(stepsScores);
   const isPartialWin =
     stepsScores.length === 2 && Math.abs(totalA - totalB) === 2;
   if (isPartialWin) {
-    return [0, 0];
+    return undefined;
   }
 
   if ((totalA || totalB) && totalA >= totalB) {
@@ -22,6 +22,10 @@ export function getRoundScore(
   }
   if (totalA || totalB) {
     return [0, points];
+  }
+  const isPartialDraw = stepsScores.length === 2;
+  if (isPartialDraw) {
+    return undefined;
   }
   // the team that raised stakes must untie a draw!
   if (teamIndexThatRaisedStakes === 0) {

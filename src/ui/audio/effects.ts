@@ -1,7 +1,7 @@
 import badCard from "./assets/bad-card";
 import goodCard from "./assets/good-card";
-import roundWin from "./assets/round-win";
 import roundLose from "./assets/round-lose";
+import roundWin from "./assets/round-win";
 import { Audio } from "./audio";
 
 let sfxEnabled = false;

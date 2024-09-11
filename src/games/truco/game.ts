@@ -189,6 +189,7 @@ class TrucoRound implements Round {
   }
 
   get score() {
+    const validSteps = this._steps.filter((step) => step.isDone);
     if (this.stake.isAccepted === false) {
       const points = this.previousStakePoints;
       const score: [number, number] = [
@@ -197,7 +198,7 @@ class TrucoRound implements Round {
       ];
       return score;
     }
-    const matches = this._steps.map((step) => {
+    const matches = validSteps.map((step) => {
       const match: [number, number] = [0, 0];
       if (step.winner) {
         match[step.winner.teamIndex] += 1;
@@ -209,9 +210,6 @@ class TrucoRound implements Round {
       this.stake.points ?? 1,
       this.stake?.raisedBy?.teamIndex,
     );
-    if (score[0] === score[1]) {
-      return undefined;
-    }
     return score;
   }
 

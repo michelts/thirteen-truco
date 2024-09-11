@@ -1,2 +1,2 @@
 export { toggleMusic } from "./music";
-export {toggleSFX, playSFX} from './effects';
+export { toggleSFX, playSFX } from "./effects";

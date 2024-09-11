@@ -1,5 +1,6 @@
 import type { Game, Player } from "@/types";
 import { getElement } from "@/utils/elements";
+import { NotYourTurnError } from "@/utils/errors";
 import { renderActions } from "./actions";
 import { playSFX, toggleMusic, toggleSFX } from "./audio";
 import { renderAvatar } from "./avatar";
@@ -23,7 +24,6 @@ import { renderScore } from "./score";
 import { renderTableCards } from "./tableCards";
 import { renderToggle } from "./toggle";
 import { renderTurnedCard } from "./turnedCard";
-import { NotYourTurnError } from "@/utils/errors";
 
 export function renderApp(game: Game) {
   const root = getElement("app");

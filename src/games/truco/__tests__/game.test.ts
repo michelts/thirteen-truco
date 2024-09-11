@@ -558,11 +558,13 @@ describe("score calculation", () => {
     player2.dropCard(new Card(2, Suit.Hearts));
     expect(game.currentRound.score).toBeUndefined();
     expect(game.score).toEqual([0, 0]);
+    expect(game.currentRound.isDone).toBe(false);
     game.currentRound.continue();
     player1.dropCard(new Card(2, Suit.Clubs));
     player2.dropCard(new Card(1, Suit.Hearts)); // best (trump)
     expect(game.currentRound.score).toBeUndefined();
     expect(game.score).toEqual([0, 0]);
+    expect(game.currentRound.isDone).toBe(false);
     game.currentRound.continue();
     player2.dropCard(new Card(3, Suit.Hearts));
     player1.dropCard(new Card(1, Suit.Clubs)); // best (trump)
@@ -612,14 +614,67 @@ describe("score calculation", () => {
     expect(game.currentRound.isDone).toBe(false);
     player1.dropCard(new Card(3, Suit.Clubs)); // tie
     player2.dropCard(new Card(3, Suit.Hearts));
+    expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.score).toBeUndefined();
     expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
     player1.dropCard(new Card(1, Suit.Clubs)); // best (highest trump)
     player2.dropCard(new Card(1, Suit.Hearts));
+    expect(game.currentRound.isDone).toBe(true);
     expect(game.currentRound.score).toEqual([1, 0]);
     expect(game.score).toEqual([1, 0]);
+  });
+
+  it("should handle a round with all draws", () => {
+    const cards = [
+      new Card(12, Suit.Spades),
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+      new Card(2, Suit.Hearts),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Hearts),
+      new Card(3, Suit.Clubs),
+      new Card(4, Suit.Hearts),
+      new Card(4, Suit.Clubs),
+    ];
+    const shuffledCards = [
+      new Card(12, Suit.Spades),
+      new Card(4, Suit.Hearts),
+      new Card(2, Suit.Hearts),
+      new Card(3, Suit.Hearts),
+      new Card(4, Suit.Clubs),
+      new Card(2, Suit.Clubs),
+      new Card(3, Suit.Clubs),
+      new Card(1, Suit.Hearts),
+      new Card(1, Suit.Clubs),
+    ];
+    const deck = new Deck(cards, () => [...shuffledCards]);
+    const game = new TrucoGame(deck);
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+    ];
+    const [player1, player2] = game.players;
+    expect(game.rounds).toHaveLength(1);
+    player1.dropCard(new Card(3, Suit.Hearts));
+    player2.dropCard(new Card(3, Suit.Clubs));
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
+    game.currentRound.continue();
+
+    player1.dropCard(new Card(2, Suit.Hearts));
+    player2.dropCard(new Card(2, Suit.Clubs));
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
+    game.currentRound.continue();
+
+    player1.dropCard(new Card(4, Suit.Hearts));
+    player2.dropCard(new Card(4, Suit.Clubs));
     expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toEqual([0, 0]);
+    expect(game.score).toEqual([0, 0]);
   });
 
   it("should count raised stakes for the winner", () => {
@@ -652,14 +707,26 @@ describe("score calculation", () => {
     ];
     const [player1, player2] = game.players;
     game.currentRound.raiseStake(player1);
+    // Do not consider raised stakes points before accepting
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
+
     game.currentRound.stake.accept(player2);
     game.currentRound.raiseStake(player2);
     game.currentRound.stake.accept(player1);
+    // Do not consider raised stakes points before win
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toBeUndefined();
+    expect(game.score).toEqual([0, 0]);
+
     player1.dropCard(new Card(4, Suit.Clubs));
     player2.dropCard(new Card(7, Suit.Clubs)); // best
+    expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.score).toBeUndefined();
     expect(game.score).toEqual([0, 0]);
     game.currentRound.continue();
+
     player2.dropCard(new Card(8, Suit.Clubs)); // best
     player1.dropCard(new Card(5, Suit.Clubs));
     expect(game.currentRound.isDone).toBe(true);
@@ -709,6 +776,7 @@ describe("score calculation", () => {
 describe("end game", () => {
   const cardsFromLowestToHighest = [
     new Card(4, Suit.Spades),
+    new Card(5, Suit.Spades),
     new Card(1, Suit.Hearts),
     new Card(1, Suit.Clubs),
     new Card(2, Suit.Hearts),
@@ -724,6 +792,7 @@ describe("end game", () => {
     new Card(3, Suit.Hearts),
     new Card(2, Suit.Hearts),
     new Card(1, Suit.Hearts),
+    new Card(5, Suit.Spades),
   ];
 
   it("should end game if one of the teams reach 12 points", () => {
@@ -739,16 +808,16 @@ describe("end game", () => {
 
     for (const index of range(12, 1)) {
       const firstPlay = [
-        [player1, new Card(3, Suit.Clubs)] as const, // draw
-        [player2, new Card(3, Suit.Hearts)] as const,
+        [player1, new Card(3, Suit.Clubs)] as const, // win
+        [player2, new Card(2, Suit.Hearts)] as const,
       ];
       const secondPlay = [
-        [player1, new Card(1, Suit.Clubs)] as const, // highest trump
+        [player1, new Card(1, Suit.Clubs)] as const, // draw
         [player2, new Card(1, Suit.Hearts)] as const,
       ];
       if (index % 2 === 0) {
+        // player1 will always begin 2nd step because he won it
         firstPlay.reverse();
-        secondPlay.reverse();
       }
       for (const [player, card] of firstPlay) {
         player.dropCard(card);
@@ -759,6 +828,7 @@ describe("end game", () => {
       }
       expect(game.score).toEqual([index, 0]);
       if (index < 12) {
+        expect(game.isDone).toBe(false);
         game.continue();
       }
     }
@@ -794,16 +864,15 @@ describe("end game", () => {
         game.currentRound.stake.accept(player2);
       }
       const firstPlay = [
-        [player1, new Card(3, Suit.Clubs)] as const, // draw
-        [player2, new Card(3, Suit.Hearts)] as const,
+        [player1, new Card(3, Suit.Clubs)] as const, // win
+        [player2, new Card(2, Suit.Hearts)] as const,
       ];
       const secondPlay = [
-        [player1, new Card(1, Suit.Clubs)] as const, // highest trump,
+        [player1, new Card(1, Suit.Clubs)] as const, // draw
         [player2, new Card(1, Suit.Hearts)] as const,
       ];
       if (index % 2 === 1) {
         firstPlay.reverse();
-        secondPlay.reverse();
       }
       for (const [player, card] of firstPlay) {
         player.dropCard(card);

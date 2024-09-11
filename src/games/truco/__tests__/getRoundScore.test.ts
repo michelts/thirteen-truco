@@ -29,12 +29,7 @@ it.each`
     scoreA: number;
     scoreB: number;
   }) => {
-    const scoresMapper: Record<string, [number, number]> = {
-      Win: [1, 0],
-      Lose: [0, 1],
-      Draw: [0, 0],
-    };
-    const scores = composition.split(" ").map((key) => scoresMapper[key]);
+    const scores = getScoresFromComposition(composition);
     const points = 1;
     const teamIndexThatRaisedStakes = undefined;
     expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual([
@@ -45,43 +40,43 @@ it.each`
 );
 
 it.each`
-  composition    | scoreA | scoreB
-  ${"Win"}       | ${0}   | ${0}
-  ${"Lose"}      | ${0}   | ${0}
-  ${"Draw"}      | ${0}   | ${0}
-  ${"Win Lose"}  | ${0}   | ${0}
-  ${"Lose Win"}  | ${0}   | ${0}
-  ${"Draw Draw"} | ${0}   | ${0}
+  composition
+  ${"Win"}
+  ${"Lose"}
+  ${"Draw"}
+  ${"Win Lose"}
+  ${"Lose Win"}
+  ${"Draw Draw"}
 `(
-  "should return incomplete games as draws ($composition)",
-  ({
-    composition,
-    scoreA,
-    scoreB,
-  }: {
-    composition: string;
-    scoreA: number;
-    scoreB: number;
-  }) => {
-    const scoresMapper: Record<string, [number, number]> = {
-      Win: [1, 0],
-      Lose: [0, 1],
-      Draw: [0, 0],
-    };
-    const scores = composition.split(" ").map((key) => scoresMapper[key]);
+  "should return incomplete games as undefined ($composition)",
+  ({ composition }: { composition: string }) => {
+    const scores = getScoresFromComposition(composition);
     const points = 1;
     const teamIndexThatRaisedStakes = undefined;
-    expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual([
-      scoreA,
-      scoreB,
-    ]);
+    expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual(
+      undefined,
+    );
   },
 );
+
+it("should return incomplete game that doesn't have any round done as undefined", () => {
+  const points = 1;
+  const teamIndexThatRaisedStakes = undefined;
+  expect(getRoundScore([], points, teamIndexThatRaisedStakes)).toEqual(
+    undefined,
+  );
+});
+
+it("should return incomplete game that doesn't have any round but raised stakes start as undefined", () => {
+  const points = 3;
+  const teamIndexThatRaisedStakes = 1;
+  expect(getRoundScore([], points, teamIndexThatRaisedStakes)).toEqual(
+    undefined,
+  );
+});
 
 it.each`
   composition         | points | teamIndexThatRaisedStakes | scoreA | scoreB
-  ${"Draw Draw"}      | ${3}   | ${0}                      | ${0}   | ${3}
-  ${"Draw Draw"}      | ${3}   | ${1}                      | ${3}   | ${0}
   ${"Draw Draw Draw"} | ${6}   | ${0}                      | ${0}   | ${6}
   ${"Draw Draw Draw"} | ${6}   | ${1}                      | ${6}   | ${0}
 `(
@@ -99,15 +94,40 @@ it.each`
     scoreA: number;
     scoreB: number;
   }) => {
-    const scoresMapper: Record<string, [number, number]> = {
-      Win: [1, 0],
-      Lose: [0, 1],
-      Draw: [0, 0],
-    };
-    const scores = composition.split(" ").map((key) => scoresMapper[key]);
+    const scores = getScoresFromComposition(composition);
     expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual([
       scoreA,
       scoreB,
     ]);
   },
 );
+
+it.each`
+  composition
+  ${"Win"}
+  ${"Lose"}
+  ${"Draw"}
+  ${"Win Lose"}
+  ${"Lose Win"}
+  ${"Draw Draw"}
+`(
+  "should not consider the team raising stakes the loser for partial scores ($composition)",
+  ({ composition }: { composition: string }) => {
+    const scores = getScoresFromComposition(composition);
+    const points = 3;
+    const teamIndexThatRaisedStakes = 1;
+    expect(getRoundScore(scores, points, teamIndexThatRaisedStakes)).toEqual(
+      undefined,
+    );
+  },
+);
+
+function getScoresFromComposition(composition: string) {
+  // Transforms string with win/lose/draw into a list of tuples
+  const scoresMapper: Record<string, [number, number]> = {
+    Win: [1, 0],
+    Lose: [0, 1],
+    Draw: [0, 0],
+  };
+  return composition.split(" ").map((key) => scoresMapper[key]);
+}
