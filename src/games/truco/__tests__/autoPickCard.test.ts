@@ -148,7 +148,6 @@ describe("first card", () => {
           trumpSuits,
           pickedTrumpSuit,
         }: { trumpSuits: Suit[]; pickedTrumpSuit: Suit }) => {
-          // XXX do not burn it
           const trumpCardNumber = 1;
           const trumpCards = trumpSuits.map(
             (suit) => new Card(trumpCardNumber, suit),
@@ -179,7 +178,6 @@ describe("first card", () => {
       `(
         "should pick highest top card if no trump cards (trump: $trumpCardNumber, cards: $highestTop, $lowestTop)",
         ({ trumpCardNumber, highestTop, lowestTop }) => {
-          // XXX do not burn card!
           const hand = [
             new Card(lowestTop, Suit.Clubs),
             new Card(7, Suit.Diamonds),
@@ -320,6 +318,37 @@ describe("first card", () => {
     },
   );
 
+  it.each`
+    myTrump        | hisTrump
+    ${Suit.Spades} | ${Suit.Diamonds}
+    ${Suit.Hearts} | ${Suit.Diamonds}
+    ${Suit.Hearts} | ${Suit.Spades}
+    ${Suit.Clubs}  | ${Suit.Diamonds}
+    ${Suit.Clubs}  | ${Suit.Spades}
+    ${Suit.Clubs}  | ${Suit.Hearts}
+  `(
+    "should not burn highest trump card if my partner already used a lower trump (myTrump: $myTrump, hisTrump: $hisTrump)",
+    ({ myTrump, hisTrump }: { myTrump: Suit; hisTrump: Suit }) => {
+      const hand = [
+        new Card(7, Suit.Spades),
+        new Card(10, Suit.Spades),
+        new Card(5, myTrump),
+      ];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 5,
+          previousFromUs: [[new Card(5, hisTrump)]],
+          previousFromThem: [[new Card(10, Suit.Spades)]],
+        }),
+      ).toEqual({
+        card: new Card(7, Suit.Spades),
+        isHidden: false,
+        shouldRaise: false,
+      });
+    },
+  );
+
   describe("I can win or draw while I have trump and no top card", () => {
     it.each`
       trumpCardNumber | highestLowestCardNumber
@@ -360,7 +389,7 @@ describe("first card", () => {
         call({
           hand,
           trumpCardNumber: 5,
-          previousFromUs: [[new Card(7, Suit.Spades)]],
+          previousFromUs: [[new Card(6, Suit.Spades)]],
           previousFromThem: [
             [new Card(7, Suit.Hearts), new Card(7, Suit.Clubs)],
           ],
@@ -585,6 +614,62 @@ describe("second card", () => {
         card: new Card(6, trumpSuit),
         isHidden: false,
         shouldRaise: true,
+      });
+    },
+  );
+
+  it.each`
+    myTrump          | hisTrump
+    ${Suit.Diamonds} | ${Suit.Spades}
+    ${Suit.Spades}   | ${Suit.Hearts}
+  `(
+    "should not burn lowest trump card if my partner already used a higher trump (myTrump: $myTrump, hisTrump: $hisTrump)",
+    ({ myTrump, hisTrump }: { myTrump: Suit; hisTrump: Suit }) => {
+      const hand = [new Card(7, Suit.Spades), new Card(5, myTrump)];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 5,
+          previousFromUs: [[new Card(10, Suit.Clubs)], [new Card(5, hisTrump)]],
+          previousFromThem: [
+            [new Card(11, Suit.Diamonds), new Card(11, Suit.Hearts)],
+            [new Card(10, Suit.Spades)],
+          ],
+        }),
+      ).toEqual({
+        card: new Card(7, Suit.Spades),
+        isHidden: false,
+        shouldRaise: false,
+      });
+    },
+  );
+
+  it.each`
+    myTrump        | hisTrump
+    ${Suit.Spades} | ${Suit.Diamonds}
+    ${Suit.Hearts} | ${Suit.Diamonds}
+    ${Suit.Hearts} | ${Suit.Spades}
+    ${Suit.Clubs}  | ${Suit.Diamonds}
+    ${Suit.Clubs}  | ${Suit.Spades}
+    ${Suit.Clubs}  | ${Suit.Hearts}
+  `(
+    "should not burn highest trump card if my partner already used a lower trump (myTrump: $myTrump, hisTrump: $hisTrump)",
+    ({ myTrump, hisTrump }: { myTrump: Suit; hisTrump: Suit }) => {
+      const hand = [new Card(7, Suit.Spades), new Card(5, myTrump)];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 5,
+          previousFromUs: [[new Card(10, Suit.Clubs)], [new Card(5, hisTrump)]],
+          previousFromThem: [
+            [new Card(11, Suit.Diamonds), new Card(11, Suit.Hearts)],
+            [new Card(10, Suit.Spades)],
+          ],
+        }),
+      ).toEqual({
+        card: new Card(7, Suit.Spades),
+        isHidden: false,
+        shouldRaise: false,
       });
     },
   );

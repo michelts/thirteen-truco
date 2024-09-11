@@ -101,6 +101,7 @@ class CardPicker implements CardPickerInterface {
         return makePickReturn(cardToWinStep, false, true);
       }
       const [bestCard, action] = this._pickBestSecondCard();
+      console.log({ bestCard });
       const card = this._dontBurnCard(bestCard);
       if (!card.isEqual(bestCard)) {
         return makePickReturn(card);
@@ -345,8 +346,21 @@ class CardPicker implements CardPickerInterface {
     const opponentCardHeights = this._theirStepCards.map(
       (theirCard) => theirCard.groupHeight,
     );
-    const threshold = Math.max(...opponentCardHeights);
-    return card.groupHeight >= threshold ? card : this._myHandAscending[0];
+    const opponentsThreshold = Math.max(...opponentCardHeights) ?? 0;
+    if (card.groupHeight < opponentsThreshold) {
+      return this._myHandAscending[0];
+    }
+    const partnerCardHeight = this._ourStepCards[0]?.height;
+    const isPartnerWinningWithTopCard =
+      partnerCardHeight >= this._topCardThreshold &&
+      partnerCardHeight > opponentsThreshold;
+    if (isPartnerWinningWithTopCard) {
+      return this._myHandAscending[0];
+    }
+    if (card.height < partnerCardHeight) {
+      return this._myHandAscending[0];
+    }
+    return card;
   }
 }
 
