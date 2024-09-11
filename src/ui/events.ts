@@ -18,8 +18,10 @@ declare global {
       card: Card;
       isHiden: boolean;
     }>;
+    stepDone: CustomEvent<{ game: Game }>;
     roundDone: CustomEvent<{ game: Game }>;
     roundAcknowledged: CustomEvent<{ game: Game }>;
+    roundContinued: CustomEvent<{ game: Game }>;
     notificationCreated: CustomEvent<{
       message: string;
       timeout?: number;
@@ -70,6 +72,12 @@ export const stakeAutoRaised = (game: Game, player: Player) =>
     detail: { game, player },
   });
 
+export const stepDone = (game: Game) =>
+  new CustomEvent("stepDone", {
+    bubbles: true,
+    detail: { game },
+  });
+
 export const roundDone = (game: Game) =>
   new CustomEvent("roundDone", {
     bubbles: true,
@@ -78,6 +86,12 @@ export const roundDone = (game: Game) =>
 
 export const roundAcknowledged = (game: Game) =>
   new CustomEvent("roundAcknowledged", {
+    bubbles: true,
+    detail: { game },
+  });
+
+export const roundContinued = (game: Game) =>
+  new CustomEvent("roundContinued", {
     bubbles: true,
     detail: { game },
   });

@@ -20,9 +20,14 @@
 
     div {
       font-weight: bold;
-      padding: 2px 4px;
+      padding: 2px 0;
       text-align: center;
-      width: 1.5em;
+      width: 1.4em;
+    }
+
+    div + div {
+      border-right: 1px solid #222;
+      font-size: 0.9rem;
     }
 
     div:first-child {
@@ -31,6 +36,7 @@
 
     div:last-child {
       background: $color-them;
+      border-right: 0;
     }
   }
 }

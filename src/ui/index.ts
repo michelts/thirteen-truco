@@ -9,9 +9,11 @@ import {
   cardPicked,
   notificationCreated,
   roundAcknowledged,
+  roundContinued,
   roundDone,
   stakeAutoRaised,
   stakeRaiseAnswered,
+  stepDone,
 } from "./events";
 import { renderMyCards } from "./myCards";
 import { renderMyself } from "./myself";
@@ -95,6 +97,7 @@ export function renderApp(game: Game) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
       game.currentRound.continue();
+      dispatchEvent(stepDone(game));
     }
     possiblyAutoContinueStep();
     if (
@@ -148,6 +151,7 @@ export function renderApp(game: Game) {
   const continueGameIfDone = () => {
     if (!game.isDone) {
       game.continue();
+      dispatchEvent(roundContinued(game));
       possiblyAutoContinueStep();
     } else {
       const score = game.score;
