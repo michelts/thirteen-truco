@@ -64,3 +64,33 @@
     background-position: 32px 32px;
   }
 }
+
+// current player
+.av-c {
+  & > div:after {
+    content: "Current";
+    display: block;
+    background: #fff;
+    background: linear-gradient(0deg, #fff 0%, #aaa 100%);
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    position: absolute;
+    top: -28px;
+    left: 0;
+    padding: 2px 4px;
+    z-index: 1;
+  }
+  & > div:before {
+    content: "";
+   width: 0px;
+   height: 0px;
+   border-style: solid;
+   border-width: 0 10px 10px 8px;
+   border-color: transparent transparent #fff transparent;
+   transform: rotate(290deg);
+    position: absolute;
+    top: -10px;
+    left: 5;
+    z-index: 2;
+  }
+}

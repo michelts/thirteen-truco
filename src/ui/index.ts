@@ -222,7 +222,7 @@ export function renderApp(game: Game) {
         renderCardDeck(renderTurnedCard(game)) +
         renderMyself(
           renderMyCards(game, game.players[0]) +
-            renderAvatar(game.players[0], "y") +
+            renderAvatar(game, game.players[0], "y") +
             renderActions(game) +
             renderNotifications(),
         ) +
@@ -231,7 +231,7 @@ export function renderApp(game: Game) {
             .slice(1)
             .map((player, index) =>
               renderPlayer(
-                renderAvatar(player, index),
+                renderAvatar(game, player, index),
                 renderOthersCards(game, player),
               ),
             ),
