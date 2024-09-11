@@ -57,7 +57,7 @@ export function renderApp(game: Game) {
     }
   }
 
-  function possiblyAutoBeginStep() {
+  function possiblyAutoContinueStep() {
     const currentPlayer = game.currentRound.currentPlayer;
     if (currentPlayer?.canAutoPickCard) {
       autoBeginStepTimeoutId = setTimeout(() => {
@@ -89,7 +89,7 @@ export function renderApp(game: Game) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
       game.currentRound.continue();
-      possiblyAutoBeginStep();
+      possiblyAutoContinueStep();
     }
     if (
       !game.currentRound.isDone &&
@@ -142,7 +142,7 @@ export function renderApp(game: Game) {
   const continueGameIfDone = () => {
     if (!game.isDone) {
       game.continue();
-      possiblyAutoBeginStep();
+      possiblyAutoContinueStep();
     } else {
       const score = game.score;
       dispatchEvent(
@@ -182,6 +182,7 @@ export function renderApp(game: Game) {
       autoAnswerStakeRaise(event.detail.player),
     );
     window.addEventListener("stakeRaiseAnswered", (event) => {
+      possiblyAutoContinueStep();
       notifyStakeAccepted(event.detail.player, continueRoundOrCloseIt);
     });
     window.addEventListener("roundAcknowledged", continueGameIfDone);
