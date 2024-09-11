@@ -17,7 +17,9 @@ export function renderOthersCards(game: Game, player: Player) {
         redraw(player, event.detail.card);
 
         getElement(`ani-${player.id}`).addEventListener("animationend", () => {
-          dispatchEvent(cardDropped(game, player, event.detail.card));
+          if (game.currentRound.stake.isAccepted !== undefined) {
+            dispatchEvent(cardDropped(game, player, event.detail.card));
+          }
         });
       }
     });
