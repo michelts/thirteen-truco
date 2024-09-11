@@ -27,6 +27,7 @@ export interface Player {
   cards: Card[];
   displayCards: Card[];
   isEqual: (otherPlayer: Player) => boolean;
+  isPendingTurn: boolean;
   canAutoPickCard: boolean;
   autoPickCard: () => {
     card: Card;

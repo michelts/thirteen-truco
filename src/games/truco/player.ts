@@ -70,6 +70,15 @@ export class TrucoPlayer implements Player, TrucoPlayerType {
     return this._cards.map((playerCard) => playerCard.displayCard);
   }
 
+  get isPendingTurn() {
+    if (this._game.currentRound.stake.isAccepted === undefined) {
+      return false;
+    }
+    const stepsCount = this._game.currentRound.steps.length;
+    const cardsCount = this.cards.length;
+    return cardsCount + stepsCount > 3;
+  }
+
   dropCard(card: Card, isHidden?: boolean) {
     if (this._game.currentRound.stake.isAccepted === undefined) {
       throw new PendingStakeRaiseError();

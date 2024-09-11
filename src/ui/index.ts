@@ -34,6 +34,12 @@ export function renderApp(game: Game) {
   let yourTurnTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   function autoPickCard(player: Player) {
+    if (
+      !player.isPendingTurn ||
+      !game.currentRound?.currentPlayer?.isEqual(player)
+    ) {
+      return;
+    }
     const autoCard = player.autoPickCard();
     const shouldRaise =
       autoCard.shouldRaise &&
@@ -89,8 +95,8 @@ export function renderApp(game: Game) {
       dispatchEvent(roundDone(game));
     } else if (game.currentRound.currentStep.isDone) {
       game.currentRound.continue();
-      possiblyAutoContinueStep();
     }
+    possiblyAutoContinueStep();
     if (
       !game.currentRound.isDone &&
       !game.currentRound.currentPlayer?.canAutoPickCard
@@ -182,7 +188,6 @@ export function renderApp(game: Game) {
       autoAnswerStakeRaise(event.detail.player),
     );
     window.addEventListener("stakeRaiseAnswered", (event) => {
-      possiblyAutoContinueStep();
       notifyStakeAccepted(event.detail.player, continueRoundOrCloseIt);
     });
     window.addEventListener("roundAcknowledged", continueGameIfDone);
