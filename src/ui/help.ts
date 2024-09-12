@@ -40,6 +40,8 @@ ${
   renderHelpCard(new Card(3, Suit.Hearts))
 }
 </div>
+<h3>Triskaidekaphobia</h3>
+<p>The card 13 loses to any other card. However, it mimics any card in the deck until you play it. Only when you drop it does it reveal it as a 13. You might think you have a strong hand, only to discover that you were better off not raising the stakes with such a weak card!</p>
 <h3>Trump Cards</h3>
 <p>These are cards that beat all others, immediately following the turned card in rank.For instance:</p>
 <div class="hlp-t">
