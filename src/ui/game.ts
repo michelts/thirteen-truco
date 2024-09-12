@@ -82,6 +82,7 @@ function listenToEvents(game: Game) {
       autoRaiseSideEffect = () =>
         dispatchEvent(cardPicked(player, autoCard.card, autoCard.isHidden));
       dispatchEvent(stakeAutoRaised(game, player));
+      playSFX("raise-stakes");
       const raisedStakesNotification =
         player.teamIndex === 1
           ? notifications.theyRaisedStakes
