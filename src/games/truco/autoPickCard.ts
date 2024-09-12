@@ -7,6 +7,7 @@ type AutoPickCardFunc = (
   previousFromUs: Card[][],
   previousFromThem: Card[][],
   wins: (boolean | undefined)[],
+  playersCount: number,
   trumpCards: Card[],
   cardsFromLowestToHighest: Card[],
   getRaiseByLevel?: (level: number) => boolean,
@@ -46,6 +47,7 @@ class CardPicker implements CardPickerInterface {
   _previousFromThem: CardWithHeights[][];
   _myTopCards: CardWithHeights[];
   _wins: (boolean | undefined)[];
+  _playersCount: number;
   _getRaiseByLevel: typeof defaultGetRaiseByLevel;
 
   constructor(...args: Parameters<AutoPickCardFunc>) {
@@ -54,6 +56,7 @@ class CardPicker implements CardPickerInterface {
       previousFromUs,
       previousFromThem,
       wins,
+      playersCount,
       trumpCards,
       cardsFromLowestToHighest,
       getRaiseByLevel,
@@ -72,6 +75,7 @@ class CardPicker implements CardPickerInterface {
     this._previousFromThem = result[4];
     this._myTopCards = this._filterTopCards(this._myHandAscending);
     this._wins = wins;
+    this._playersCount = playersCount;
     this._getRaiseByLevel = getRaiseByLevel ?? defaultGetRaiseByLevel;
   }
 
@@ -112,27 +116,13 @@ class CardPicker implements CardPickerInterface {
       );
     }
     if (this._round === 3) {
-      const cardToWinStep = this.getCardToWinStep(this._myHandAscending);
-      if (this._wins[0] && cardToWinStep) {
-        return makePickReturn(cardToWinStep, false, true);
-      }
-      const cardLeft = this._myHandAscending[0];
-      if (this._haveMinTrumps(1)) {
-        return makePickReturn(
-          cardLeft,
-          false,
-          this._getRaiseByLevel(
-            this._wins[0] ? CardAction.Raise2 : CardAction.Raise1,
-          ),
-        );
-      }
-      if (this._myTopCards.length > 0) {
-        return makePickReturn(
-          cardLeft,
-          false,
-          this._wins[0] ? this._getRaiseByLevel(CardAction.Raise2) : false,
-        );
-      }
+      const [bestCard, action] = this._pickBestThirdCard();
+      const isBurningCard = this._isBurningCard(bestCard);
+      return makePickReturn(
+        bestCard,
+        false,
+        isBurningCard ? false : this._getRaiseByLevel(action),
+      );
     }
     return makePickReturn(shuffle(this._myHandAscending)[0], false, false);
   }
@@ -160,7 +150,9 @@ class CardPicker implements CardPickerInterface {
     const opponentCardHeights = this._theirStepCards.map(
       (card) => card.groupHeight,
     );
-    const threshold = Math.max(...opponentCardHeights);
+    const threshold = opponentCardHeights.length
+      ? Math.max(...opponentCardHeights)
+      : 0;
     for (const card of myCards) {
       if (card.groupHeight > threshold) {
         return card;
@@ -176,7 +168,9 @@ class CardPicker implements CardPickerInterface {
     const opponentCardHeights = this._theirStepCards.map(
       (card) => card.groupHeight,
     );
-    const threshold = Math.max(...opponentCardHeights);
+    const threshold = opponentCardHeights
+      ? Math.max(...opponentCardHeights)
+      : 0;
     for (const card of myCards) {
       if (card.groupHeight === threshold) {
         return card;
@@ -192,12 +186,17 @@ class CardPicker implements CardPickerInterface {
     const opponentCardHeights = this._theirStepCards.map(
       (card) => card.groupHeight,
     );
-    const threshold = Math.max(...opponentCardHeights);
+    const threshold = opponentCardHeights
+      ? Math.max(...opponentCardHeights)
+      : 0;
     return this._myHandAscending.every((card) => card.groupHeight < threshold);
   }
 
   get _amILast() {
-    return this._theirStepCards.length === 2 && this._ourStepCards.length === 1;
+    return (
+      this._theirStepCards.length + this._ourStepCards.length ===
+      this._playersCount - 1
+    );
   }
 
   get _myTrumps() {
@@ -316,6 +315,27 @@ class CardPicker implements CardPickerInterface {
     return [this._myHandAscending[0], CardAction.DoNotRaise];
   }
 
+  _pickBestThirdCard() {
+    const cardToWinStep = this.getCardToWinStep(this._myHandAscending);
+    if (this._wins[0] && cardToWinStep) {
+      return [cardToWinStep, CardAction.Raise3] as const;
+    }
+    const cardLeft = this._myHandAscending[0];
+    if (this._haveMinTrumps(1)) {
+      return [
+        cardLeft,
+        this._wins[0] ? CardAction.Raise2 : CardAction.Raise1,
+      ] as const;
+    }
+    if (this._myTopCards.length > 0) {
+      return [
+        cardLeft,
+        this._wins[0] ? CardAction.Raise2 : CardAction.DoNotRaise,
+      ] as const;
+    }
+    return [cardLeft, CardAction.DoNotRaise] as const;
+  }
+
   _haveHighestTrumps(count: number) {
     return this._myTrumps
       .filter((_trump, index) => {
@@ -342,24 +362,33 @@ class CardPicker implements CardPickerInterface {
   }
 
   _dontBurnCard(card: CardWithHeights) {
+    if (this._isBurningCard(card)) {
+      return this._myHandAscending[0];
+    }
+    return card;
+  }
+
+  _isBurningCard(card: CardWithHeights) {
     const opponentCardHeights = this._theirStepCards.map(
       (theirCard) => theirCard.groupHeight,
     );
-    const opponentsThreshold = Math.max(...opponentCardHeights) ?? 0;
+    const opponentsThreshold = opponentCardHeights
+      ? Math.max(...opponentCardHeights)
+      : 0;
     if (card.groupHeight < opponentsThreshold) {
-      return this._myHandAscending[0];
+      return true;
     }
     const partnerCardHeight = this._ourStepCards[0]?.height;
     const isPartnerWinningWithTopCard =
       partnerCardHeight >= this._topCardThreshold &&
       partnerCardHeight > opponentsThreshold;
     if (isPartnerWinningWithTopCard) {
-      return this._myHandAscending[0];
+      return true;
     }
     if (card.height < partnerCardHeight) {
-      return this._myHandAscending[0];
+      return true;
     }
-    return card;
+    return false;
   }
 }
 

@@ -443,7 +443,7 @@ describe("first card", () => {
       });
     });
 
-    it("should pick card high enough to win the opponents", () => {
+    it("should pick card high enough to win the opponents (4 players)", () => {
       const hand = [
         new Card(6, Suit.Clubs),
         new Card(1, Suit.Clubs),
@@ -457,6 +457,27 @@ describe("first card", () => {
           previousFromThem: [
             [new Card(7, Suit.Hearts), new Card(12, Suit.Hearts)],
           ],
+        }),
+      ).toEqual({
+        card: new Card(1, Suit.Clubs),
+        isHidden: false,
+        shouldRaise: false,
+      });
+    });
+
+    it("should pick card high enough to win the opponents (2 players)", () => {
+      const hand = [
+        new Card(6, Suit.Clubs),
+        new Card(1, Suit.Clubs),
+        new Card(3, Suit.Clubs),
+      ];
+      expect(
+        call({
+          hand,
+          trumpCardNumber: 5,
+          previousFromUs: [[]],
+          previousFromThem: [[new Card(12, Suit.Hearts)]],
+          playersCount: 2,
         }),
       ).toEqual({
         card: new Card(1, Suit.Clubs),
@@ -1081,12 +1102,14 @@ function call({
   previousFromUs,
   previousFromThem,
   wins = [],
+  playersCount = 4,
 }: {
   hand: Card[];
   trumpCardNumber: number;
   previousFromUs: Card[][];
   previousFromThem: Card[][];
   wins?: (boolean | undefined)[];
+  playersCount?: number;
 }) {
   // Wraps the autoPickCard call to allow using objects and give more
   // flexibility for tests. The function autoPickCard uses positional
@@ -1097,6 +1120,7 @@ function call({
     previousFromUs,
     previousFromThem,
     wins,
+    playersCount,
     makeTrumpCards(trumpCardNumber),
     deck.cardsFromLowestToHighest,
     getRaiseByLevel,
