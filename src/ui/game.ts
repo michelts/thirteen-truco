@@ -206,7 +206,7 @@ function listenToEvents(game: Game) {
         }
         throw err;
       }
-      await playSFX(
+      playSFX(
         !event.detail.isHidden && realCard.mimicable ? "bad-card" : "good-card",
       );
       if (game.currentRound.currentPlayer?.canAutoPickCard) {
