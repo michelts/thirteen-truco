@@ -19,12 +19,12 @@ import {
 import { filterBestCards as defaultFilterBestCards } from "./filterBestCards";
 import { getRoundScore } from "./getRoundScore";
 import { getTrumpCards } from "./getTrumpCards";
-import { PlayerCard, type TrucoPlayer } from "./player";
+import { TrucoPlayerCard } from "./player";
 
 export class TrucoGame implements Game {
   filterBestCards: BestCardsFilterFunc = defaultFilterBestCards;
   deck: Deck;
-  private _players: TrucoPlayer[] = [];
+  private _players: Player[] = [];
   private _rounds: Round[] = [];
 
   constructor(pack: Deck, filterBestCards?: BestCardsFilterFunc) {
@@ -62,7 +62,7 @@ export class TrucoGame implements Game {
             realCard = this.deck.getCard();
           }
         }
-        cards.push(new PlayerCard(card, realCard));
+        cards.push(new TrucoPlayerCard(card, realCard));
       }
       player.receiveCards(cards);
     }
@@ -84,7 +84,13 @@ export class TrucoGame implements Game {
     }
   }
 
-  reset() {
+  reset(players?: Player[]) {
+    if (players) {
+      this._players = players;
+      this._players.forEach((player, index) => {
+        player.teamIndex = (index % 2) as Player["teamIndex"];
+      });
+    }
     this._rounds = [];
     this._rounds.push(new TrucoRound(this, this.players[0]));
     this.distributeCards();

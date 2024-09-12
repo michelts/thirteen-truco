@@ -5,7 +5,9 @@ let dismissTimeout: ReturnType<typeof setTimeout> | null = null;
 let currentMessage = "";
 
 export function renderNotifications() {
-  window.addEventListener("notificationCreated", (event) => {
+  const handleNotificationCreated = (
+    event: GlobalEventHandlersEventMap["notificationCreated"],
+  ) => {
     getElement("nf").innerHTML = render(
       event.detail.message,
       event.detail.onDismiss,
@@ -16,10 +18,13 @@ export function renderNotifications() {
         dismiss(event.detail.onDismiss, event.detail.message);
       }, event.detail.timeout);
     }
-  });
+  };
+  window.addEventListener("notificationCreated", handleNotificationCreated);
   window.addEventListener("gameReset", () => {
-    getElement("nf").innerHTML = render("");
-    currentMessage = "";
+    window.removeEventListener(
+      "notificationCreated",
+      handleNotificationCreated,
+    );
   });
   return '<div id="nf"></div>';
 }

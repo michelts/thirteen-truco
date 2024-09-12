@@ -1,4 +1,4 @@
-import type { Card, Game, Player } from "@/types";
+import type { Card, Game, Player, PlayerCard } from "@/types";
 import {
   CardNotFoundError,
   NotEnoughCardsError,
@@ -9,11 +9,7 @@ import {
 import { getId } from "@/utils/getId";
 import { autoPickCard } from "./autoPickCard";
 
-interface TrucoPlayerType {
-  receiveCards: (playerCards: PlayerCard[]) => void;
-}
-
-export class TrucoPlayer implements Player, TrucoPlayerType {
+export class TrucoPlayer implements Player {
   public canAutoPickCard: boolean;
   private _game: Game;
   private _id: ReturnType<typeof getId>;
@@ -130,7 +126,7 @@ export class TrucoPlayer implements Player, TrucoPlayerType {
   }
 }
 
-export class PlayerCard {
+export class TrucoPlayerCard implements PlayerCard {
   public card: Card;
   private _realCard?: Card;
 

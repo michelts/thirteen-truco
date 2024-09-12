@@ -5,16 +5,21 @@ import { cardDropped } from "./events";
 
 export function renderMyCards(game: Game, player: Player) {
   setTimeout(() => {
-    window.addEventListener("gameReset", () => {
+    const redrawOnAcknowledge = () => {
       redraw(game, player);
-    });
-    window.addEventListener("roundAcknowledged", () => {
-      redraw(game, player);
-    });
-    window.addEventListener("cardDropped", (event) => {
+    };
+    const redrawOnDrop = (
+      event: GlobalEventHandlersEventMap["cardDropped"],
+    ) => {
       if (event.detail.player === player) {
         redraw(game, player);
       }
+    };
+    window.addEventListener("roundAcknowledged", redrawOnAcknowledge);
+    window.addEventListener("cardDropped", redrawOnDrop);
+    window.addEventListener("gameReset", () => {
+      window.removeEventListener("roundAcknowledged", redrawOnAcknowledge);
+      window.removeEventListener("cardDropped", redrawOnDrop);
     });
   });
   return `<div id="mc">${render(game, player)}</div>`;

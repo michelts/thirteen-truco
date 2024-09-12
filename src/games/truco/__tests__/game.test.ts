@@ -1008,6 +1008,43 @@ describe("reset game", () => {
     expect(game.currentRound.isDone).toBe(false);
     expect(game.currentRound.currentStep.isDone).toBe(false);
   });
+
+  it("should allow reset game with a new set of players", () => {
+    const game = new TrucoGame(getDeck());
+    game.players = [
+      new TrucoPlayer(game, "Jack"),
+      new TrucoPlayer(game, "Curtis"),
+      new TrucoPlayer(game, "Meg"),
+      new TrucoPlayer(game, "Marge"),
+    ];
+    expect(game.isDone).toBe(false);
+    expect(game.score).toEqual([0, 0]);
+    expect(game.rounds).toHaveLength(1);
+    expect(game.players).toHaveLength(4);
+    expect(game.players.map(({ name }) => name)).toEqual([
+      "Jack",
+      "Curtis",
+      "Meg",
+      "Marge",
+    ]);
+    expect(game.currentRound.currentPlayer).toEqual(game.players[0]);
+    expect(game.currentRound.steps).toHaveLength(1);
+    expect(game.currentRound.currentStep.cards).toEqual([]);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.currentStep.isDone).toBe(false);
+
+    game.reset([new TrucoPlayer(game, "Will"), new TrucoPlayer(game, "Gus")]);
+    expect(game.isDone).toBe(false);
+    expect(game.score).toEqual([0, 0]);
+    expect(game.rounds).toHaveLength(1);
+    expect(game.players).toHaveLength(2);
+    expect(game.players.map(({ name }) => name)).toEqual(["Will", "Gus"]);
+    expect(game.currentRound.currentPlayer).toEqual(game.players[0]);
+    expect(game.currentRound.steps).toHaveLength(1);
+    expect(game.currentRound.currentStep.cards).toEqual([]);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.currentStep.isDone).toBe(false);
+  });
 });
 
 describe("mimic cards", () => {

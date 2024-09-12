@@ -101,7 +101,6 @@ class CardPicker implements CardPickerInterface {
         return makePickReturn(cardToWinStep, false, true);
       }
       const [bestCard, action] = this._pickBestSecondCard();
-      console.log({ bestCard });
       const card = this._dontBurnCard(bestCard);
       if (!card.isEqual(bestCard)) {
         return makePickReturn(card);

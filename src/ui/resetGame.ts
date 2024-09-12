@@ -5,6 +5,7 @@ import { gameReset } from "./events";
 export function renderResetGame(game: Game) {
   setTimeout(() => {
     getElement("rst").addEventListener("click", () => {
+      getElement("wrap").classList.remove("playing");
       game.reset();
       dispatchEvent(gameReset(game));
     });

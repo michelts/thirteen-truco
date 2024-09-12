@@ -15,13 +15,14 @@
 @import "./_others-cards.scss";
 @import "./_actions.scss";
 @import "./_notifications.scss";
+@import "./_splash-menu.scss";
 
 * {
     -webkit-tap-highlight-color: transparent;
     outline: none;
 }
 
-html, body, button, svg {
+html, body, button, svg, h1 {
   display: block;
   margin: 0;
   padding: 0;
@@ -41,4 +42,34 @@ body {
 
 #wrap {
   @include body-shadow;
+
+  &.playing {
+    #app {
+      filter: none;
+    }
+
+    #spl {
+      display: none;
+    }
+  }
+}
+
+#app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  filter: blur(10px);
+}
+
+#spl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
 }

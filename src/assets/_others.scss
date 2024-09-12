@@ -21,6 +21,10 @@
     & > div:nth-child(2n) {
       margin: 0 0 0 -20vw;
     }
+
+    & > div:first-child:last-child {
+      margin: 0 0 105px 160px;
+    }
   }
 }
 

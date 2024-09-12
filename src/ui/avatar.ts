@@ -6,14 +6,21 @@ export function renderAvatar(
   player: Player,
   index: number | string,
 ): string {
-  function redraw() {
-    getElement(`av-${player.id}`).outerHTML = render(game, player, index);
-  }
-  window.addEventListener("gameReset", redraw);
-  window.addEventListener("cardPlaced", redraw);
-  window.addEventListener("stepDone", redraw);
-  window.addEventListener("roundDone", redraw);
-  window.addEventListener("roundContinued", redraw);
+  setTimeout(() => {
+    function redraw() {
+      getElement(`av-${player.id}`).outerHTML = render(game, player, index);
+    }
+    window.addEventListener("cardPlaced", redraw);
+    window.addEventListener("stepDone", redraw);
+    window.addEventListener("roundDone", redraw);
+    window.addEventListener("roundContinued", redraw);
+    window.addEventListener("gameReset", () => {
+      window.removeEventListener("cardPlaced", redraw);
+      window.removeEventListener("stepDone", redraw);
+      window.removeEventListener("roundDone", redraw);
+      window.removeEventListener("roundContinued", redraw);
+    });
+  });
   return render(game, player, index);
 }
 

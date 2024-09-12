@@ -13,3 +13,5 @@ function* generateDefaultCards() {
     }
   }
 }
+
+export const playerNames = ["You", "Curtis", "Bret", "Molly"];

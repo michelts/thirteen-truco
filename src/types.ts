@@ -29,12 +29,19 @@ export interface Player {
   isEqual: (otherPlayer: Player) => boolean;
   isPendingTurn: boolean;
   canAutoPickCard: boolean;
+  receiveCards: (cards: PlayerCard[]) => void;
   autoPickCard: () => {
     card: Card;
     isHidden: boolean;
     shouldRaise: boolean;
   };
   dropCard: (card: Card, isHidden?: boolean) => void;
+}
+
+export interface PlayerCard {
+  card: Card;
+  displayCard: Card;
+  isMimic: boolean;
 }
 
 export interface Game {
@@ -44,7 +51,7 @@ export interface Game {
   currentRound: Round;
   isDone: boolean;
   continue: () => void;
-  reset: () => void;
+  reset: (players?: Player[]) => void;
   score: [number, number];
 }
 

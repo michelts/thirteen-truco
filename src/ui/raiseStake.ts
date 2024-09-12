@@ -21,6 +21,7 @@ function render(game: Game) {
       );
     });
   });
+
   const canRaiseStakes =
     !game.currentRound.isDone &&
     game.currentRound.stake.isAccepted === true &&

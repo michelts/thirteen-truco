@@ -6,13 +6,10 @@ import { cardDropped } from "./events";
 
 export function renderOthersCards(game: Game, player: Player) {
   setTimeout(() => {
-    window.addEventListener("gameReset", () => {
+    const redrawOnAcknowledge = () => {
       redraw(player);
-    });
-    window.addEventListener("roundAcknowledged", () => {
-      redraw(player);
-    });
-    window.addEventListener("cardPicked", (event) => {
+    };
+    const redrawOnPick = (event: GlobalEventHandlersEventMap["cardPicked"]) => {
       if (event.detail.player === player) {
         redraw(player, event.detail.card);
 
@@ -22,11 +19,21 @@ export function renderOthersCards(game: Game, player: Player) {
           }
         });
       }
-    });
-    window.addEventListener("cardDropped", (event) => {
+    };
+    const redrawOnDrop = (
+      event: GlobalEventHandlersEventMap["cardDropped"],
+    ) => {
       if (event.detail.player === player) {
         redraw(player);
       }
+    };
+    window.addEventListener("roundAcknowledged", redrawOnAcknowledge);
+    window.addEventListener("cardPicked", redrawOnPick);
+    window.addEventListener("cardDropped", redrawOnDrop);
+    window.addEventListener("gameReset", () => {
+      window.removeEventListener("roundAcknowledged", redrawOnAcknowledge);
+      window.removeEventListener("cardPicked", redrawOnPick);
+      window.removeEventListener("cardDropped", redrawOnDrop);
     });
   });
   return `<div class="otc" id="p${player.id}">${render(player)}</div>`;
