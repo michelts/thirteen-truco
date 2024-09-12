@@ -1,10 +1,12 @@
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
+import { stopMusic } from "./audio";
 import { gameReset } from "./events";
 
 export function renderResetGame(game: Game) {
   setTimeout(() => {
     getElement("rst").addEventListener("click", () => {
+      stopMusic();
       getElement("wrap").classList.remove("playing");
       game.reset();
       dispatchEvent(gameReset(game));

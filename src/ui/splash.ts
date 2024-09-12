@@ -2,6 +2,7 @@ import { playerNames } from "@/config";
 import { TrucoPlayer } from "@/games/truco";
 import type { Game } from "@/types";
 import { getElement } from "@/utils/elements";
+import { possiblyPlayMusic } from "./audio/music";
 import { gameReset } from "./events";
 
 export function renderSplash(game: Game) {
@@ -27,6 +28,7 @@ function listenToEvents(game: Game) {
           .map((name, index) => new TrucoPlayer(game, name, index !== 0)),
       );
       dispatchEvent(gameReset(game));
+      possiblyPlayMusic();
       getElement("wrap").classList.add("playing");
     });
 
@@ -37,7 +39,12 @@ function listenToEvents(game: Game) {
         ),
       );
       dispatchEvent(gameReset(game));
+      possiblyPlayMusic();
       getElement("wrap").classList.add("playing");
+    });
+
+    getElement("spl-hlp").addEventListener("click", () => {
+      getElement("wrap").classList.add("learning");
     });
   });
 }

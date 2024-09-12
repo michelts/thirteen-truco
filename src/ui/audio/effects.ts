@@ -4,7 +4,7 @@ import roundLose from "./assets/round-lose";
 import roundWin from "./assets/round-win";
 import { Audio } from "./audio";
 
-let sfxEnabled = false;
+let sfxEnabled = true;
 
 const assets = {
   "bad-card": badCard,

@@ -16,13 +16,14 @@
 @import "./_actions.scss";
 @import "./_notifications.scss";
 @import "./_splash-menu.scss";
+@import "./_help.scss";
 
 * {
     -webkit-tap-highlight-color: transparent;
     outline: none;
 }
 
-html, body, button, svg, h1 {
+html, body, button, svg, h1, ul, h3, p {
   display: block;
   margin: 0;
   padding: 0;
@@ -51,25 +52,37 @@ body {
     #spl {
       display: none;
     }
+
+    #hlp {
+      display: none;
+    }
+  }
+
+  &.learning {
+    #spl {
+      display: none;
+    }
+
+    #hlp {
+      display: block;
+    }
   }
 }
 
-#app {
+#app, #spl, #hlp {
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+
+#app {
   z-index: 1;
   filter: blur(10px);
 }
 
-#spl {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+#spl, #hlp {
   z-index: 2;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
 }
