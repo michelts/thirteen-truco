@@ -182,6 +182,7 @@ function listenToEvents(game: Game) {
       possiblyAutoContinueStep();
     } else {
       const score = game.score;
+      playSFX(score[0] > score[1] ? "game-win" : "game-lose");
       dispatchEvent(
         notificationCreated(
           score[0] > score[1]

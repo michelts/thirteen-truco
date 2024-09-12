@@ -1,4 +1,6 @@
 import badCard from "./assets/bad-card";
+import gameLose from "./assets/game-lose";
+import gameWin from "./assets/game-win";
 import goodCard from "./assets/good-card";
 import roundLose from "./assets/round-lose";
 import roundWin from "./assets/round-win";
@@ -11,6 +13,8 @@ const assets = {
   "good-card": goodCard,
   "round-win": roundWin,
   "round-lose": roundLose,
+  "game-win": gameWin,
+  "game-lose": gameLose,
 };
 
 const effects: Partial<Record<keyof typeof assets, Audio | undefined>> = {};
