@@ -26,6 +26,7 @@ export class TrucoGame implements Game {
   deck: Deck;
   private _players: Player[] = [];
   private _rounds: Round[] = [];
+  private _maxScore = 12;
 
   constructor(pack: Deck, filterBestCards?: BestCardsFilterFunc) {
     this.deck = pack;
@@ -118,11 +119,11 @@ export class TrucoGame implements Game {
   }
 
   capMaxScore(value: number) {
-    return value <= 12 ? value : 12;
+    return value <= this._maxScore ? value : this._maxScore;
   }
 
   get isDone() {
-    return this.score.some((value) => value === 12);
+    return this.score.some((value) => value === this._maxScore);
   }
 }
 
