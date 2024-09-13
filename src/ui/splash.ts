@@ -16,7 +16,7 @@ function renderSplashTitle() {
 }
 
 function renderSplashMenu() {
-  return `<div><button id="spl-1p">1 player vs computer</button><button id="spl-2p">1 player + computer vs 2 computers</button><button id="spl-hlp">Help</button></div>`;
+  return `<div><button id="spl-1p">1 Player vs Computer</button><button id="spl-2p">1 Player + Computer vs 2 Computers</button><button id="spl-hlp">Help</button></div>`;
 }
 
 function listenToEvents(game: Game) {
