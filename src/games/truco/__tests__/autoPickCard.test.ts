@@ -1096,6 +1096,50 @@ describe("second card", () => {
   });
 });
 
+describe("regression tests", () => {
+  it("should not burn trump card over partner's top card", () => {
+    const hand = [
+      new Card(6, Suit.Diamonds),
+      new Card(7, Suit.Diamonds),
+      new Card(7, Suit.Hearts),
+    ];
+    expect(
+      call({
+        hand,
+        trumpCardNumber: 6,
+        previousFromUs: [[new Card(3, Suit.Hearts)]],
+        previousFromThem: [
+          [new Card(4, Suit.Clubs), new Card(10, Suit.Spades)],
+        ],
+      }),
+    ).toEqual({
+      card: new Card(7, Suit.Diamonds),
+      isHidden: false,
+      shouldRaise: false,
+    });
+  });
+
+  it("should prefer lower card if already won", () => {
+    const hand = [
+      new Card(5, Suit.Diamonds),
+      new Card(3, Suit.Diamonds),
+      new Card(7, Suit.Diamonds),
+    ];
+    expect(
+      call({
+        hand,
+        trumpCardNumber: 5,
+        previousFromUs: [[new Card(10, Suit.Hearts)]],
+        previousFromThem: [[new Card(4, Suit.Clubs), new Card(6, Suit.Spades)]],
+      }),
+    ).toEqual({
+      card: new Card(7, Suit.Diamonds),
+      isHidden: false,
+      shouldRaise: false,
+    });
+  });
+});
+
 function call({
   hand,
   trumpCardNumber,

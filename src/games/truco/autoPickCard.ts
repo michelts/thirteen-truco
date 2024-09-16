@@ -81,7 +81,7 @@ class CardPicker implements CardPickerInterface {
 
   pick() {
     if (this._round === 1) {
-      if (this._isMyPartnerWinningWithTopCard()) {
+      if (this._isMyPartnerProbablyWinning()) {
         return makePickReturn(this._pickWorstCard());
       }
       if (this._myTrumpCards.length === 0) {
@@ -237,15 +237,24 @@ class CardPicker implements CardPickerInterface {
     return this._ourStepCards.length === 0 && this._theirStepCards.length === 0;
   }
 
-  _isMyPartnerWinningWithTopCard() {
+  _isMyPartnerProbablyWinning() {
     const partnerCard = this._ourStepCards[0];
     if (!partnerCard) {
       return false;
     }
     const opponentCardHeights = this._theirStepCards.map((card) => card.height);
+    const opponentsThreshold = opponentCardHeights
+      ? Math.max(...opponentCardHeights)
+      : 0;
+    if (
+      opponentCardHeights.length === 2 &&
+      partnerCard.height > opponentsThreshold
+    ) {
+      return true;
+    }
     return (
       partnerCard.height >= this._topCardThreshold &&
-      opponentCardHeights.every((height) => height <= partnerCard.height)
+      partnerCard.height > opponentsThreshold
     );
   }
 
