@@ -329,13 +329,22 @@ class TrucoRoundStep implements Step {
   }
 
   get winner() {
-    const winners = this.bestCards.map((bestCard) => {
-      return this.cards.find((item) => item.card.isEqual(bestCard));
-    });
-    if (winners.length > 1) {
+    let winner: Player | undefined = undefined;
+    for (const bestCard of this.bestCards) {
+      const winnerCard = this.cards.find((item) => item.card.isEqual(bestCard));
+      if (!winnerCard) {
+        continue;
+      }
+      if (!winner) {
+        winner = winnerCard.player;
+        continue;
+      }
+      if (winner.teamIndex === winnerCard.player.teamIndex) {
+        continue;
+      }
       return undefined;
     }
-    return winners[0]?.player ?? undefined;
+    return winner;
   }
 }
 

@@ -625,6 +625,69 @@ describe("score calculation", () => {
     expect(game.score).toEqual([1, 0]);
   });
 
+  it("should not not consider same cards of players from the same team as draws", () => {
+    const customDeck = new Deck(
+      [
+        new Card(1, Suit.Diamonds),
+        new Card(1, Suit.Spades),
+        new Card(1, Suit.Hearts),
+        new Card(1, Suit.Clubs),
+        new Card(2, Suit.Diamonds),
+        new Card(2, Suit.Spades),
+        new Card(2, Suit.Hearts),
+        new Card(2, Suit.Clubs),
+        new Card(3, Suit.Diamonds),
+        new Card(3, Suit.Spades),
+        new Card(3, Suit.Hearts),
+        new Card(3, Suit.Clubs),
+        new Card(4, Suit.Spades),
+      ],
+      () => [
+        new Card(4, Suit.Spades),
+        new Card(1, Suit.Clubs),
+        new Card(2, Suit.Clubs),
+        new Card(3, Suit.Clubs),
+        new Card(1, Suit.Hearts),
+        new Card(2, Suit.Hearts),
+        new Card(3, Suit.Hearts),
+        new Card(1, Suit.Diamonds),
+        new Card(2, Suit.Diamonds),
+        new Card(3, Suit.Diamonds),
+        new Card(1, Suit.Spades),
+        new Card(2, Suit.Spades),
+        new Card(3, Suit.Spades),
+      ],
+    );
+    const game = new TrucoGame(customDeck);
+    game.players = [
+      new TrucoPlayer(game, "Player 1"),
+      new TrucoPlayer(game, "Player 2"),
+      new TrucoPlayer(game, "Player 3"),
+      new TrucoPlayer(game, "Player 4"),
+    ];
+    const [player1, player2, player3, player4] = game.players;
+    expect(game.currentRound.isDone).toBe(false);
+    player1.dropCard(new Card(3, Suit.Clubs));
+    player2.dropCard(new Card(2, Suit.Hearts));
+    player3.dropCard(new Card(3, Suit.Diamonds));
+    player4.dropCard(new Card(2, Suit.Spades));
+    expect(game.currentRound.currentStep.isDone).toBe(true);
+    expect(game.currentRound.currentStep.winner).toEqual(player1);
+    expect(game.currentRound.isDone).toBe(false);
+    expect(game.currentRound.score).toEqual(undefined);
+    expect(game.score).toEqual([0, 0]);
+    game.currentRound.continue();
+    player1.dropCard(new Card(1, Suit.Clubs));
+    player2.dropCard(new Card(3, Suit.Hearts));
+    player3.dropCard(new Card(2, Suit.Diamonds));
+    player4.dropCard(new Card(3, Suit.Spades));
+    expect(game.currentRound.currentStep.isDone).toBe(true);
+    expect(game.currentRound.currentStep.winner).toEqual(player1);
+    expect(game.currentRound.isDone).toBe(true);
+    expect(game.currentRound.score).toEqual([1, 0]);
+    expect(game.score).toEqual([1, 0]);
+  });
+
   it("should handle a round with all draws", () => {
     const cards = [
       new Card(12, Suit.Spades),
