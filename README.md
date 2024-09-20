@@ -1,6 +1,6 @@
 # Thirteen Truco
 
-[Click here for the postmortem!](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/POSTMORTEM.md)
+[Click here for the postmortem!](https://github.com/michelts/thirteen-truco/blob/main/docs/POSTMORTEM.md)
 
 The game is a clone of the classic card game Truco, with one major difference: the introduction of a card numbered 13.
 

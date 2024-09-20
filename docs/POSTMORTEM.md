@@ -10,11 +10,11 @@ Besides, I could potentially turn it into a multiplayer game after the competiti
 
 Once again, I asked ChatGPT for help, and my initial feedback wasn’t great. I don’t have the screenshot anymore, but here’s my interpretation of it:
 
-![first-layout](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/first-layout.gif)
+![first-layout](https://github.com/michelts/thirteen-truco/blob/main/docs/first-layout.gif)
 
 A few iterations later, and after analyzing existing games, my final layout improved a bit:
 
-![first-layout](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/second-layout.gif)
+![first-layout](https://github.com/michelts/thirteen-truco/blob/main/docs/second-layout.gif)
 
 As you can see, I focused on a mobile-first approach, making it easier for regular people to play the game. In Brazil, [64% of the population navigates the web exclusively through cellphones](https://agenciabrasil-ebc-com-br.translate.goog/geral/noticia/2022-06/classes-b-c-d-e-e-tem-menos-acesso-computadores-desde-pandemia?_x_tr_sl=pt&_x_tr_tl=en&_x_tr_hl=pt-BR&_x_tr_pto=wapp).
 
@@ -22,11 +22,11 @@ As you can see, I focused on a mobile-first approach, making it easier for regul
 
 Since my goal was to eventually make the game multiplayer, I decided to completely separate the UI from the game mechanics. This allowed me to apply TDD (Test-Driven Development) while building the game, so all of my engine was thoroughly tested.
 
-Games in general use a lot of randomness, and mine is no different. To make my tests predictable, I used dependency injection. TypeScript made this a breeze: for example, the game class constructor has a deck parameter, and the deck class itself takes a sorter function parameter. In my tests, I simply [injected a deck with a dummy sorter](https://github.com/michelts/thirteen-truco/blob/post-mortem/src/games/truco/__tests__/game.test.ts#L17).
+Games in general use a lot of randomness, and mine is no different. To make my tests predictable, I used dependency injection. TypeScript made this a breeze: for example, the game class constructor has a deck parameter, and the deck class itself takes a sorter function parameter. In my tests, I simply [injected a deck with a dummy sorter](https://github.com/michelts/thirteen-truco/blob/main/src/games/truco/__tests__/game.test.ts#L17).
 
 ## Game Logic
 
-The game logic isn't too difficult: players compete with 3 cards in rounds of 3 steps. You win the round if you win two steps or if you win the first step and draw the second, plus a few edge cases. Dependency injection helped again: I could test all combinations of a win [without worrying about the cards or the game in general](https://github.com/michelts/thirteen-truco/blob/post-mortem/src/games/truco/__tests__/getRoundScore.test.ts).
+The game logic isn't too difficult: players compete with 3 cards in rounds of 3 steps. You win the round if you win two steps or if you win the first step and draw the second, plus a few edge cases. Dependency injection helped again: I could test all combinations of a win [without worrying about the cards or the game in general](https://github.com/michelts/thirteen-truco/blob/main/src/games/truco/__tests__/getRoundScore.test.ts).
 
 The order of the cards is another auxiliary element: I assume my cards are already sorted by default, and I just need to identify the trumps (cards that beat all others, determined by the card immediately after the turned card). This logic was also isolated for easy testing of edge cases.
 
@@ -44,7 +44,7 @@ To align with the theme, I introduced a special card with the number 13. This ca
 
 You play against the computer, and random decisions wouldn’t make for good computer player behavior.
 
-I'm not the best Truco player, but being part of a family that plays it often, I know a few strategies. I wrote a function to determine which card to [play depending on the situation](https://github.com/michelts/thirteen-truco/blob/post-mortem/src/games/truco/__tests__/autoPickCard.test.ts).
+I'm not the best Truco player, but being part of a family that plays it often, I know a few strategies. I wrote a function to determine which card to [play depending on the situation](https://github.com/michelts/thirteen-truco/blob/main/src/games/truco/__tests__/autoPickCard.test.ts).
 
 For instance, if the turned card is a 4 and the auto-player has the five of clubs and the five of hearts (the highest cards in the game), the player will drop the lowest card and save the higher ones for the 2nd and 3rd rounds to raise the stakes!
 
