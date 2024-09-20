@@ -15,18 +15,16 @@ Besides that I could potentially turn it into a multiplayer game after compo.
 Again I asked ChatGPT for help, and my initial feedback wasn't great. I don't
 have the screen anymore, but I have my interpretation of it:
 
-XXX
+![first-layout](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/first-layout.gif)
 
 A few iterations later and after navigating through existing games, my final
 layout was a little improved:
 
-XXX
+![first-layout](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/second-layout.gif)
 
 As you can see, I focused on a mobile-first approach with the idea regular
-people could play the game. In Brazil, 64% of the population navigates the web
-exclusively through cellphones.
-
-https://agenciabrasil-ebc-com-br.translate.goog/geral/noticia/2022-06/classes-b-c-d-e-e-tem-menos-acesso-computadores-desde-pandemia?_x_tr_sl=pt&_x_tr_tl=en&_x_tr_hl=pt-BR&_x_tr_pto=wapp
+people could play the game. In Brazil, [64% of the population navigates the web
+exclusively through cellphones](https://agenciabrasil-ebc-com-br.translate.goog/geral/noticia/2022-06/classes-b-c-d-e-e-tem-menos-acesso-computadores-desde-pandemia?_x_tr_sl=pt&_x_tr_tl=en&_x_tr_hl=pt-BR&_x_tr_pto=wapp).
 
 ## Implementation
 
@@ -37,8 +35,8 @@ developing the game so all my engine is tested.
 Games in general uses a lot of random and mine is no different. To make my
 tests predictable, I'm using dependency injection. Typescript makes it a breeze:
 for instance, the game class constructor has a deck parameter and the deck
-class itself has a sorter function parameter. On tests, I just need to inject a
-deck with a dummy sorter. [link to test]
+class itself has a sorter function parameter. On tests, [I just had to inject a
+deck with a dummy sorter](https://github.com/michelts/thirteen-truco/blob/post-mortem/src/games/truco/__tests__/game.test.ts#L17).
 
 ## Game logic
 
@@ -95,10 +93,10 @@ raise stakes too (now using random).
 ## Sound
 
 I really wanted to use *Ace of Spades*, from *Mötorhead*, as inspiration for my
-game music. For any reason my blues vein make me pick *I'm Shakin'*, from
+game music. For any reason my blues vein make me pick *[I'm Shakin'](https://www.youtube.com/watch?v=qWRjus3end4)*, from
 *Little Willie John* so the music notes are taken from there.
 
-Credits also to Chris Wilson's SoundBox [link] which I used for composing the
+Credits also to [Chris Wilson's SoundBox](https://sb.bitsnbites.eu/) which I used for composing the
 some.
 
 ## Size constraints
@@ -109,7 +107,7 @@ end, my game was continuously growing to a point I would need to be mindful
 with adding features.
 
 I had my own vite config to build the project and luckily, someone shared a
-link to js13k-vite-plugins: that made a big difference and saved my maybe 2kb,
+link to [Cody Ebberson's js13k-vite-plugins](https://github.com/codyebberson/js13k-starter): that made a big difference and saved me 2kb (I think),
 enough to add sound and additional features easily!
 
 ## Finishing the game
