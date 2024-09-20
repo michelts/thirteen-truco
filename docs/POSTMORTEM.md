@@ -69,11 +69,11 @@ With the UI and game mechanics in good shape, I realized one big issue: Truco is
 
 At first, I thought it would be simple: since my UI and game mechanics were decoupled, I could easily create a tutorial class that respects the same game interface and demonstrates how to play.
 
-After compo, I recorded a video-demonstration that could be helpful for any newcomer:
+After compo, I recorded video-demonstrations that could be helpful for any newcomer:
 
+![Game: you vs computer](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/vs-computer.mp4)
 
-
-![first-layout](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/game-play-demonstration.mp4)
+![Game: you and a partner vs 2 computers](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/vs-two-computer.mp4)
 
 However, the time limit was an issue: I wouldn’t have enough time to implement this feature. I ended up adding a help screen with instructions and some new UI elements to indicate whose turn it is or who won the round, but it was just a temporary fix. There’s still room for improvement.
 
