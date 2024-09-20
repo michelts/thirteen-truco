@@ -69,13 +69,17 @@ With the UI and game mechanics in good shape, I realized one big issue: Truco is
 
 At first, I thought it would be simple: since my UI and game mechanics were decoupled, I could easily create a tutorial class that respects the same game interface and demonstrates how to play.
 
+However, the time limit was an issue: I wouldn’t have enough time to implement this feature. I ended up adding a help screen with instructions and some new UI elements to indicate whose turn it is or who won the round, but it was just a temporary fix. There’s still room for improvement.
+
 After compo, I recorded video-demonstrations that could be helpful for any newcomer:
 
-![Game: you vs computer](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/vs-computer.mp4)
+### You vs computer
 
-![Game: you and a partner vs 2 computers](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/vs-two-computer.mp4)
+https://github.com/user-attachments/assets/59dd3fd9-d53e-418a-b762-c7c0be014f61
 
-However, the time limit was an issue: I wouldn’t have enough time to implement this feature. I ended up adding a help screen with instructions and some new UI elements to indicate whose turn it is or who won the round, but it was just a temporary fix. There’s still room for improvement.
+### You and a partner vs two computers
+
+https://github.com/user-attachments/assets/1e17beaf-9878-4861-9945-82e76964a320
 
 ## Next steps
 
@@ -99,4 +103,4 @@ However, training a lightweight model to play the cards could be a viable approa
 
 The js13k-games competition is no easy task, and with only a few weekends and early mornings available to work on it—while balancing work and family—I must congratulate all contestants on their accomplishments!
 
-Special thanks to the game organizers, Ender and Alkor, for their passion and dedication to the competition!
+Special thanks to the game organizers, Ender and Alkor, and all the js13k community for their passion and dedication to the competition!
