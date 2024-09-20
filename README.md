@@ -1,5 +1,7 @@
 # Thirteen Truco
 
+[Click here for the postmortem!](https://github.com/michelts/thirteen-truco/blob/post-mortem/docs/POSTMORTEM.md)
+
 The game is a clone of the classic card game Truco, with one major difference: the introduction of a card numbered 13.
 
 This card functions as a reverse Joker - it loses to any other card. However, it mimics the appearance of any card in the deck until you play it. Only when you drop it does it reveal its true identity as a 13.
