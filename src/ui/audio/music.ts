@@ -1,7 +1,8 @@
 import music1 from "./assets/music1";
 import { Audio } from "./audio";
 
-let musicEnabled = true;
+const key = "13-truco-tgl-MUSIC";
+let musicEnabled = window.localStorage.getItem(key) !== "off";
 let music: Audio;
 
 export async function toggleMusic(value?: boolean) {

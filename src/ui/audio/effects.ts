@@ -7,7 +7,8 @@ import roundLose from "./assets/round-lose";
 import roundWin from "./assets/round-win";
 import { Audio } from "./audio";
 
-let sfxEnabled = true;
+const key = "13-truco-tgl-SFX";
+let sfxEnabled = window.localStorage.getItem(key) !== "off";
 
 const assets = {
   "bad-card": badCard,

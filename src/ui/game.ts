@@ -29,8 +29,7 @@ export function renderGame(game: Game) {
     renderHeader(
       renderResetGame(game),
       renderScore(game),
-      renderToggle("MUSIC", true, toggleMusic) +
-        renderToggle("SFX", true, toggleSFX),
+      renderToggle("MUSIC", toggleMusic) + renderToggle("SFX", toggleSFX),
     ) +
     renderKitchenTable(
       renderTableCards(game) +
